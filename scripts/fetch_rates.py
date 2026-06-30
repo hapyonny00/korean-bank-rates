@@ -209,6 +209,77 @@ __FONTCSS__
  .hcard .d b{font-weight:600}
  @media (max-width:560px){.hero{grid-template-columns:1fr}}
 
+ /* 툴바 3단 정리 */
+ .barrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+ .barrow.primary{justify-content:space-between;margin-bottom:12px}
+ .barrow.refine{margin-top:12px}
+ .btn-primary{font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:#fff;
+  background:var(--brandFg);border:1px solid var(--brandFg);
+  border-radius:var(--radiusMd);padding:9px 16px}
+ .btn-primary:hover{background:var(--brandFgHover);border-color:var(--brandFgHover)}
+ .btn-ghost{font:inherit;font-size:14px;cursor:pointer;color:var(--neutralFg2);
+  background:transparent;border:1px solid var(--neutralStroke1);
+  border-radius:var(--radiusMd);padding:9px 14px}
+ .btn-ghost:hover{background:var(--neutralBg2)}
+ /* 담기 버튼 / 예상이자 / 비대면 배지 */
+ .add{font:inherit;font-size:12px;cursor:pointer;color:var(--brandFg);
+  background:var(--neutralBg1);border:1px solid var(--neutralStroke1);
+  border-radius:var(--radiusPill);padding:2px 10px;margin-left:8px;white-space:nowrap}
+ .add.on{background:var(--brandFg);color:#fff;border-color:var(--brandFg)}
+ .est{display:block;margin-top:4px;font-size:12px;color:#0a7a3c;font-weight:600}
+ .est small{color:var(--neutralFg3);font-weight:400}
+ .onbadge{font-size:11px;color:var(--brandFg);border:1px solid #bcd9f0;
+  background:#eaf3fb;border-radius:var(--radiusPill);padding:1px 7px;margin-left:6px}
+ /* 비교 트레이(하단 고정) */
+ .tray{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--neutralBg1);
+  border-top:1px solid var(--neutralStroke1);box-shadow:0 -2px 8px rgba(0,0,0,.08);
+  padding:10px 16px}
+ .trayinner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  max-width:1100px;margin:0 auto}
+ .traycount{font-size:13px;font-weight:600;color:var(--neutralFg2);white-space:nowrap}
+ .traychips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+ .traychip{font:inherit;font-size:12px;cursor:pointer;color:var(--neutralFg2);
+  background:var(--neutralBg3);border:1px solid var(--neutralStroke2);
+  border-radius:var(--radiusPill);padding:3px 10px}
+ /* 오버레이 / 시트 */
+ .overlay{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.4);display:flex;
+  align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+ .sheet{background:var(--neutralBg1);border-radius:var(--radiusXl);width:100%;
+  max-width:880px;box-shadow:0 8px 28px rgba(0,0,0,.22);padding:18px 20px}
+ .sheet-h{display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;font-size:17px}
+ .sheet-h small{font-weight:400;color:var(--neutralFg3);font-size:12px}
+ .x{font:inherit;font-size:16px;cursor:pointer;border:0;background:transparent;
+  color:var(--neutralFg3);padding:4px 8px;border-radius:var(--radiusMd)}
+ .x:hover{background:var(--neutralBg2)}
+ /* 비교 카드 */
+ .ccards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+ .ccard{border:1px solid var(--neutralStroke2);border-radius:var(--radiusLg);padding:12px}
+ .cc-h{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700}
+ .cc-h .x{margin-left:auto}
+ .cc-p{color:var(--neutralFg2);font-size:13px;margin:4px 0 8px;font-weight:400}
+ .cc-t{width:100%;border-collapse:collapse;font-size:13px}
+ .cc-t th{text-align:left;color:var(--neutralFg3);font-weight:600;padding:3px 0;width:62px}
+ .cc-t td{padding:3px 0}
+ .cc-t td.hi{background:#eaf6ef;border-radius:4px;padding:3px 6px}
+ .cc-t .b{font-size:15px;color:var(--neutralFg1)}
+ .cc-t .m{font-size:12px;color:var(--neutralFg3)}
+ .cc-t .cempty{color:var(--neutralStroke1)}
+ .cc-s{margin-top:8px;font-size:12px;color:var(--neutralFg3);line-height:1.45;
+  border-top:1px solid var(--neutralBg3);padding-top:8px}
+ /* 마법사 폼 */
+ .wiz{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ .wiz label{display:flex;flex-direction:column;gap:5px;font-size:13px;
+  font-weight:600;color:var(--neutralFg2)}
+ .wiz select,.wiz input{font:inherit;font-size:14px;font-weight:400;padding:9px 11px;
+  border:1px solid var(--neutralStroke1);border-radius:var(--radiusMd);
+  background:var(--neutralBg1);color:var(--neutralFg1)}
+ .wiz-btns{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+ .wiz-note{grid-column:1/-1;font-size:12px;color:var(--neutralFg3);margin:2px 0 0}
+ @media (max-width:560px){.wiz{grid-template-columns:1fr}}
+ /* 하단 트레이 공간 */
+ body{padding-bottom:88px}
+
  /* ===== 표 ===== */
  .wrap{overflow-x:auto;border:1px solid var(--neutralStroke2);
   border-radius:var(--radiusXl);box-shadow:var(--shadow2)}
@@ -271,7 +342,7 @@ __FONTCSS__
 <div id="hero" class="hero" aria-live="polite"></div>
 
 <div class="stickybar">
- <div class="toolbar">
+ <div class="barrow primary">
   <div class="seg" id="seg" role="tablist" aria-label="상품 종류">
   <button data-p="deposit"><svg viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
@@ -283,29 +354,37 @@ __FONTCSS__
    <path d="M5.5 6.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/>
    <path d="M5.5 11.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/></svg>적금</button>
   </div>
-  <input id="q" class="search" type="search" placeholder="상품명·은행 검색"
+  <button id="wizOpen" class="btn-primary" type="button">✨ 내 조건으로 찾기</button>
+ </div>
+ <div class="chips" id="chips" role="group" aria-label="은행 선택"></div>
+ <div class="barrow refine">
+  <input id="q" class="search" type="search" placeholder="상품·은행 검색"
    aria-label="상품 검색" autocomplete="off">
+  <select id="term-sel" class="sort" aria-label="기간 선택"></select>
   <select id="sort" class="sort" aria-label="정렬 기준">
    <option value="max">최고우대금리순</option>
    <option value="base">기본금리순</option>
    <option value="name">상품명순</option>
   </select>
  </div>
- <div class="chips" id="chips" role="group" aria-label="은행 선택"></div>
- <div class="chips terms" id="terms" role="group" aria-label="기간 선택"></div>
 </div>
 
 <div id="view"></div>
 
 <p class="legend">큰 숫자=<b>기본금리(%)</b>, 작은 숫자=최고우대금리(%) ·
- 은행 칩은 여러 개 동시 선택, 기간 칩·검색·정렬로 좁혀보세요 ·
+ 은행 칩은 여러 개 동시 선택, 기간·정렬 드롭다운과 검색으로 좁히고,
+ <b>＋담기</b>로 2~4개를 골라 <b>나란히 비교</b>하세요 ·
  <span class="badge">BEST</span>=현재 목록 중 최고우대 1위 · 빈칸(·)은 해당 기간 미판매</p>
 <p class="legend">※ 표시 금리는 세전·연이율이며 우대금리는 조건 충족 시 적용됩니다.
  상품별 단리/복리·과세 조건이 다를 수 있으니 가입 전 각 은행 약관을 확인하세요.</p>
 
+<div id="tray" class="tray" hidden></div>
+<div id="overlay" class="overlay" hidden><div class="sheet" id="sheet"></div></div>
+
 <script>
 const APP = __DATA__;
-const state = {product:'deposit', banks:new Set(), term:'전체', q:'', sort:'max'};
+const state = {product:'deposit', banks:new Set(), term:'전체', q:'', sort:'max',
+  compare:[], modal:null, online:false, amount:0};
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const isNum = v => /^\d+$/.test(String(v));
@@ -332,6 +411,114 @@ function renderHero(){
    mk('오늘의 최고 적금', ICON_SAV, heroBest(APP.saving));
 }
 
+// ===== 비교 트레이 · 마법사 · 예상이자 =====
+function isOnline(jw){ return /인터넷|스마트폰|모바일|비대면|폰뱅킹|온라인/.test(jw||''); }
+function allGroups(product){ return pivot(APP[product]||[]).arr; }
+function groupByKey(product,key){ return allGroups(product).find(g => g.key===key) || null; }
+function won(n){ return n==null?'':('약 '+Number(n).toLocaleString('ko-KR')+'원'); }
+function estInterest(product, base, term, amount){
+ if(!base || !amount || !term) return null;
+ const r = base/100;
+ if(product==='deposit') return Math.round(amount*r*term/12);          // 예금 단리 세전
+ return Math.round(amount*r*(term*(term+1)/2)/12);                     // 적금 단리 세전
+}
+function toggleCompare(key){
+ const i = state.compare.indexOf(key);
+ if(i>=0) state.compare.splice(i,1);
+ else { if(state.compare.length>=4){ alert('최대 4개까지 비교할 수 있어요.'); return; }
+   state.compare.push(key); }
+ render();
+}
+function renderTray(){
+ const el = document.getElementById('tray');
+ if(!state.compare.length){ el.hidden = true; el.innerHTML=''; return; }
+ el.hidden = false;
+ const chips = state.compare.map(k => {
+  const g = groupByKey(state.product,k); const nm = g?g.product:k;
+  return `<button class="traychip" data-k="${esc(k)}" title="빼기">${esc(nm)} ✕</button>`;
+ }).join('');
+ el.innerHTML = `<div class="trayinner"><span class="traycount">비교함 ${state.compare.length}/4</span>`+
+  `<div class="traychips">${chips}</div>`+
+  `<button class="btn-primary" id="cmpOpen" type="button">나란히 비교 →</button>`+
+  `<button class="btn-ghost" id="cmpClear" type="button">비우기</button></div>`;
+ el.querySelectorAll('.traychip').forEach(b => b.onclick = () => toggleCompare(b.dataset.k));
+ document.getElementById('cmpOpen').onclick = () => { state.modal='compare'; renderOverlay(); };
+ document.getElementById('cmpClear').onclick = () => { state.compare=[]; render(); };
+}
+function renderOverlay(){
+ const ov = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+ if(!state.modal){ ov.hidden = true; sheet.innerHTML=''; return; }
+ ov.hidden = false;
+ sheet.innerHTML = state.modal==='compare' ? compareHTML() : wizardHTML();
+ ov.onclick = e => { if(e.target===ov) closeOverlay(); };
+ sheet.querySelectorAll('[data-close]').forEach(b => b.onclick = closeOverlay);
+ sheet.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => {
+  const i = state.compare.indexOf(b.dataset.rm); if(i>=0) state.compare.splice(i,1);
+  if(!state.compare.length){ closeOverlay(); render(); } else { renderOverlay(); render(); }
+ });
+ const form = document.getElementById('wizForm');
+ if(form) form.onsubmit = e => {
+  e.preventDefault();
+  const f = new FormData(form);
+  state.product = f.get('product');
+  state.term = f.get('term');
+  state.online = f.get('online')==='1';
+  state.amount = parseInt(f.get('amount'),10) || 0;
+  state.compare = [];
+  closeOverlay(); render();
+  document.getElementById('view').scrollIntoView({behavior:'smooth', block:'start'});
+ };
+}
+function closeOverlay(){ state.modal = null; renderOverlay(); }
+function compareHTML(){
+ const groups = state.compare.map(k => groupByKey(state.product,k)).filter(Boolean);
+ if(!groups.length) return `<div class="sheet-h"><b>나란히 비교</b>`+
+   `<button class="x" data-close>✕</button></div><p class="empty">담은 상품이 없습니다.</p>`;
+ const terms = [...new Set(groups.flatMap(g => Object.keys(g.cells).map(Number)))].sort((a,b)=>a-b);
+ const bestPer = {};
+ terms.forEach(t => { let mv=-1; groups.forEach(g => { const c=g.cells[t]; if(c&&(c.mx||0)>mv) mv=c.mx||0; }); bestPer[t]=mv; });
+ const cards = groups.map(g => {
+  const rows = terms.map(t => {
+   const c = g.cells[t];
+   if(!c) return `<tr><th>${t}개월</th><td class="cempty">·</td></tr>`;
+   const hi = (c.mx===bestPer[t]) ? ' class="hi"' : '';
+   return `<tr><th>${t}개월</th><td${hi}><span class="b">${c.base==null?'-':c.base}</span> `+
+     `<span class="m">최고 ${c.mx==null?'-':c.mx}</span></td></tr>`;
+  }).join('');
+  const on = isOnline(g.joinway) ? '<span class="onbadge">비대면</span>' : '';
+  return `<div class="ccard"><div class="cc-h">${esc(g.bank)}${on}`+
+   `<button class="x" data-rm="${esc(g.key)}" title="빼기">✕</button></div>`+
+   `<div class="cc-p">${esc(g.product)}${g.rsv?` <span class="tag">${esc(g.rsv)}</span>`:''}</div>`+
+   `<table class="cc-t">${rows}</table>`+
+   `<div class="cc-s">${esc(g.spcl||'-')}</div></div>`;
+ }).join('');
+ return `<div class="sheet-h"><b>나란히 비교 <small>${groups.length}개 · 칠해진 칸=기간별 최고</small></b>`+
+   `<button class="x" data-close>✕</button></div><div class="ccards">${cards}</div>`;
+}
+function wizardHTML(){
+ const termsAvail = [...new Set((APP[state.product]||[]).filter(r=>isNum(r.term_months))
+   .map(r=>+r.term_months))].sort((a,b)=>a-b);
+ const topts = termsAvail.map(t => `<option value="${t}"${String(state.term)===String(t)?' selected':''}>${t}개월</option>`).join('');
+ const isDep = state.product==='deposit';
+ return `<div class="sheet-h"><b>✨ 내 조건으로 찾기</b><button class="x" data-close>✕</button></div>
+ <form id="wizForm" class="wiz">
+  <label>상품<select name="product">
+   <option value="deposit"${isDep?' selected':''}>예금 (목돈 예치)</option>
+   <option value="saving"${!isDep?' selected':''}>적금 (매월 납입)</option></select></label>
+  <label>기간<select name="term"><option value="전체">상관없음</option>${topts}</select></label>
+  <label>가입방법<select name="online">
+   <option value="0"${!state.online?' selected':''}>상관없음</option>
+   <option value="1"${state.online?' selected':''}>비대면(앱·인터넷)만</option></select></label>
+  <label>${isDep?'예치금액(원)':'월 납입액(원)'}
+   <input name="amount" type="number" min="0" step="10000" inputmode="numeric"
+    placeholder="예: 1000000" value="${state.amount||''}"></label>
+  <div class="wiz-btns"><button type="button" class="btn-ghost" data-close>취소</button>
+   <button type="submit" class="btn-primary">추천 받기</button></div>
+  <p class="wiz-note">※ 금액을 넣으면 예상이자(세전·단리 근사치)를 함께 보여줍니다.
+   기간을 고르면 해당 기간 기준으로 계산합니다.</p>
+ </form>`;
+}
+
 function pivot(rows){
  const terms = [...new Set(rows.filter(r => isNum(r.term_months))
    .map(r => +r.term_months))].sort((a,b) => a-b);
@@ -340,8 +527,9 @@ function pivot(rows){
   if(!isNum(r.term_months)) continue;
   const key = r.bank+'¦'+r.product+'¦'+(r.reserve_type||'');
   let g = groups.get(key);
-  if(!g){ g={bank:r.bank, product:r.product, rsv:r.reserve_type||'', cells:{}, spcl:''};
-   groups.set(key,g); }
+  if(!g){ g={key, bank:r.bank, product:r.product, rsv:r.reserve_type||'',
+    joinway:r.join_way||'', cells:{}, spcl:''}; groups.set(key,g); }
+  if(!g.joinway && r.join_way) g.joinway = r.join_way;
   const t = +r.term_months;
   const base = parseFloat(r.base_rate), mx = parseFloat(r.max_rate);
   const cell = {base:isNaN(base)?null:base, mx:isNaN(mx)?null:mx};
@@ -364,8 +552,10 @@ function render(){
   const on = b.dataset.p === state.product;
   b.classList.toggle('on', on);
   b.setAttribute('role','tab'); b.setAttribute('aria-selected', on);
-  b.onclick = () => { state.product = b.dataset.p; state.term = '전체'; render(); };
+  b.onclick = () => { state.product = b.dataset.p; state.term = '전체'; state.compare = []; render(); };
  });
+ // 마법사 열기
+ document.getElementById('wizOpen').onclick = () => { state.modal = 'wizard'; renderOverlay(); };
  // 정렬 / 검색
  const sortEl = document.getElementById('sort');
  sortEl.value = state.sort;
@@ -392,17 +582,14 @@ function render(){
 
  const productRows = APP[state.product] || [];
 
- // 기간 칩
+ // 기간 선택(드롭다운)
  const termsAvail = [...new Set(productRows.filter(r => isNum(r.term_months))
    .map(r => +r.term_months))].sort((a,b) => a-b);
- const termEl = document.getElementById('terms');
- termEl.innerHTML = ['전체', ...termsAvail].map(t => {
-  const on = String(state.term) === String(t);
-  const lbl = t === '전체' ? '전체 기간' : t+'개월';
-  return `<button class="chip${on?' on':''}" data-t="${t}" aria-pressed="${on}">${lbl}</button>`;
- }).join('');
- termEl.querySelectorAll('button').forEach(btn =>
-  btn.onclick = () => { state.term = btn.dataset.t; render(); });
+ const termSel = document.getElementById('term-sel');
+ termSel.innerHTML = `<option value="전체">전체 기간</option>` +
+   termsAvail.map(t => `<option value="${t}">${t}개월</option>`).join('');
+ termSel.value = String(state.term);
+ termSel.onchange = () => { state.term = termSel.value; render(); };
 
  // 필터 + 피벗
  let rows = productRows;
@@ -411,9 +598,10 @@ function render(){
  const focus = state.term !== '전체' ? +state.term : null;
  const dispTerms = focus ? terms.filter(t => t === focus) : terms;
 
- // 검색 + 기간 보유 필터
- const q = state.q.trim().toLowerCase();
+ // 필터: 비대면 → 검색 → 기간 보유
  let items = arr;
+ if(state.online) items = items.filter(g => isOnline(g.joinway));
+ const q = state.q.trim().toLowerCase();
  if(q) items = items.filter(g => (g.product+' '+g.bank+' '+g.rsv).toLowerCase().includes(q));
  if(focus) items = items.filter(g => g.cells[focus]);
 
@@ -437,11 +625,12 @@ function render(){
  const title = state.banks.size === 0 ? '전체 은행'
    : APP.banks.filter(b => state.banks.has(b)).join(', ');
  const focusLbl = focus ? ` · ${focus}개월` : '';
+ const onLbl = state.online ? ' · 비대면' : '';
 
  if(!items.length){
-  view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl}</h2>`+
+  view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl}${onLbl}</h2>`+
    `<p class="empty">해당 조건의 상품이 없습니다. 필터를 줄여보세요.</p>`;
-  return;
+  renderTray(); renderOverlay(); return;
  }
  const showBank = state.banks.size !== 1;
  const ths = dispTerms.map(t => `<th class="num">${t}개월</th>`).join('');
@@ -451,6 +640,13 @@ function render(){
   prevBank = g.bank;
   const tag = g.rsv ? ` <span class="tag">${esc(g.rsv)}</span>` : '';
   const badge = g === bestG ? ` <span class="badge">BEST</span>` : '';
+  const inCmp = state.compare.includes(g.key);
+  const addBtn = `<button class="add${inCmp?' on':''}" data-k="${esc(g.key)}" aria-pressed="${inCmp}">${inCmp?'담음 ✓':'＋ 담기'}</button>`;
+  let estLine = '';
+  if(state.amount > 0 && focus){
+   const c = g.cells[focus]; const e = c ? estInterest(state.product, c.base, focus, state.amount) : null;
+   if(e != null) estLine = `<span class="est">예상이자 ${won(e)} <small>(세전·기본금리)</small></span>`;
+  }
   let cells = '';
   for(const t of dispTerms){
    const c = g.cells[t];
@@ -461,13 +657,15 @@ function render(){
   }
   const bankCell = showBank ? `<td class="bank" data-label="은행">${esc(g.bank)}</td>` : '';
   trs += `<tr class="${sep.trim()}">${bankCell}`+
-   `<td class="prod" data-label="상품">${esc(g.product)}${tag}${badge}</td>`+
+   `<td class="prod" data-label="상품">${esc(g.product)}${tag}${badge}${addBtn}${estLine}</td>`+
    `${cells}<td class="spcl" data-label="우대조건">${esc(g.spcl||'-')}</td></tr>`;
  }
  const bankTh = showBank ? '<th>은행</th>' : '';
- view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl} <small>· ${items.length}개 상품</small></h2>`+
+ view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl}${onLbl} <small>· ${items.length}개 상품</small></h2>`+
   `<div class="wrap"><table><thead><tr>${bankTh}<th>상품명</th>${ths}`+
   `<th>우대조건</th></tr></thead><tbody>${trs}</tbody></table></div>`;
+ view.querySelectorAll('.add').forEach(b => b.onclick = () => toggleCompare(b.dataset.k));
+ renderTray(); renderOverlay();
 }
 render();
 </script>
