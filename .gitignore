@@ -2,3 +2,7 @@
 금리표_*.html
 launchd.log
 __pycache__/
+
+# 대시보드 가상환경 / 로그
+dashboard/.venv/
+dashboard/*.log
