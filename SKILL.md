@@ -94,6 +94,30 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.hapyonny.bankrates.p
 ```
 > 컴퓨터가 켜져 있어야 실행됩니다. 7시에 꺼져 있었으면 다음 부팅 후 보충 실행됩니다.
 
+## Streamlit 대시보드 (dashboard/)
+
+리포트(`금리표_latest.html`)와 **동일한 디자인**(Fluent 2 + Pretendard)의 인터랙티브 대시보드.
+
+```bash
+cd dashboard
+./run.sh          # 수동 실행 → http://localhost:8501
+```
+- 컨트롤: 예금/적금 칩(st.pills), 은행 다중선택 칩
+- 탭: ① 기간별 비교표(리포트와 동일 마크업) ② 은행별 비교(막대 + 은행×기간 히트맵)
+  ③ 우대조건 키워드 분석(조건 키워드 빈도 + 원문 단어 TOP) ④ 전체 데이터 + CSV
+- 의존성: `dashboard/requirements.txt` (venv는 `dashboard/.venv`, git 제외)
+
+### 대시보드 매일 자동 실행 (오전 7:05 + 로그인 시)
+- LaunchAgent: `~/Library/LaunchAgents/com.hapyonny.bankdashboard.plist`
+- 래퍼: `dashboard/serve.sh` (기존 8501 정리 → 재기동 → 브라우저 자동 오픈)
+- 로그: `dashboard/dashboard.log`
+```bash
+# 즉시 재시작 / 끄기·켜기
+launchctl kickstart -k gui/$(id -u)/com.hapyonny.bankdashboard
+launchctl bootout   gui/$(id -u) ~/Library/LaunchAgents/com.hapyonny.bankdashboard.plist
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.hapyonny.bankdashboard.plist
+```
+
 ## 결과 정리 팁
 
 사용자에게 답할 때는 스크립트 출력 표를 그대로 보여주거나, `--json` 결과를 받아
