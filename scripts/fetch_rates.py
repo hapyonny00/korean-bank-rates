@@ -175,6 +175,40 @@ __FONTCSS__
  .chip.on{background:var(--brandFg);border-color:var(--brandFg);
   color:#fff;font-weight:600}
 
+ /* 스티키 툴바 */
+ .stickybar{position:sticky;top:0;z-index:5;background:var(--neutralBg1);
+  padding:12px 0 14px;border-bottom:1px solid var(--neutralStroke2)}
+ .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:12px}
+ .search{flex:1 1 220px;min-width:150px;font:inherit;font-size:14px;
+  padding:9px 12px;border:1px solid var(--neutralStroke1);
+  border-radius:var(--radiusMd);background:var(--neutralBg1);color:var(--neutralFg1)}
+ .search::placeholder{color:var(--neutralFg3)}
+ .sort{font:inherit;font-size:14px;padding:9px 12px;cursor:pointer;
+  border:1px solid var(--neutralStroke1);border-radius:var(--radiusMd);
+  background:var(--neutralBg1);color:var(--neutralFg1)}
+ .terms{margin-top:10px}
+ .terms .chip{padding:5px 13px;font-size:13px}
+ /* 포커스 접근성 (Fluent focus stroke) */
+ :focus-visible{outline:2px solid var(--brandFg);outline-offset:2px;
+  border-radius:var(--radiusMd)}
+ /* BEST 배지 */
+ .badge{display:inline-block;font-size:11px;font-weight:700;color:#fff;
+  background:var(--brandFg);border-radius:var(--radiusPill);
+  padding:1px 8px;margin-left:6px;vertical-align:middle;letter-spacing:.3px}
+ /* 히어로(오늘의 베스트) */
+ .hero{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 4px}
+ .hcard{border:1px solid var(--neutralStroke2);border-radius:var(--radiusXl);
+  padding:16px 18px;box-shadow:var(--shadow2);
+  background:linear-gradient(180deg,var(--neutralBg1),var(--neutralBg2))}
+ .hcard .k{font-size:13px;color:var(--neutralFg3);font-weight:600;
+  display:flex;align-items:center;gap:6px}
+ .hcard .k svg{width:16px;height:16px;color:var(--brandFg);flex:none}
+ .hcard .v{font-size:30px;font-weight:700;margin:6px 0 2px;line-height:1.1}
+ .hcard .v small{font-size:14px;font-weight:600;color:var(--neutralFg3)}
+ .hcard .d{font-size:13px;color:var(--neutralFg2);line-height:1.45}
+ .hcard .d b{font-weight:600}
+ @media (max-width:560px){.hero{grid-template-columns:1fr}}
+
  /* ===== 표 ===== */
  .wrap{overflow-x:auto;border:1px solid var(--neutralStroke2);
   border-radius:var(--radiusXl);box-shadow:var(--shadow2)}
@@ -234,9 +268,11 @@ __FONTCSS__
  <path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3.5 21h17"/></svg>
  한국 은행 예·적금 금리</h1>
 <p class="meta" id="meta"></p>
+<div id="hero" class="hero" aria-live="polite"></div>
 
-<div class="controls">
- <div class="seg" id="seg">
+<div class="stickybar">
+ <div class="toolbar">
+  <div class="seg" id="seg" role="tablist" aria-label="상품 종류">
   <button data-p="deposit"><svg viewBox="0 0 24 24" fill="none"
    stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
    stroke-linejoin="round"><rect x="2.5" y="6.5" width="19" height="11" rx="2"/>
@@ -246,23 +282,55 @@ __FONTCSS__
    stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="6.5" ry="2.6"/>
    <path d="M5.5 6.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/>
    <path d="M5.5 11.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/></svg>적금</button>
+  </div>
+  <input id="q" class="search" type="search" placeholder="상품명·은행 검색"
+   aria-label="상품 검색" autocomplete="off">
+  <select id="sort" class="sort" aria-label="정렬 기준">
+   <option value="max">최고우대금리순</option>
+   <option value="base">기본금리순</option>
+   <option value="name">상품명순</option>
+  </select>
  </div>
- <div class="chips" id="chips"></div>
+ <div class="chips" id="chips" role="group" aria-label="은행 선택"></div>
+ <div class="chips terms" id="terms" role="group" aria-label="기간 선택"></div>
 </div>
 
 <div id="view"></div>
 
 <p class="legend">큰 숫자=<b>기본금리(%)</b>, 작은 숫자=최고우대금리(%) ·
- 은행 칩으로 골라보고 예금/적금을 전환하세요 · 빈칸(·)은 해당 기간 미판매 ·
- 맨 오른쪽 열에서 우대조건 확인</p>
+ 은행 칩은 여러 개 동시 선택, 기간 칩·검색·정렬로 좁혀보세요 ·
+ <span class="badge">BEST</span>=현재 목록 중 최고우대 1위 · 빈칸(·)은 해당 기간 미판매</p>
+<p class="legend">※ 표시 금리는 세전·연이율이며 우대금리는 조건 충족 시 적용됩니다.
+ 상품별 단리/복리·과세 조건이 다를 수 있으니 가입 전 각 은행 약관을 확인하세요.</p>
 
 <script>
 const APP = __DATA__;
-const state = {product:'deposit', banks:new Set()};  // 빈 Set = 전체
+const state = {product:'deposit', banks:new Set(), term:'전체', q:'', sort:'max'};
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const isNum = v => /^\d+$/.test(String(v));
 const bestMax = g => Math.max(0, ...Object.values(g.cells).map(c => c.mx||0));
+const ICON_DEP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.5" width="19" height="11" rx="2"/><circle cx="12" cy="12" r="2.4"/></svg>';
+const ICON_SAV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="6.5" ry="2.6"/><path d="M5.5 6.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/><path d="M5.5 11.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/></svg>';
+
+function heroBest(list){
+ let best = null;
+ for(const r of list){
+  const mx = parseFloat(r.max_rate); if(isNaN(mx)) continue;
+  if(!best || mx > best.mx) best = {mx, base:parseFloat(r.base_rate), bank:r.bank,
+    product:r.product, term:r.term_months, rsv:r.reserve_type||''};
+ }
+ return best;
+}
+function renderHero(){
+ const mk = (label, icon, b) => b ? `<div class="hcard"><div class="k">${icon}${label}</div>`+
+   `<div class="v">${b.mx}<small>%</small></div>`+
+   `<div class="d"><b>${esc(b.bank)}</b> · ${esc(b.product)} · ${b.term}개월`+
+   `${b.rsv?' · '+esc(b.rsv):''} · 기본 ${isNaN(b.base)?'-':b.base}%</div></div>` : '';
+ document.getElementById('hero').innerHTML =
+   mk('오늘의 최고 예금', ICON_DEP, heroBest(APP.deposit)) +
+   mk('오늘의 최고 적금', ICON_SAV, heroBest(APP.saving));
+}
 
 function pivot(rows){
  const terms = [...new Set(rows.filter(r => isNum(r.term_months))
@@ -289,19 +357,32 @@ function pivot(rows){
 function render(){
  document.getElementById('meta').textContent =
   '공시기준 '+APP.dcls+' · 조회시각 '+APP.now+' · 출처: 금융감독원 금융상품통합비교공시';
- // 세그먼트
+ renderHero();
+
+ // 세그먼트(탭)
  document.querySelectorAll('#seg button').forEach(b => {
-  b.classList.toggle('on', b.dataset.p === state.product);
-  b.onclick = () => { state.product = b.dataset.p; render(); };
+  const on = b.dataset.p === state.product;
+  b.classList.toggle('on', on);
+  b.setAttribute('role','tab'); b.setAttribute('aria-selected', on);
+  b.onclick = () => { state.product = b.dataset.p; state.term = '전체'; render(); };
  });
+ // 정렬 / 검색
+ const sortEl = document.getElementById('sort');
+ sortEl.value = state.sort;
+ sortEl.onchange = () => { state.sort = sortEl.value; render(); };
+ const qEl = document.getElementById('q');
+ if(document.activeElement !== qEl) qEl.value = state.q;
+ qEl.oninput = () => { state.q = qEl.value; render(); };
+
  // 은행 칩 (다중 선택 — 빈 선택 = 전체)
  const chipEl = document.getElementById('chips');
  const allOn = state.banks.size === 0;
  chipEl.innerHTML =
-  `<button class="chip${allOn?' on':''}" data-b="__ALL__">전체</button>` +
-  APP.banks.map(b =>
-   `<button class="chip${state.banks.has(b)?' on':''}" data-b="${esc(b)}">${esc(b)}</button>`
-  ).join('');
+  `<button class="chip${allOn?' on':''}" data-b="__ALL__" aria-pressed="${allOn}">전체</button>` +
+  APP.banks.map(b => {
+   const on = state.banks.has(b);
+   return `<button class="chip${on?' on':''}" data-b="${esc(b)}" aria-pressed="${on}">${esc(b)}</button>`;
+  }).join('');
  chipEl.querySelectorAll('button').forEach(btn => btn.onclick = () => {
   const b = btn.dataset.b;
   if(b === '__ALL__') state.banks.clear();
@@ -309,29 +390,69 @@ function render(){
   render();
  });
 
- // 데이터 필터 + 피벗
- let rows = APP[state.product] || [];
+ const productRows = APP[state.product] || [];
+
+ // 기간 칩
+ const termsAvail = [...new Set(productRows.filter(r => isNum(r.term_months))
+   .map(r => +r.term_months))].sort((a,b) => a-b);
+ const termEl = document.getElementById('terms');
+ termEl.innerHTML = ['전체', ...termsAvail].map(t => {
+  const on = String(state.term) === String(t);
+  const lbl = t === '전체' ? '전체 기간' : t+'개월';
+  return `<button class="chip${on?' on':''}" data-t="${t}" aria-pressed="${on}">${lbl}</button>`;
+ }).join('');
+ termEl.querySelectorAll('button').forEach(btn =>
+  btn.onclick = () => { state.term = btn.dataset.t; render(); });
+
+ // 필터 + 피벗
+ let rows = productRows;
  if(state.banks.size) rows = rows.filter(r => state.banks.has(r.bank));
  const {terms, arr} = pivot(rows);
+ const focus = state.term !== '전체' ? +state.term : null;
+ const dispTerms = focus ? terms.filter(t => t === focus) : terms;
+
+ // 검색 + 기간 보유 필터
+ const q = state.q.trim().toLowerCase();
+ let items = arr;
+ if(q) items = items.filter(g => (g.product+' '+g.bank+' '+g.rsv).toLowerCase().includes(q));
+ if(focus) items = items.filter(g => g.cells[focus]);
+
+ // 정렬
+ const metric = g => focus
+   ? (g.cells[focus] ? (state.sort==='base'?g.cells[focus].base:g.cells[focus].mx)||0 : 0)
+   : (state.sort==='base' ? Math.max(0,...Object.values(g.cells).map(c=>c.base||0)) : bestMax(g));
+ items = (state.sort === 'name')
+   ? items.slice().sort((a,b) => a.product.localeCompare(b.product,'ko'))
+   : items.slice().sort((a,b) => metric(b) - metric(a));
+
+ // BEST(현재 목록 최고우대 1위)
+ let bestG = null, mv = -1;
+ for(const g of items){
+  const v = focus ? (g.cells[focus]?g.cells[focus].mx||0:0) : bestMax(g);
+  if(v > mv){ mv = v; bestG = g; }
+ }
+
  const view = document.getElementById('view');
  const pname = state.product === 'deposit' ? '정기예금' : '적금';
  const title = state.banks.size === 0 ? '전체 은행'
    : APP.banks.filter(b => state.banks.has(b)).join(', ');
+ const focusLbl = focus ? ` · ${focus}개월` : '';
 
- if(!arr.length){
-  view.innerHTML = `<h2>${esc(title)} · ${pname}</h2>`+
-   `<p class="empty">해당 조건의 상품이 없습니다.</p>`;
+ if(!items.length){
+  view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl}</h2>`+
+   `<p class="empty">해당 조건의 상품이 없습니다. 필터를 줄여보세요.</p>`;
   return;
  }
  const showBank = state.banks.size !== 1;
- const ths = terms.map(t => `<th class="num">${t}개월</th>`).join('');
+ const ths = dispTerms.map(t => `<th class="num">${t}개월</th>`).join('');
  let trs = '', prevBank = null;
- for(const g of arr){
+ for(const g of items){
   const sep = (showBank && prevBank && g.bank !== prevBank) ? ' rowsep' : '';
   prevBank = g.bank;
   const tag = g.rsv ? ` <span class="tag">${esc(g.rsv)}</span>` : '';
+  const badge = g === bestG ? ` <span class="badge">BEST</span>` : '';
   let cells = '';
-  for(const t of terms){
+  for(const t of dispTerms){
    const c = g.cells[t];
    if(!c){ cells += `<td class="num cempty" data-label="${t}개월">·</td>`; continue; }
    cells += `<td class="num" data-label="${t}개월">`+
@@ -340,11 +461,11 @@ function render(){
   }
   const bankCell = showBank ? `<td class="bank" data-label="은행">${esc(g.bank)}</td>` : '';
   trs += `<tr class="${sep.trim()}">${bankCell}`+
-   `<td class="prod" data-label="상품">${esc(g.product)}${tag}</td>`+
+   `<td class="prod" data-label="상품">${esc(g.product)}${tag}${badge}</td>`+
    `${cells}<td class="spcl" data-label="우대조건">${esc(g.spcl||'-')}</td></tr>`;
  }
  const bankTh = showBank ? '<th>은행</th>' : '';
- view.innerHTML = `<h2>${esc(title)} · ${pname} <small>· ${arr.length}개 상품</small></h2>`+
+ view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl} <small>· ${items.length}개 상품</small></h2>`+
   `<div class="wrap"><table><thead><tr>${bankTh}<th>상품명</th>${ths}`+
   `<th>우대조건</th></tr></thead><tbody>${trs}</tbody></table></div>`;
 }
