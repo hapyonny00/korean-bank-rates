@@ -1,0 +1,4 @@
+# 생성 결과물 / 로그 (매일 자동 생성)
+금리표_*.html
+launchd.log
+__pycache__/
