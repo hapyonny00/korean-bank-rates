@@ -206,61 +206,79 @@ def write_html(out, path):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>은행 예·적금 금리</title>
 <style>
- :root{{color-scheme:light}}
- body{{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;margin:0;
-  padding:24px;background:#fff;color:#1a1a1a}}
- h1{{font-size:22px;margin:0 0 4px}}
- h2{{font-size:16px;margin:32px 0 6px}}
- h2 small{{font-weight:400;color:#888;font-size:12px}}
- .meta{{color:#666;font-size:13px;margin:0}}
- .wrap{{overflow-x:auto;border:1px solid #ececef;border-radius:10px}}
- table{{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}}
- th,td{{padding:7px 10px;text-align:left;border-bottom:1px solid #f0f0f2;
-  vertical-align:top}}
- thead th{{background:#fafafb;position:sticky;top:0;z-index:2;color:#555;
-  font-weight:600;border-bottom:2px solid #e7e7ea}}
+ /* ===== Microsoft Fluent 2 디자인 토큰 ===== */
+ :root{{
+  color-scheme:light;
+  --neutralFg1:#242424; --neutralFg2:#424242; --neutralFg3:#616161;
+  --neutralBg1:#ffffff; --neutralBg2:#fafafa; --neutralBg3:#f5f5f5;
+  --neutralStroke1:#d1d1d1; --neutralStroke2:#e0e0e0;
+  --brandFg:#0f6cbd;
+  --radiusMd:4px; --radiusLg:6px; --radiusXl:8px;
+  --shadow2:0 1px 2px rgba(0,0,0,.14),0 0 2px rgba(0,0,0,.12);
+  --fontBase:'Segoe UI Variable','Segoe UI','Apple SD Gothic Neo',
+   'Malgun Gothic',system-ui,sans-serif;
+ }}
+ body{{font-family:var(--fontBase);margin:0;padding:24px;
+  background:var(--neutralBg1);color:var(--neutralFg1);
+  font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;letter-spacing:.1px}}
+ /* Fluent type ramp: title2 / subtitle1 / caption */
+ h1{{font-size:28px;font-weight:600;margin:0 0 4px;line-height:1.25}}
+ h2{{font-size:20px;font-weight:600;margin:36px 0 8px;line-height:1.3}}
+ h2 small{{font-weight:400;color:var(--neutralFg3);font-size:13px}}
+ .meta{{color:var(--neutralFg3);font-size:13px;margin:0}}
+ .wrap{{overflow-x:auto;border:1px solid var(--neutralStroke2);
+  border-radius:var(--radiusXl);box-shadow:var(--shadow2)}}
+ table{{border-collapse:separate;border-spacing:0;width:100%;font-size:15px}}
+ th,td{{padding:10px 14px;text-align:left;
+  border-bottom:1px solid var(--neutralStroke2);vertical-align:top}}
+ thead th{{background:var(--neutralBg3);position:sticky;top:0;z-index:2;
+  color:var(--neutralFg2);font-weight:600;font-size:14px;
+  border-bottom:1px solid var(--neutralStroke1)}}
  .num{{text-align:center;white-space:nowrap}}
- td.num b{{font-size:14px;color:#0a5}}
- td.num.empty{{color:#ccc}}
- .base{{display:block;font-size:10px;color:#9a9a9a;font-weight:400;margin-top:1px}}
- .bank{{font-weight:700;white-space:nowrap;color:#2a2a2a}}
- .prod{{color:#333;min-width:180px}}
- .spcl{{color:#666;font-size:12px;line-height:1.45;min-width:280px;
-  max-width:420px;white-space:normal}}
- .tag{{font-size:10px;color:#0a5;border:1px solid #bfe6d2;border-radius:4px;
-  padding:0 4px;margin-left:4px;vertical-align:middle}}
- tr.rowsep td{{border-top:2px solid #e7e7ea}}
- tbody tr:hover td{{background:#f6f9f7}}
- .empty{{color:#999}}
- .legend{{font-size:12px;color:#888;margin-top:10px}}
- .legend b{{color:#0a5}}
+ /* 최고우대금리: 강조 제거(중립색·일반 굵기), 기본 폰트 확대 */
+ td.num b{{font-size:17px;font-weight:400;color:var(--neutralFg1)}}
+ td.num.cempty{{color:var(--neutralStroke1)}}
+ .base{{display:block;font-size:14px;color:var(--neutralFg3);
+  font-weight:400;margin-top:2px}}
+ .bank{{font-weight:600;white-space:nowrap;color:var(--neutralFg1)}}
+ .prod{{color:var(--neutralFg2);min-width:180px}}
+ .spcl{{color:var(--neutralFg3);font-size:13px;line-height:1.5;
+  min-width:280px;max-width:420px;white-space:normal}}
+ .tag{{font-size:12px;color:var(--neutralFg2);background:var(--neutralBg3);
+  border:1px solid var(--neutralStroke2);border-radius:var(--radiusMd);
+  padding:1px 6px;margin-left:6px;vertical-align:middle}}
+ tr.rowsep td{{border-top:1px solid var(--neutralStroke1)}}
+ tbody tr:hover td{{background:var(--neutralBg2)}}
+ .empty{{color:var(--neutralFg3)}}
+ .legend{{font-size:13px;color:var(--neutralFg3);margin-top:12px}}
+ .legend b{{color:var(--neutralFg2);font-weight:600}}
 
  /* ===== 반응형: 좁은 화면(모바일)에서는 상품별 카드로 ===== */
  @media (max-width:720px){{
-  body{{padding:14px}}
-  h1{{font-size:18px}}
-  .wrap{{border:none;overflow:visible}}
+  body{{padding:16px;font-size:15px}}
+  h1{{font-size:24px}} h2{{font-size:18px}}
+  .wrap{{border:none;overflow:visible;box-shadow:none}}
   table,thead,tbody,tr,td{{display:block;width:auto}}
   thead{{display:none}}
-  tr{{border:1px solid #e7e7ea;border-radius:12px;margin:0 0 12px;
-   padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}}
+  tr{{border:1px solid var(--neutralStroke2);border-radius:var(--radiusXl);
+   margin:0 0 14px;padding:14px 16px;box-shadow:var(--shadow2)}}
   tr.rowsep td{{border-top:none}}
-  td{{border:none;padding:3px 0;text-align:left;white-space:normal}}
-  td.bank{{font-size:15px;font-weight:800;padding-top:0}}
-  td.prod{{color:#666;min-width:0;margin-bottom:6px;
-   border-bottom:1px dashed #eee;padding-bottom:6px}}
-  /* 기간 금리: 라벨 + 값 한 줄 */
+  td{{border:none;padding:4px 0;text-align:left;white-space:normal}}
+  td.bank{{font-size:17px;font-weight:600;padding-top:0}}
+  td.prod{{color:var(--neutralFg3);min-width:0;margin-bottom:8px;
+   border-bottom:1px solid var(--neutralStroke2);padding-bottom:8px}}
   td.num{{display:flex;justify-content:space-between;align-items:baseline;
-   text-align:left;border-bottom:1px solid #f4f4f5;padding:5px 0}}
-  td.num::before{{content:attr(data-label);color:#999;font-size:12px;
-   font-weight:600}}
-  td.num b{{font-size:15px}}
-  .base{{display:inline;margin:0 0 0 6px;font-size:11px}}
-  td.num.cempty{{display:none}}              /* 미판매 기간은 카드에서 숨김 */
-  td.spcl{{margin-top:8px;min-width:0;max-width:none;background:#fafafb;
-   border-radius:8px;padding:8px 10px}}
-  td.spcl::before{{content:'우대조건';display:block;color:#999;
-   font-size:11px;font-weight:600;margin-bottom:3px}}
+   text-align:left;border-bottom:1px solid var(--neutralBg3);padding:7px 0}}
+  td.num::before{{content:attr(data-label);color:var(--neutralFg3);
+   font-size:14px;font-weight:600}}
+  td.num b{{font-size:17px}}
+  .base{{display:inline;margin:0 0 0 8px;font-size:14px}}
+  td.num.cempty{{display:none}}
+  td.spcl{{margin-top:10px;min-width:0;max-width:none;
+   background:var(--neutralBg2);border-radius:var(--radiusLg);padding:10px 12px}}
+  td.spcl::before{{content:'우대조건';display:block;color:var(--neutralFg3);
+   font-size:12px;font-weight:600;margin-bottom:4px}}
  }}
 </style></head><body>
 <h1>🏦 한국 은행 예·적금 금리 — 기간별 비교</h1>
