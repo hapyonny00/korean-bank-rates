@@ -130,8 +130,7 @@ def print_table(label, rows):
 HTML_TEMPLATE = r'''<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>은행 예·적금 금리</title>
-<link rel="stylesheet"
- href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+__FONTCSS__
 <style>
  /* ===== Microsoft Fluent 2 디자인 토큰 / 폰트: Pretendard ===== */
  :root{
@@ -259,7 +258,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
 
 <script>
 const APP = __DATA__;
-const state = {product:'deposit', bank:'전체'};
+const state = {product:'deposit', banks:new Set()};  // 빈 Set = 전체
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const isNum = v => /^\d+$/.test(String(v));
@@ -295,28 +294,36 @@ function render(){
   b.classList.toggle('on', b.dataset.p === state.product);
   b.onclick = () => { state.product = b.dataset.p; render(); };
  });
- // 은행 칩
+ // 은행 칩 (다중 선택 — 빈 선택 = 전체)
  const chipEl = document.getElementById('chips');
- chipEl.innerHTML = ['전체', ...APP.banks].map(b =>
-  `<button class="chip${b===state.bank?' on':''}" data-b="${esc(b)}">${esc(b)}</button>`
- ).join('');
- chipEl.querySelectorAll('button').forEach(b =>
-  b.onclick = () => { state.bank = b.dataset.b; render(); });
+ const allOn = state.banks.size === 0;
+ chipEl.innerHTML =
+  `<button class="chip${allOn?' on':''}" data-b="__ALL__">전체</button>` +
+  APP.banks.map(b =>
+   `<button class="chip${state.banks.has(b)?' on':''}" data-b="${esc(b)}">${esc(b)}</button>`
+  ).join('');
+ chipEl.querySelectorAll('button').forEach(btn => btn.onclick = () => {
+  const b = btn.dataset.b;
+  if(b === '__ALL__') state.banks.clear();
+  else state.banks.has(b) ? state.banks.delete(b) : state.banks.add(b);
+  render();
+ });
 
  // 데이터 필터 + 피벗
  let rows = APP[state.product] || [];
- if(state.bank !== '전체') rows = rows.filter(r => r.bank === state.bank);
+ if(state.banks.size) rows = rows.filter(r => state.banks.has(r.bank));
  const {terms, arr} = pivot(rows);
  const view = document.getElementById('view');
  const pname = state.product === 'deposit' ? '정기예금' : '적금';
- const title = state.bank === '전체' ? '전체 은행' : state.bank;
+ const title = state.banks.size === 0 ? '전체 은행'
+   : APP.banks.filter(b => state.banks.has(b)).join(', ');
 
  if(!arr.length){
   view.innerHTML = `<h2>${esc(title)} · ${pname}</h2>`+
    `<p class="empty">해당 조건의 상품이 없습니다.</p>`;
   return;
  }
- const showBank = state.bank === '전체';
+ const showBank = state.banks.size !== 1;
  const ths = terms.map(t => `<th class="num">${t}개월</th>`).join('');
  let trs = '', prevBank = null;
  for(const g of arr){
@@ -346,9 +353,30 @@ render();
 </body></html>'''
 
 
+def _font_face_css():
+    """로컬 Pretendard woff2 를 base64로 임베드한 @font-face <style> 반환.
+    파일이 없으면 None (CDN 폴백)."""
+    import base64
+    fdir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "assets", "fonts")
+    weights = {400: "Regular", 600: "SemiBold", 700: "Bold"}
+    faces = []
+    for w, name in weights.items():
+        fp = os.path.join(fdir, f"Pretendard-{name}.woff2")
+        if not os.path.exists(fp):
+            return None
+        with open(fp, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("ascii")
+        faces.append(
+            "@font-face{font-family:'Pretendard';font-style:normal;"
+            f"font-weight:{w};font-display:swap;"
+            f"src:url(data:font/woff2;base64,{b64}) format('woff2')}}")
+    return "<style>" + "".join(faces) + "</style>"
+
+
 def write_html(out, path):
-    """은행 칩 필터 + 예금/적금 전환 인터랙티브 HTML 리포트 생성.
-    디자인: Microsoft Fluent 2 토큰 / 폰트: Pretendard(CDN) / 렌더링: 클라이언트 JS."""
+    """은행 칩 다중선택 + 예금/적금 전환 인터랙티브 HTML 리포트 생성.
+    디자인: Microsoft Fluent 2 토큰 / 폰트: Pretendard(로컬 임베드) / 렌더링: 클라이언트 JS."""
     import datetime
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     dcls = next((r["dcls_month"] for rows in out.values() for r in rows), "-")
@@ -364,7 +392,10 @@ def write_html(out, path):
     }
     # </script> 깨짐 방지
     data_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
-    html = HTML_TEMPLATE.replace("__DATA__", data_json)
+    fontcss = _font_face_css() or (
+        '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/'
+        'pretendard@v1.3.9/dist/web/static/pretendard.min.css">')
+    html = HTML_TEMPLATE.replace("__FONTCSS__", fontcss).replace("__DATA__", data_json)
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)
     return path
