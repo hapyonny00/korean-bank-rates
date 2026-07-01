@@ -99,6 +99,7 @@ def collect(service, auth, bank_keywords, term):
             "base_rate": opt.get("intr_rate"),
             "max_rate": opt.get("intr_rate2"),
             "join_way": base.get("join_way", ""),
+            "join_deny": base.get("join_deny", ""),  # 1:제한없음 2:서민전용 3:일부제한
             "special": (base.get("spcl_cnd", "") or "").replace("\n", " ").strip(),
             "dcls_month": base.get("dcls_month", ""),
         })
@@ -412,7 +413,8 @@ __FONTCSS__
 <script>
 const APP = __DATA__;
 const state = {product:'deposit', banks:new Set(), term:'전체', q:'', sort:'max',
-  compare:[], modal:null, online:false, amount:0};
+  compare:[], modal:null, online:false, amount:0,
+  ratetype:'', joindeny:'', rsvtype:'', minrate:0};
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const isNum = v => /^\d+$/.test(String(v));
@@ -484,6 +486,11 @@ function renderOverlay(){
   const i = state.compare.indexOf(b.dataset.rm); if(i>=0) state.compare.splice(i,1);
   if(!state.compare.length){ closeOverlay(); render(); } else { renderOverlay(); render(); }
  });
+ sheet.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => {
+  state.term='전체'; state.online=false; state.amount=0;
+  state.ratetype=''; state.joindeny=''; state.rsvtype=''; state.minrate=0;
+  renderOverlay();
+ });
  const form = document.getElementById('wizForm');
  if(form) form.onsubmit = e => {
   e.preventDefault();
@@ -492,6 +499,10 @@ function renderOverlay(){
   state.term = f.get('term');
   state.online = f.get('online')==='1';
   state.amount = parseInt(f.get('amount'),10) || 0;
+  state.ratetype = f.get('ratetype') || '';
+  state.joindeny = f.get('joindeny') || '';
+  state.rsvtype = f.get('rsvtype') || '';
+  state.minrate = parseFloat(f.get('minrate')) || 0;
   state.compare = [];
   closeOverlay(); render();
   document.getElementById('view').scrollIntoView({behavior:'smooth', block:'start'});
@@ -537,10 +548,25 @@ function wizardHTML(){
   <label>가입방법<select name="online">
    <option value="0"${!state.online?' selected':''}>상관없음</option>
    <option value="1"${state.online?' selected':''}>비대면(앱·인터넷)만</option></select></label>
+  <label>이자 방식<select name="ratetype">
+   <option value="">상관없음</option>
+   <option value="단리"${state.ratetype==='단리'?' selected':''}>단리</option>
+   <option value="복리"${state.ratetype==='복리'?' selected':''}>복리</option></select></label>
+  <label>가입 대상<select name="joindeny">
+   <option value="">상관없음</option>
+   <option value="1"${state.joindeny==='1'?' selected':''}>누구나 (제한 없음)</option></select></label>
+  ${!isDep ? `<label>적립 방식<select name="rsvtype">
+   <option value="">상관없음</option>
+   <option value="자유적립식"${state.rsvtype==='자유적립식'?' selected':''}>자유적립식</option>
+   <option value="정액적립식"${state.rsvtype==='정액적립식'?' selected':''}>정액적립식</option></select></label>` : ''}
+  <label>최고우대 금리 하한(%)
+   <input name="minrate" type="number" min="0" step="0.1" inputmode="decimal"
+    placeholder="예: 3.0" value="${state.minrate||''}"></label>
   <label>${isDep?'예치금액(원)':'월 납입액(원)'}
    <input name="amount" type="number" min="0" step="10000" inputmode="numeric"
     placeholder="예: 1000000" value="${state.amount||''}"></label>
-  <div class="wiz-btns"><button type="button" class="btn-ghost" data-close>취소</button>
+  <div class="wiz-btns"><button type="button" class="btn-ghost" data-reset>초기화</button>
+   <button type="button" class="btn-ghost" data-close>취소</button>
    <button type="submit" class="btn-primary">추천 받기</button></div>
   <p class="wiz-note">※ 금액을 넣으면 예상이자(세전·단리 근사치)를 함께 보여줍니다.
    기간을 고르면 해당 기간 기준으로 계산합니다.</p>
@@ -556,8 +582,11 @@ function pivot(rows){
   const key = r.bank+'¦'+r.product+'¦'+(r.reserve_type||'');
   let g = groups.get(key);
   if(!g){ g={key, bank:r.bank, product:r.product, rsv:r.reserve_type||'',
-    joinway:r.join_way||'', cells:{}, spcl:''}; groups.set(key,g); }
+    joinway:r.join_way||'', ratetype:r.rate_type||'', joindeny:r.join_deny||'',
+    cells:{}, spcl:''}; groups.set(key,g); }
   if(!g.joinway && r.join_way) g.joinway = r.join_way;
+  if(!g.ratetype && r.rate_type) g.ratetype = r.rate_type;
+  if(!g.joindeny && r.join_deny) g.joindeny = r.join_deny;
   const t = +r.term_months;
   const base = parseFloat(r.base_rate), mx = parseFloat(r.max_rate);
   const cell = {base:isNaN(base)?null:base, mx:isNaN(mx)?null:mx};
@@ -629,9 +658,16 @@ function render(){
  // 필터: 비대면 → 검색 → 기간 보유
  let items = arr;
  if(state.online) items = items.filter(g => isOnline(g.joinway));
+ if(state.ratetype) items = items.filter(g => (g.ratetype||'').indexOf(state.ratetype) >= 0);
+ if(state.joindeny) items = items.filter(g => String(g.joindeny) === state.joindeny);
+ if(state.product==='saving' && state.rsvtype) items = items.filter(g => g.rsv === state.rsvtype);
  const q = state.q.trim().toLowerCase();
  if(q) items = items.filter(g => (g.product+' '+g.bank+' '+g.rsv).toLowerCase().includes(q));
  if(focus) items = items.filter(g => g.cells[focus]);
+ if(state.minrate > 0) items = items.filter(g => {
+  const v = focus ? (g.cells[focus]?g.cells[focus].mx||0:0) : bestMax(g);
+  return v >= state.minrate;
+ });
 
  // 정렬
  const metric = g => focus
@@ -653,7 +689,13 @@ function render(){
  const title = state.banks.size === 0 ? '전체 은행'
    : APP.banks.filter(b => state.banks.has(b)).join(', ');
  const focusLbl = focus ? ` · ${focus}개월` : '';
- const onLbl = state.online ? ' · 비대면' : '';
+ const conds = [];
+ if(state.online) conds.push('비대면');
+ if(state.ratetype) conds.push(state.ratetype);
+ if(state.joindeny === '1') conds.push('누구나');
+ if(state.product==='saving' && state.rsvtype) conds.push(state.rsvtype);
+ if(state.minrate > 0) conds.push(state.minrate+'%↑');
+ const onLbl = conds.length ? ' · ' + conds.join(' · ') : '';
 
  if(!items.length){
   view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl}${onLbl}</h2>`+
