@@ -184,9 +184,16 @@ __FONTCSS__
   padding:9px 12px;border:1px solid var(--neutralStroke1);
   border-radius:var(--radiusMd);background:var(--neutralBg1);color:var(--neutralFg1)}
  .search::placeholder{color:var(--neutralFg3)}
- .sort{font:inherit;font-size:14px;padding:9px 12px;cursor:pointer;
-  border:1px solid var(--neutralStroke1);border-radius:var(--radiusMd);
-  background:var(--neutralBg1);color:var(--neutralFg1)}
+ /* Fluent 2 드롭다운 (전체 기간 / 정렬) */
+ .sort{font:inherit;font-size:14px;cursor:pointer;color:var(--neutralFg1);
+  padding:9px 34px 9px 12px;border:1px solid var(--neutralStroke1);
+  border-radius:var(--radiusMd);background-color:var(--neutralBg1);
+  -webkit-appearance:none;appearance:none;background-repeat:no-repeat;
+  background-position:right 10px center;background-size:16px;
+  background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23616161' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>")}
+ .sort:hover{border-color:var(--neutralFg3);background-color:var(--neutralBg2)}
+ .sort:focus-visible{outline:2px solid var(--brandFg);outline-offset:1px;
+  border-color:var(--brandFg)}
  .terms{margin-top:10px}
  .terms .chip{padding:5px 13px;font-size:13px}
  /* 포커스 접근성 (Fluent focus stroke) */
@@ -284,6 +291,11 @@ __FONTCSS__
  .wiz select,.wiz input{font:inherit;font-size:14px;font-weight:400;padding:9px 11px;
   border:1px solid var(--neutralStroke1);border-radius:var(--radiusMd);
   background:var(--neutralBg1);color:var(--neutralFg1)}
+ .wiz select{cursor:pointer;padding-right:34px;-webkit-appearance:none;appearance:none;
+  background-repeat:no-repeat;background-position:right 10px center;background-size:16px;
+  background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23616161' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>")}
+ .wiz select:focus-visible,.wiz input:focus-visible{outline:2px solid var(--brandFg);
+  outline-offset:1px;border-color:var(--brandFg)}
  .wiz-btns{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
  .wiz-note{grid-column:1/-1;font-size:12px;color:var(--neutralFg3);margin:2px 0 0}
  @media (max-width:560px){.wiz{grid-template-columns:1fr}}
