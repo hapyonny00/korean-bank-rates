@@ -251,6 +251,9 @@ __FONTCSS__
  /* 오버레이 / 시트 */
  .overlay{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.4);display:flex;
   align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+ /* hidden 속성이 display:flex 를 이기도록(안 그러면 빈 오버레이가 안 닫힘) */
+ .overlay[hidden]{display:none}
+ .tray[hidden]{display:none}
  .sheet{background:var(--neutralBg1);border-radius:var(--radiusXl);width:100%;
   max-width:880px;box-shadow:0 8px 28px rgba(0,0,0,.22);padding:18px 20px}
  .sheet-h{display:flex;justify-content:space-between;align-items:center;
