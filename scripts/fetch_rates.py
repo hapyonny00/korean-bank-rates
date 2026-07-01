@@ -130,6 +130,7 @@ def print_table(label, rows):
 HTML_TEMPLATE = r'''<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>은행 예·적금 금리</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>&#127974;</text></svg>">
 __FONTCSS__
 <style>
  /* ===== Microsoft Fluent 2 디자인 토큰 / 폰트: Pretendard ===== */
@@ -213,10 +214,16 @@ __FONTCSS__
  .barrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
  .barrow.primary{justify-content:space-between;margin-bottom:12px}
  .barrow.refine{margin-top:12px}
- .btn-primary{font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:#fff;
-  background:var(--brandFg);border:1px solid var(--brandFg);
-  border-radius:var(--radiusMd);padding:9px 16px}
+ .btn-primary{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:14px;
+  font-weight:600;cursor:pointer;color:#fff;background:var(--brandFg);
+  border:1px solid var(--brandFg);border-radius:var(--radiusMd);padding:9px 16px}
  .btn-primary:hover{background:var(--brandFgHover);border-color:var(--brandFgHover)}
+ .btn-primary svg{width:18px;height:18px;flex:none}
+ /* 검색창 안 돋보기 아이콘 */
+ .searchwrap{position:relative;display:flex;align-items:center;flex:1 1 240px;min-width:160px}
+ .searchwrap svg{position:absolute;left:11px;width:17px;height:17px;
+  color:var(--neutralFg3);pointer-events:none}
+ .searchwrap .search{flex:1;width:100%;min-width:0;padding-left:34px}
  .btn-ghost{font:inherit;font-size:14px;cursor:pointer;color:var(--neutralFg2);
   background:transparent;border:1px solid var(--neutralStroke1);
   border-radius:var(--radiusMd);padding:9px 14px}
@@ -354,12 +361,18 @@ __FONTCSS__
    <path d="M5.5 6.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/>
    <path d="M5.5 11.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/></svg>적금</button>
   </div>
-  <button id="wizOpen" class="btn-primary" type="button">✨ 내 조건으로 찾기</button>
+  <button id="wizOpen" class="btn-primary" type="button"><svg viewBox="0 0 24 24"
+   fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+   stroke-linejoin="round"><circle cx="12" cy="7.5" r="3.5"/>
+   <path d="M4.5 19.5a7.5 7.5 0 0 1 15 0"/></svg>내 조건으로 찾기</button>
  </div>
  <div class="chips" id="chips" role="group" aria-label="은행 선택"></div>
  <div class="barrow refine">
-  <input id="q" class="search" type="search" placeholder="상품·은행 검색"
-   aria-label="상품 검색" autocomplete="off">
+  <span class="searchwrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/>
+   <path d="m20 20-3.2-3.2"/></svg>
+   <input id="q" class="search" type="search" placeholder="상품·은행 검색"
+    aria-label="상품 검색" autocomplete="off"></span>
   <select id="term-sel" class="sort" aria-label="기간 선택"></select>
   <select id="sort" class="sort" aria-label="정렬 기준">
    <option value="max">최고우대금리순</option>
@@ -500,7 +513,7 @@ function wizardHTML(){
    .map(r=>+r.term_months))].sort((a,b)=>a-b);
  const topts = termsAvail.map(t => `<option value="${t}"${String(state.term)===String(t)?' selected':''}>${t}개월</option>`).join('');
  const isDep = state.product==='deposit';
- return `<div class="sheet-h"><b>✨ 내 조건으로 찾기</b><button class="x" data-close>✕</button></div>
+ return `<div class="sheet-h"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:-3px;margin-right:5px"><circle cx="12" cy="7.5" r="3.5"/><path d="M4.5 19.5a7.5 7.5 0 0 1 15 0"/></svg>내 조건으로 찾기</b><button class="x" data-close>✕</button></div>
  <form id="wizForm" class="wiz">
   <label>상품<select name="product">
    <option value="deposit"${isDep?' selected':''}>예금 (목돈 예치)</option>
