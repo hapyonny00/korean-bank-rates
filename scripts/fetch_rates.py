@@ -147,12 +147,61 @@ __FONTCSS__
    'Segoe UI Variable','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
  }
  *{box-sizing:border-box}
- body{font-family:var(--fontBase);margin:0;padding:24px;
-  background:var(--neutralBg1);color:var(--neutralFg1);
+ body{font-family:var(--fontBase);margin:0;padding:28px 16px;
+  background:#e9ebef;color:var(--neutralFg1);
   font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
- h1{display:flex;align-items:center;gap:10px;
-  font-size:28px;font-weight:700;margin:0 0 4px;line-height:1.25}
- h1 svg{width:30px;height:30px;color:var(--brandFg);flex:none}
+ /* ===== 위젯 셸 ===== */
+ .widget{max-width:1020px;margin:0 auto;background:var(--neutralBg1);
+  border-radius:28px;padding:26px 28px 30px;
+  box-shadow:0 24px 60px rgba(30,40,60,.14),0 2px 8px rgba(30,40,60,.06)}
+ .whead{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+ .wmark{display:inline-flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:14px;background:var(--neutralBg3);
+  color:var(--brandFg)}
+ .wmark svg{width:22px;height:22px}
+ .wname{font-size:16px;font-weight:700}
+ .whead .meta{margin-left:auto;text-align:right}
+ .greet{margin:6px 0 18px}
+ .greet .spark{width:34px;height:34px;color:var(--brandFg);margin-bottom:8px}
+ .greet h1{font-size:26px;font-weight:700;margin:0 0 4px;line-height:1.25}
+ .greet p{margin:0;color:var(--neutralFg3);font-size:15px}
+ /* ===== 채팅 (금리 에이전트) ===== */
+ .chat{margin:18px 0 22px}
+ .chatlog{display:flex;flex-direction:column;gap:10px;margin:0 0 12px;
+  max-height:340px;overflow:auto;padding:4px 2px}
+ .msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;
+  line-height:1.55;white-space:pre-line}
+ .msg.user{align-self:flex-end;background:var(--brandFg);color:#fff;
+  border-bottom-right-radius:6px}
+ .msg.bot{align-self:flex-start;background:var(--neutralBg3);
+  border-bottom-left-radius:6px}
+ .msg.bot b{color:var(--brandFg)}
+ .askbar{display:flex;align-items:center;gap:10px;background:var(--neutralBg1);
+  border:1px solid var(--neutralStroke2);border-radius:18px;padding:8px 8px 8px 16px;
+  box-shadow:0 6px 18px rgba(30,40,60,.07)}
+ .askbar>svg{width:18px;height:18px;color:var(--neutralFg3);flex:none}
+ .askbar input{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;
+  background:transparent;color:var(--neutralFg1)}
+ .askbar input::placeholder{color:var(--neutralFg3)}
+ .sendbtn{display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;color:#fff;
+  background:linear-gradient(180deg,#3d94e6,var(--brandFg));
+  box-shadow:0 4px 12px rgba(15,108,189,.35)}
+ .sendbtn:hover{filter:brightness(1.06)}
+ .sendbtn svg{width:19px;height:19px}
+ .sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+ .sugg button{font:inherit;font-size:13px;cursor:pointer;color:var(--neutralFg2);
+  background:var(--neutralBg2);border:1px solid var(--neutralStroke2);
+  border-radius:var(--radiusPill);padding:6px 13px}
+ .sugg button:hover{background:var(--neutralBg3)}
+ /* ===== 카드 공통 / 추이 그래프 ===== */
+ .card{border:1px solid var(--neutralStroke2);border-radius:18px;
+  padding:16px 18px;margin:0 0 8px;box-shadow:var(--shadow2)}
+ .card-h{display:flex;align-items:baseline;gap:10px;font-size:16px;margin-bottom:6px}
+ .card-sub{font-size:12px;color:var(--neutralFg3)}
+ #trend{overflow-x:auto}
+ #trend svg{display:block;width:100%;height:auto}
+ .trend-note{color:var(--neutralFg3);font-size:13px;padding:14px 2px}
  h2{font-size:20px;font-weight:700;margin:8px 0 10px;line-height:1.3}
  h2 small{font-weight:400;color:var(--neutralFg3);font-size:13px}
  .meta{color:var(--neutralFg3);font-size:13px;margin:0}
@@ -204,18 +253,24 @@ __FONTCSS__
  .badge{display:inline-block;font-size:11px;font-weight:700;color:#fff;
   background:var(--brandFg);border-radius:var(--radiusPill);
   padding:1px 8px;margin-left:6px;vertical-align:middle;letter-spacing:.3px}
- /* 히어로(오늘의 베스트) */
- .hero{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 4px}
- .hcard{border:1px solid var(--neutralStroke2);border-radius:var(--radiusXl);
-  padding:16px 18px;box-shadow:var(--shadow2);
-  background:linear-gradient(180deg,var(--neutralBg1),var(--neutralBg2))}
- .hcard .k{font-size:13px;color:var(--neutralFg3);font-weight:600;
+ /* 히어로: 그라데이션 숏컷 타일 3장 */
+ .hero{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0 4px}
+ .hcard{position:relative;border:0;border-radius:20px;padding:16px 18px;
+  min-height:132px;cursor:pointer;text-align:left;font:inherit;
+  box-shadow:0 8px 22px rgba(30,40,60,.10);transition:transform .15s,box-shadow .15s}
+ .hcard:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(30,40,60,.16)}
+ .hcard.dep{background:linear-gradient(135deg,#d9f4ec,#c2ead9 55%,#dff0fa)}
+ .hcard.sav{background:linear-gradient(135deg,#e6e2fa,#d9d2f4 55%,#f3e3f4)}
+ .hcard.trd{background:linear-gradient(135deg,#fde7d8,#fbd9c6 55%,#f9e3ef)}
+ .hcard .k{font-size:13px;color:rgba(20,30,40,.65);font-weight:600;
   display:flex;align-items:center;gap:6px}
- .hcard .k svg{width:16px;height:16px;color:var(--brandFg);flex:none}
- .hcard .v{font-size:30px;font-weight:700;margin:6px 0 2px;line-height:1.1}
- .hcard .v small{font-size:14px;font-weight:600;color:var(--neutralFg3)}
- .hcard .d{font-size:13px;color:var(--neutralFg2);line-height:1.45}
+ .hcard .k svg{width:16px;height:16px;color:rgba(20,30,40,.7);flex:none}
+ .hcard .v{font-size:30px;font-weight:700;margin:6px 0 2px;line-height:1.1;
+  color:#1c2733}
+ .hcard .v small{font-size:14px;font-weight:600;color:rgba(20,30,40,.55)}
+ .hcard .d{font-size:12.5px;color:rgba(20,30,40,.72);line-height:1.45}
  .hcard .d b{font-weight:600}
+ @media (max-width:760px){.hero{grid-template-columns:1fr 1fr}}
  @media (max-width:560px){.hero{grid-template-columns:1fr}}
 
  /* 툴바 3단 정리 */
@@ -332,8 +387,10 @@ __FONTCSS__
 
  /* ===== 반응형: 좁은 화면(모바일)에서는 상품별 카드로 ===== */
  @media (max-width:720px){
-  body{padding:16px}
-  h1{font-size:23px} h2{font-size:18px}
+  body{padding:10px 6px}
+  .widget{padding:18px 14px 22px;border-radius:22px}
+  .greet h1{font-size:22px} h2{font-size:18px}
+  .whead .meta{display:none}
   .wrap{border:none;overflow:visible;box-shadow:none}
   table,thead,tbody,tr,td{display:block;width:auto}
   thead{display:none}
@@ -357,12 +414,46 @@ __FONTCSS__
    font-size:12px;font-weight:600;margin-bottom:4px}
  }
 </style></head><body>
-<h1><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
- stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 4l9 5.5"/>
- <path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3.5 21h17"/></svg>
- 한국 은행 예·적금 금리</h1>
-<p class="meta" id="meta"></p>
+<div class="widget">
+<header class="whead">
+ <span class="wmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
+  <path d="M3.5 21h17"/></svg></span>
+ <span class="wname">금리 에이전트</span>
+ <span class="meta" id="meta"></span>
+</header>
+
+<div class="greet">
+ <svg class="spark" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 2l2.2 6.4L21 11l-6.8 2.6L12 20l-2.2-6.4L3 11l6.8-2.6z"/>
+  <circle cx="19" cy="4" r="1.6"/></svg>
+ <h1>안녕하세요 👋</h1>
+ <p>7개 은행 예·적금, 궁금한 걸 물어보시면 바로 찾아드려요.</p>
+</div>
+
 <div id="hero" class="hero" aria-live="polite"></div>
+
+<div class="chat">
+ <div id="chatlog" class="chatlog" hidden aria-live="polite"></div>
+ <div class="askbar">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+   stroke-linecap="round" stroke-linejoin="round"><path d="m14 5 5 5L8 21H3v-5z"/>
+   <path d="m12.5 6.5 5 5"/></svg>
+  <input id="ask" type="text" placeholder="무엇이든 물어보세요… 예) 12개월 예금 최고 금리"
+   aria-label="금리 질문" autocomplete="off">
+  <button id="send" class="sendbtn" aria-label="질문 보내기"><svg viewBox="0 0 24 24"
+   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+   stroke-linejoin="round"><path d="M12 19V6"/><path d="m6 11 6-6 6 6"/></svg></button>
+ </div>
+ <div class="sugg" id="sugg"></div>
+</div>
+
+<section class="card" id="trendcard">
+ <div class="card-h"><b>날짜별 금리 추이</b>
+  <span class="card-sub" id="trendsub"></span></div>
+ <div id="trend"></div>
+</section>
 
 <div class="stickybar">
  <div class="barrow primary">
@@ -406,6 +497,7 @@ __FONTCSS__
  <span class="badge">BEST</span>=현재 목록 중 최고우대 1위 · 빈칸(·)은 해당 기간 미판매</p>
 <p class="legend">※ 표시 금리는 세전·연이율이며 우대금리는 조건 충족 시 적용됩니다.
  상품별 단리/복리·과세 조건이 다를 수 있으니 가입 전 각 은행 약관을 확인하세요.</p>
+</div><!-- /.widget -->
 
 <div id="tray" class="tray" hidden></div>
 <div id="overlay" class="overlay" hidden><div class="sheet" id="sheet"></div></div>
@@ -431,14 +523,28 @@ function heroBest(list){
  }
  return best;
 }
+const ICON_TRD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5.5-5.5 4 4L21 7"/><path d="M15 7h6v6"/></svg>';
 function renderHero(){
- const mk = (label, icon, b) => b ? `<div class="hcard"><div class="k">${icon}${label}</div>`+
-   `<div class="v">${b.mx}<small>%</small></div>`+
+ const mk = (cls, label, icon, b, extra) => `<button type="button" class="hcard ${cls}" data-go="${cls}">`+
+   `<div class="k">${icon}${label}</div>`+
+   (b ? `<div class="v">${b.mx}<small>%</small></div>`+
    `<div class="d"><b>${esc(b.bank)}</b> · ${esc(b.product)} · ${b.term}개월`+
-   `${b.rsv?' · '+esc(b.rsv):''} · 기본 ${isNaN(b.base)?'-':b.base}%</div></div>` : '';
+   `${b.rsv?' · '+esc(b.rsv):''} · 기본 ${isNaN(b.base)?'-':b.base}%</div>` : extra)+
+   `</button>`;
+ const days = Object.keys(APP.history||{}).length;
  document.getElementById('hero').innerHTML =
-   mk('오늘의 최고 예금', ICON_DEP, heroBest(APP.deposit)) +
-   mk('오늘의 최고 적금', ICON_SAV, heroBest(APP.saving));
+   mk('dep','오늘의 최고 예금', ICON_DEP, heroBest(APP.deposit)) +
+   mk('sav','오늘의 최고 적금', ICON_SAV, heroBest(APP.saving)) +
+   mk('trd','날짜별 금리 추이', ICON_TRD, null,
+     `<div class="v">${days}<small>일치 기록</small></div>`+
+     `<div class="d">매일 아침 7시에 쌓이는<br>은행별 최고금리 흐름 보기</div>`);
+ document.querySelectorAll('.hcard').forEach(c => c.onclick = () => {
+  const go = c.dataset.go;
+  if(go==='trd'){ document.getElementById('trendcard').scrollIntoView({behavior:'smooth'}); return; }
+  state.product = go==='sav' ? 'saving' : 'deposit';
+  state.term='전체'; state.compare=[]; render();
+  document.getElementById('view').scrollIntoView({behavior:'smooth'});
+ });
 }
 
 // ===== 비교 트레이 · 마법사 · 예상이자 =====
@@ -573,6 +679,188 @@ function wizardHTML(){
  </form>`;
 }
 
+// ===== 날짜별 금리 추이 그래프 =====
+const LINE_COLORS = ['#0f6cbd','#7a5af8','#e8618c','#12a594','#e07b39','#5a6acf','#c05299'];
+function renderTrend(){
+ const el = document.getElementById('trend'), sub = document.getElementById('trendsub');
+ const hist = APP.history || {};
+ const dates = Object.keys(hist).sort();
+ const prod = state.product, pname = prod==='deposit' ? '예금' : '적금';
+ const sel = state.banks.size ? APP.banks.filter(b => state.banks.has(b)) : null;
+ const names = sel || ['전체 최고'];
+ const series = names.map(name => ({name, pts: dates.map(d => {
+   const day = (hist[d]||{})[prod] || {};
+   if(sel) return day[name] ? day[name].max : null;
+   let m = 0; for(const b in day) m = Math.max(m, day[b].max||0);
+   return m || null;
+ })}));
+ sub.textContent = pname+' 최고우대 기준 · '+(sel?sel.join('·'):'7개 은행 중 최고')
+   +' · '+dates.length+'일 기록';
+ const vals = series.flatMap(s => s.pts).filter(v => v != null);
+ if(!dates.length || !vals.length){
+  el.innerHTML = '<p class="trend-note">아직 기록이 없어요. 매일 아침 7시 자동 갱신 때마다 하루치가 쌓여요.</p>';
+  return;
+ }
+ let mn = Math.min(...vals), mx = Math.max(...vals);
+ if(mx - mn < 0.4){ const c = (mx+mn)/2; mn = c-0.25; mx = c+0.25; }
+ const W=720, H=230, L=42, R=20, T=34, B=30;
+ const X = i => L + (W-L-R) * (dates.length===1 ? 0.5 : i/(dates.length-1));
+ const Y = v => T + (H-T-B) * (1-(v-mn)/(mx-mn));
+ const fmtD = d => (+d.slice(5,7))+'/'+(+d.slice(8,10));
+ function path(pts){
+  const p = pts.map((v,i)=> v==null?null:{x:X(i),y:Y(v)}).filter(Boolean);
+  if(p.length < 2) return '';
+  let d = 'M'+p[0].x.toFixed(1)+' '+p[0].y.toFixed(1);
+  for(let i=1;i<p.length;i++){
+   const a=p[i-1], b=p[i], cx=((a.x+b.x)/2).toFixed(1);
+   d += ' C'+cx+' '+a.y.toFixed(1)+' '+cx+' '+b.y.toFixed(1)+' '+b.x.toFixed(1)+' '+b.y.toFixed(1);
+  }
+  return d;
+ }
+ let g = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="날짜별 '+pname+' 최고금리 추이">';
+ g += '<defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">'
+   +'<stop offset="0" stop-color="'+LINE_COLORS[0]+'" stop-opacity=".22"/>'
+   +'<stop offset="1" stop-color="'+LINE_COLORS[0]+'" stop-opacity="0"/></linearGradient></defs>';
+ // 가로 눈금 3줄
+ for(let i=0;i<3;i++){
+  const v = mn + (mx-mn)*i/2, y = Y(v);
+  g += '<line x1="'+L+'" y1="'+y.toFixed(1)+'" x2="'+(W-R)+'" y2="'+y.toFixed(1)
+    +'" stroke="#eceef1"/>'
+    +'<text x="'+(L-6)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="10.5"'
+    +' fill="#8a8f98">'+v.toFixed(1)+'</text>';
+ }
+ // 기본(첫) 시리즈: 그라데이션 영역
+ const first = series[0];
+ const fp = path(first.pts);
+ if(fp){
+  const pIdx = first.pts.map((v,i)=>v==null?null:i).filter(v=>v!=null);
+  const x0 = X(pIdx[0]), x1 = X(pIdx[pIdx.length-1]), yb = H-B;
+  g += '<path d="'+fp+' L'+x1.toFixed(1)+' '+yb+' L'+x0.toFixed(1)+' '+yb+' Z" fill="url(#tg)"/>';
+ }
+ series.forEach((s,si)=>{
+  const col = LINE_COLORS[si % LINE_COLORS.length];
+  const d = path(s.pts);
+  if(d) g += '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="'
+    +(si===0?2.5:1.8)+'" stroke-linecap="round"/>';
+  s.pts.forEach((v,i)=>{ if(v!=null) g += '<circle cx="'+X(i).toFixed(1)+'" cy="'
+    +Y(v).toFixed(1)+'" r="'+(si===0?3.5:2.6)+'" fill="#fff" stroke="'+col
+    +'" stroke-width="2"/>'; });
+ });
+ // 마지막 포인트: 점선 마커 + 말풍선 라벨 (레퍼런스 스타일)
+ const li = first.pts.map((v,i)=>v==null?null:i).filter(v=>v!=null).pop();
+ if(li != null){
+  const lv = first.pts[li], lx = X(li), ly = Y(lv);
+  const txt = lv.toFixed(2)+'%', tw = txt.length*7.2+16;
+  g += '<line x1="'+lx.toFixed(1)+'" y1="'+(H-B)+'" x2="'+lx.toFixed(1)+'" y2="'
+    +ly.toFixed(1)+'" stroke="'+LINE_COLORS[0]+'" stroke-dasharray="3 4" opacity=".55"/>'
+    +'<rect x="'+(lx-tw/2).toFixed(1)+'" y="'+(ly-32).toFixed(1)+'" width="'+tw.toFixed(1)
+    +'" height="21" rx="10.5" fill="'+LINE_COLORS[0]+'"/>'
+    +'<text x="'+lx.toFixed(1)+'" y="'+(ly-17.5).toFixed(1)+'" text-anchor="middle"'
+    +' font-size="11.5" font-weight="700" fill="#fff">'+txt+'</text>';
+ }
+ // 날짜 라벨
+ const step = Math.max(1, Math.ceil(dates.length/8));
+ dates.forEach((d,i)=>{ if(i%step===0 || i===dates.length-1)
+  g += '<text x="'+X(i).toFixed(1)+'" y="'+(H-9)+'" text-anchor="middle" font-size="10.5"'
+    +' fill="#8a8f98">'+fmtD(d)+'</text>'; });
+ g += '</svg>';
+ if(dates.length === 1) g += '<p class="trend-note">오늘 첫 기록이에요 — 내일 아침 7시부터 선이 그려져요.</p>';
+ // 범례(은행 선택 시)
+ if(sel && sel.length > 1) g += '<p class="trend-note">'
+   + sel.map((b,i)=>'<span style="color:'+LINE_COLORS[i%LINE_COLORS.length]
+     +';font-weight:600">●</span> '+esc(b)).join('&nbsp;&nbsp;') + '</p>';
+ el.innerHTML = g;
+}
+
+// ===== 금리 에이전트 채팅 (내장 데이터 기반 오프라인 응답) =====
+const chatMsgs = [];
+const SUGGS = ['12개월 예금 최고 금리는?','카카오뱅크 적금 알려줘',
+  '100만원 12개월 이자 얼마?','국민 하나 예금 비교'];
+function addMsg(cls, html){
+ chatMsgs.push({cls, html});
+ const log = document.getElementById('chatlog');
+ log.hidden = false;
+ log.innerHTML = chatMsgs.map(m=>'<div class="msg '+m.cls+'">'+m.html+'</div>').join('');
+ log.scrollTop = 1e9;
+}
+function parseAmount(q){
+ let m = q.match(/(\d+(?:\.\d+)?)\s*억/); if(m) return Math.round(+m[1]*1e8);
+ m = q.match(/(\d+(?:\.\d+)?)\s*천\s*만/); if(m) return Math.round(+m[1]*1e7);
+ m = q.match(/(\d+(?:\.\d+)?)\s*백\s*만/); if(m) return Math.round(+m[1]*1e6);
+ m = q.match(/(\d[\d,]*)\s*만\s*원?/); if(m) return +m[1].replace(/,/g,'')*1e4;
+ m = q.match(/(\d[\d,]{3,})\s*원/); if(m) return +m[1].replace(/,/g,'');
+ return 0;
+}
+function agentAnswer(q){
+ const prod = /적금/.test(q) ? 'saving' : (/예금/.test(q) ? 'deposit' : state.product);
+ const pname = prod==='deposit' ? '예금' : '적금';
+ const banks = APP.banks.filter(b => {
+  const s = b.replace('은행','').replace('뱅크','');
+  return q.indexOf(b)>=0 || (s && q.indexOf(s)>=0);
+ });
+ const tmM = q.match(/(\d+)\s*개월/);
+ const tm = tmM ? +tmM[1] : 0;
+ const amt = parseAmount(q);
+ const wantBase = /기본/.test(q) && !/최고|우대/.test(q);
+ const lbl = wantBase ? '기본금리' : '최고우대금리';
+ let arr = allGroups(prod);
+ if(banks.length) arr = arr.filter(g => banks.includes(g.bank));
+ if(tm) arr = arr.filter(g => g.cells[tm]);
+ const val = g => { if(tm){ const c=g.cells[tm]; return (wantBase?c.base:c.mx)||0; }
+  return Math.max(0, ...Object.values(g.cells).map(c=>(wantBase?c.base:c.mx)||0)); };
+ const bestTerm = g => { let bt=0,bv=-1; for(const t in g.cells){
+   const v=(wantBase?g.cells[t].base:g.cells[t].mx)||0; if(v>bv){bv=v;bt=+t;} } return bt; };
+ arr = arr.slice().sort((a,b)=>val(b)-val(a));
+ if(!arr.length) return {html:'조건에 맞는 상품을 찾지 못했어요. 은행명·기간을 바꾸거나 "'
+   +pname+'" 대신 다른 상품으로 물어보세요.'};
+ let html;
+ if(/비교/.test(q) && banks.length >= 2){
+  html = '<b>'+banks.join(' vs ')+'</b> · '+pname+(tm?' '+tm+'개월':'')+' '+lbl+' 비교\n';
+  banks.forEach(b => { const g = arr.find(x=>x.bank===b);
+   if(!g){ html += '· '+b+': 해당 조건 상품 없음\n'; return; }
+   const t = tm || bestTerm(g);
+   html += '· '+b+' <b>'+val(g).toFixed(2)+'%</b> — '+esc(g.product)+' ('+t+'개월)\n'; });
+ } else {
+  const top = arr.slice(0, 3);
+  html = (banks.length?banks.join('·')+' ':'')+(tm?tm+'개월 ':'')+pname+' '+lbl
+    +' TOP'+top.length+'\n';
+  top.forEach((g,i)=>{ const t = tm || bestTerm(g);
+   const c = g.cells[t] || {};
+   html += (i+1)+'. <b>'+val(g).toFixed(2)+'%</b> '+esc(g.bank)+' '+esc(g.product)
+     +' ('+t+'개월, 기본 '+(c.base==null?'-':c.base)+'%)\n'; });
+ }
+ if(amt > 0){
+  const g0 = arr[0], t0 = tm || bestTerm(g0), c0 = g0.cells[t0];
+  const e = c0 ? estInterest(prod, c0.base, t0, amt) : null;
+  if(e != null) html += '\n💰 1위 상품에 '+won(amt)
+    +(prod==='saving'?'씩 매달':'을')+' '+t0+'개월 → 예상이자 <b>'+won(e)
+    +'</b> (세전·기본금리 단리 근사)\n';
+ }
+ html += '\n아래 표에도 이 조건을 적용해뒀어요.';
+ return {html, apply(){ state.product=prod;
+   state.banks = new Set(banks); state.term = tm ? String(tm) : '전체';
+   state.q=''; render(); }};
+}
+function sendMsg(){
+ const inp = document.getElementById('ask');
+ const q = (inp.value||'').trim();
+ if(!q) return;
+ addMsg('user', esc(q));
+ inp.value = '';
+ const a = agentAnswer(q);
+ addMsg('bot', a.html);
+ if(a.apply) a.apply();
+}
+function initChat(){
+ const sug = document.getElementById('sugg');
+ sug.innerHTML = SUGGS.map(s=>'<button type="button">'+esc(s)+'</button>').join('');
+ sug.querySelectorAll('button').forEach(b => b.onclick = () => {
+  document.getElementById('ask').value = b.textContent; sendMsg(); });
+ document.getElementById('send').onclick = sendMsg;
+ document.getElementById('ask').addEventListener('keydown', e => {
+  if(e.key === 'Enter') sendMsg(); });
+}
+
 function pivot(rows){
  const terms = [...new Set(rows.filter(r => isNum(r.term_months))
    .map(r => +r.term_months))].sort((a,b) => a-b);
@@ -700,7 +988,7 @@ function render(){
  if(!items.length){
   view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl}${onLbl}</h2>`+
    `<p class="empty">해당 조건의 상품이 없습니다. 필터를 줄여보세요.</p>`;
-  renderTray(); renderOverlay(); return;
+  renderTrend(); renderTray(); renderOverlay(); return;
  }
  const showBank = state.banks.size !== 1;
  const ths = dispTerms.map(t => `<th class="num">${t}개월</th>`).join('');
@@ -735,11 +1023,87 @@ function render(){
   `<div class="wrap"><table><thead><tr>${bankTh}<th>상품명</th>${ths}`+
   `<th>우대조건</th></tr></thead><tbody>${trs}</tbody></table></div>`;
  view.querySelectorAll('.add').forEach(b => b.onclick = () => toggleCompare(b.dataset.k));
- renderTray(); renderOverlay();
+ renderTrend(); renderTray(); renderOverlay();
 }
+initChat();
 render();
 </script>
 </body></html>'''
+
+
+def _fnum(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _root_dir():
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _bank_best(rows):
+    """은행별 대표 지표: 전 상품·기간 중 최고우대 최댓값과 기본금리 최댓값."""
+    best = {}
+    for r in rows:
+        mx, base = _fnum(r.get("max_rate")), _fnum(r.get("base_rate"))
+        b = best.setdefault(r["bank"], {"max": 0.0, "base": 0.0})
+        if mx and mx > b["max"]:
+            b["max"] = mx
+        if base and base > b["base"]:
+            b["base"] = base
+    return best
+
+
+def _seed_history_from_20260629(hist):
+    """과거 생성본(금리표_20260629.html)에서 은행별 최고치를 파싱해 시드."""
+    import re
+    if "2026-06-29" in hist:
+        return
+    p = os.path.join(_root_dir(), "금리표_20260629.html")
+    if not os.path.exists(p):
+        return
+    h = open(p, encoding="utf-8").read()
+    day = {}
+    for sec in re.split(r"<h2>", h)[1:]:
+        label = ("deposit" if sec.startswith("정기예금")
+                 else "saving" if sec.startswith("적금") else None)
+        if not label:
+            continue
+        best = {}
+        for tr in re.split(r"<tr", sec):
+            mb = re.search(r"class=['\"]bank['\"][^>]*>([^<]+)<", tr)
+            if not mb:
+                continue
+            bank = mb.group(1)
+            for base, mx in re.findall(
+                    r"class='num'>([\d.]+)%</td><td class='num max'>([\d.]+)%", tr):
+                b = best.setdefault(bank, {"max": 0.0, "base": 0.0})
+                b["max"] = max(b["max"], float(mx))
+                b["base"] = max(b["base"], float(base))
+        if best:
+            day[label] = best
+    if day:
+        hist["2026-06-29"] = day
+
+
+def update_history(out):
+    """history.json에 오늘 스냅샷(은행별 최고우대/기본 최댓값) 누적. 반환: 전체 이력."""
+    import datetime
+    path = os.path.join(_root_dir(), "history.json")
+    try:
+        hist = json.load(open(path, encoding="utf-8"))
+    except (OSError, ValueError):
+        hist = {}
+    _seed_history_from_20260629(hist)
+    today = datetime.date.today().isoformat()
+    hist[today] = {
+        "deposit": _bank_best(out.get("정기예금", [])),
+        "saving": _bank_best(out.get("적금", [])),
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(hist, f, ensure_ascii=False, indent=1)
+    return hist
 
 
 def _font_face_css():
@@ -778,6 +1142,7 @@ def write_html(out, path):
         "banks": banks_order,
         "dcls": dcls,
         "now": now,
+        "history": update_history(out),
     }
     # </script> 깨짐 방지
     data_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
