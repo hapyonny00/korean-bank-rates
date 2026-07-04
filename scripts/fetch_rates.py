@@ -140,62 +140,91 @@ __FONTCSS__
   --neutralFg1:#242424; --neutralFg2:#424242; --neutralFg3:#616161;
   --neutralBg1:#ffffff; --neutralBg2:#fafafa; --neutralBg3:#f5f5f5;
   --neutralStroke1:#d1d1d1; --neutralStroke2:#e0e0e0;
-  --brandFg:#0f6cbd; --brandFgHover:#115ea3;
+  /* 디지털 뱅킹 랜딩 팔레트 */
+  --ink:#0c2f24; --ink2:#124534; --lime:#d9f25a; --limeDeep:#b8d92e;
+  --paper:#f2f3ec;
+  --brandFg:#0e6b4f; --brandFgHover:#0a563f;
   --radiusMd:4px; --radiusLg:6px; --radiusXl:8px; --radiusPill:999px;
   --shadow2:0 1px 2px rgba(0,0,0,.14),0 0 2px rgba(0,0,0,.12);
   --fontBase:'Pretendard','Pretendard Variable',-apple-system,
    'Segoe UI Variable','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
  }
  *{box-sizing:border-box}
- body{font-family:var(--fontBase);margin:0;padding:28px 16px;
-  background:#e9ebef;color:var(--neutralFg1);
+ body{font-family:var(--fontBase);margin:0;padding:14px 16px 28px;
+  background:var(--paper);color:var(--neutralFg1);
   font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
- /* ===== 위젯 셸 ===== */
- .widget{max-width:1020px;margin:0 auto;background:var(--neutralBg1);
-  border-radius:28px;padding:26px 28px 30px;
-  box-shadow:0 24px 60px rgba(30,40,60,.14),0 2px 8px rgba(30,40,60,.06)}
- .whead{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+ /* ===== 랜딩 컨테이너 ===== */
+ .widget{max-width:1080px;margin:0 auto}
+ /* ===== 탑바: 로고 + 모듈 내비 ===== */
+ .whead{display:flex;align-items:center;gap:14px;padding:10px 6px 16px;
+  flex-wrap:wrap}
  .wmark{display:inline-flex;align-items:center;justify-content:center;
-  width:40px;height:40px;border-radius:14px;background:var(--neutralBg3);
-  color:var(--brandFg)}
+  width:40px;height:40px;border-radius:14px;background:var(--ink);
+  color:var(--lime)}
  .wmark svg{width:22px;height:22px}
- .wname{font-size:16px;font-weight:700}
- .whead .meta{margin-left:auto;text-align:right}
- .greet{margin:6px 0 18px}
- .greet .spark{width:34px;height:34px;color:var(--brandFg);margin-bottom:8px}
- .greet h1{font-size:26px;font-weight:700;margin:0 0 4px;line-height:1.25}
- .greet p{margin:0;color:var(--neutralFg3);font-size:15px}
- /* ===== 채팅 (금리 에이전트) ===== */
- .chat{margin:18px 0 22px}
- .chatlog{display:flex;flex-direction:column;gap:10px;margin:0 0 12px;
-  max-height:340px;overflow:auto;padding:4px 2px}
- .msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;
-  line-height:1.55;white-space:pre-line}
- .msg.user{align-self:flex-end;background:var(--brandFg);color:#fff;
-  border-bottom-right-radius:6px}
- .msg.bot{align-self:flex-start;background:var(--neutralBg3);
-  border-bottom-left-radius:6px}
- .msg.bot b{color:var(--brandFg)}
- .askbar{display:flex;align-items:center;gap:10px;background:var(--neutralBg1);
-  border:1px solid var(--neutralStroke2);border-radius:18px;padding:8px 8px 8px 16px;
-  box-shadow:0 6px 18px rgba(30,40,60,.07)}
+ .wname{font-size:16px;font-weight:800;letter-spacing:-.2px}
+ .mods{display:flex;gap:4px;margin:0 auto;background:#fff;
+  border:1px solid var(--neutralStroke2);border-radius:var(--radiusPill);
+  padding:4px;overflow-x:auto;max-width:100%}
+ .mods button{font:inherit;font-size:14px;font-weight:600;cursor:pointer;
+  color:var(--neutralFg2);background:transparent;border:0;
+  border-radius:var(--radiusPill);padding:8px 16px;white-space:nowrap}
+ .mods button:hover{background:var(--neutralBg3)}
+ .mods button.on{background:var(--ink);color:#fff}
+ .whead .meta{text-align:right}
+ /* ===== 히어로 패널 (딥 그린) ===== */
+ .heroPanel{background:
+   radial-gradient(90% 140% at 85% -20%,var(--ink2),transparent 60%),
+   var(--ink);
+  border-radius:26px;padding:44px 42px 34px;margin-bottom:16px;color:#fff}
+ .eyebrow{display:inline-block;font-size:12.5px;font-weight:600;margin:0 0 14px;
+  color:var(--lime);background:rgba(217,242,90,.12);
+  border:1px solid rgba(217,242,90,.35);border-radius:var(--radiusPill);
+  padding:5px 13px;letter-spacing:.2px}
+ .heroPanel h1{font-size:clamp(28px,4.6vw,46px);font-weight:800;margin:0 0 12px;
+  line-height:1.16;letter-spacing:-.8px}
+ .herosub{margin:0 0 22px;color:rgba(255,255,255,.72);font-size:15.5px;
+  max-width:560px}
+ /* Get Started 자리의 LLM 입력창 */
+ .askbar{display:flex;align-items:center;gap:8px;background:#fff;
+  border-radius:var(--radiusPill);padding:8px 8px 8px 18px;max-width:620px;
+  box-shadow:0 14px 34px rgba(0,0,0,.28)}
  .askbar>svg{width:18px;height:18px;color:var(--neutralFg3);flex:none}
  .askbar input{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;
   background:transparent;color:var(--neutralFg1)}
  .askbar input::placeholder{color:var(--neutralFg3)}
+ .keybtn{display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;
+  color:var(--neutralFg3);background:var(--neutralBg3)}
+ .keybtn:hover{color:var(--ink);background:var(--neutralBg2)}
+ .keybtn.on{color:var(--ink);background:var(--lime)}
+ .keybtn svg{width:17px;height:17px}
  .sendbtn{display:inline-flex;align-items:center;justify-content:center;flex:none;
-  width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;color:#fff;
-  background:linear-gradient(180deg,#3d94e6,var(--brandFg));
-  box-shadow:0 4px 12px rgba(15,108,189,.35)}
- .sendbtn:hover{filter:brightness(1.06)}
+  width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;color:var(--ink);
+  background:linear-gradient(180deg,var(--lime),var(--limeDeep))}
+ .sendbtn:hover{filter:brightness(1.05)}
  .sendbtn svg{width:19px;height:19px}
- .sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
- .sugg button{font:inherit;font-size:13px;cursor:pointer;color:var(--neutralFg2);
-  background:var(--neutralBg2);border:1px solid var(--neutralStroke2);
+ .llmstat{margin:8px 2px 0;font-size:12px;color:rgba(255,255,255,.55)}
+ .llmstat b{color:var(--lime);font-weight:600}
+ .sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+ .sugg button{font:inherit;font-size:13px;cursor:pointer;
+  color:rgba(255,255,255,.85);background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.22);
   border-radius:var(--radiusPill);padding:6px 13px}
- .sugg button:hover{background:var(--neutralBg3)}
+ .sugg button:hover{background:rgba(255,255,255,.16)}
+ /* 채팅 로그 (히어로 안) */
+ .chatlog{display:flex;flex-direction:column;gap:10px;margin:16px 0 0;
+  max-height:360px;overflow:auto;padding:4px 2px}
+ .msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;
+  line-height:1.55;white-space:pre-line}
+ .msg.user{align-self:flex-end;background:var(--lime);color:var(--ink);
+  border-bottom-right-radius:6px;font-weight:500}
+ .msg.bot{align-self:flex-start;background:rgba(255,255,255,.94);
+  color:var(--neutralFg1);border-bottom-left-radius:6px}
+ .msg.bot b{color:var(--brandFg)}
+ .msg.typing{opacity:.75;font-style:italic}
  /* ===== 카드 공통 / 추이 그래프 ===== */
- .card{border:1px solid var(--neutralStroke2);border-radius:18px;
+ .card{border:1px solid var(--neutralStroke2);border-radius:18px;background:#fff;
   padding:16px 18px;margin:0 0 8px;box-shadow:var(--shadow2)}
  .card-h{display:flex;align-items:baseline;gap:10px;font-size:16px;margin-bottom:6px}
  .card-sub{font-size:12px;color:var(--neutralFg3)}
@@ -227,7 +256,7 @@ __FONTCSS__
   color:#fff;font-weight:600}
 
  /* 스티키 툴바 */
- .stickybar{position:sticky;top:0;z-index:5;background:var(--neutralBg1);
+ .stickybar{position:sticky;top:0;z-index:5;background:var(--paper);
   padding:12px 0 14px;border-bottom:1px solid var(--neutralStroke2)}
  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:12px}
  .search{flex:1 1 220px;min-width:150px;font:inherit;font-size:14px;
@@ -359,8 +388,8 @@ __FONTCSS__
  body{padding-bottom:88px}
 
  /* ===== 표 ===== */
- .wrap{overflow-x:auto;border:1px solid var(--neutralStroke2);
-  border-radius:var(--radiusXl);box-shadow:var(--shadow2)}
+ .wrap{overflow-x:auto;border:1px solid var(--neutralStroke2);background:#fff;
+  border-radius:16px;box-shadow:var(--shadow2)}
  table{border-collapse:separate;border-spacing:0;width:100%;font-size:15px}
  th,td{padding:11px 14px;text-align:left;
   border-bottom:1px solid var(--neutralStroke2);vertical-align:top}
@@ -387,10 +416,11 @@ __FONTCSS__
 
  /* ===== 반응형: 좁은 화면(모바일)에서는 상품별 카드로 ===== */
  @media (max-width:720px){
-  body{padding:10px 6px}
-  .widget{padding:18px 14px 22px;border-radius:22px}
-  .greet h1{font-size:22px} h2{font-size:18px}
+  body{padding:8px 10px 20px}
+  .heroPanel{padding:26px 20px 24px;border-radius:20px}
+  h2{font-size:18px}
   .whead .meta{display:none}
+  .mods{margin:0;order:3;flex-basis:100%}
   .wrap{border:none;overflow:visible;box-shadow:none}
   table,thead,tbody,tr,td{display:block;width:auto}
   thead{display:none}
@@ -421,33 +451,42 @@ __FONTCSS__
   <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
   <path d="M3.5 21h17"/></svg></span>
  <span class="wname">금리 에이전트</span>
+ <nav class="mods" id="mods" aria-label="바로가기">
+  <button type="button" data-m="dep">예금</button>
+  <button type="button" data-m="sav">적금</button>
+  <button type="button" data-m="trend">금리 추이</button>
+  <button type="button" data-m="cmp">상품 비교</button>
+  <button type="button" data-m="wiz">내 조건</button>
+ </nav>
  <span class="meta" id="meta"></span>
 </header>
 
-<div class="greet">
- <svg class="spark" viewBox="0 0 24 24" fill="currentColor">
-  <path d="M12 2l2.2 6.4L21 11l-6.8 2.6L12 20l-2.2-6.4L3 11l6.8-2.6z"/>
-  <circle cx="19" cy="4" r="1.6"/></svg>
- <h1>안녕하세요 👋</h1>
- <p>7개 은행 예·적금, 궁금한 걸 물어보시면 바로 찾아드려요.</p>
-</div>
-
-<div id="hero" class="hero" aria-live="polite"></div>
-
-<div class="chat">
- <div id="chatlog" class="chatlog" hidden aria-live="polite"></div>
- <div class="askbar">
+<section class="heroPanel">
+ <p class="eyebrow">금융감독원 공시 기반 · 매일 아침 7시 갱신</p>
+ <h1>오늘 가장 높은<br>예·적금 금리를 찾아드려요</h1>
+ <p class="herosub">국민·우리·농협·하나·카카오뱅크·기업·수협 —
+  7개 은행 상품을 에이전트에게 바로 물어보세요.</p>
+ <div class="askbar" role="search">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
    stroke-linecap="round" stroke-linejoin="round"><path d="m14 5 5 5L8 21H3v-5z"/>
    <path d="m12.5 6.5 5 5"/></svg>
   <input id="ask" type="text" placeholder="무엇이든 물어보세요… 예) 12개월 예금 최고 금리"
    aria-label="금리 질문" autocomplete="off">
+  <button id="llmset" class="keybtn" type="button" title="Claude API 키 설정"
+   aria-label="Claude API 키 설정"><svg viewBox="0 0 24 24" fill="none"
+   stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+   stroke-linejoin="round"><circle cx="8" cy="14" r="4.5"/>
+   <path d="m11.5 10.5 8-8M16 5l2.5 2.5M13.5 7.5 16 10"/></svg></button>
   <button id="send" class="sendbtn" aria-label="질문 보내기"><svg viewBox="0 0 24 24"
    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
    stroke-linejoin="round"><path d="M12 19V6"/><path d="m6 11 6-6 6 6"/></svg></button>
  </div>
  <div class="sugg" id="sugg"></div>
-</div>
+ <p class="llmstat" id="llmstat"></p>
+ <div id="chatlog" class="chatlog" hidden aria-live="polite"></div>
+</section>
+
+<div id="hero" class="hero" aria-live="polite"></div>
 
 <section class="card" id="trendcard">
  <div class="card-h"><b>날짜별 금리 추이</b>
@@ -841,15 +880,96 @@ function agentAnswer(q){
    state.banks = new Set(banks); state.term = tm ? String(tm) : '전체';
    state.q=''; render(); }};
 }
-function sendMsg(){
+// ===== Claude API 연결 (키가 있으면 실제 LLM, 없으면 내장 에이전트) =====
+const LLM_MODEL = 'claude-sonnet-4-6';
+function getKey(){
+ try{ return localStorage.getItem('anthropic_api_key') || ''; }catch(e){ return ''; }
+}
+function setKey(k){
+ try{ k ? localStorage.setItem('anthropic_api_key', k)
+        : localStorage.removeItem('anthropic_api_key'); }catch(e){}
+}
+function updateLlmStat(){
+ const el = document.getElementById('llmstat');
+ const btn = document.getElementById('llmset');
+ const on = !!getKey();
+ btn.classList.toggle('on', on);
+ el.innerHTML = on
+  ? '<b>Claude 연결됨</b> ('+LLM_MODEL+') — 자유롭게 질문하세요. 🔑 버튼으로 해제'
+  : '내장 에이전트 모드 — 🔑 버튼에 Claude API 키를 넣으면 어떤 질문에도 답해요';
+}
+function buildContext(){
+ const line = g => { const terms = Object.keys(g.cells).sort((a,b)=>a-b)
+   .map(t=>t+'개월 기본'+(g.cells[t].base==null?'-':g.cells[t].base)
+     +'/최고'+(g.cells[t].mx==null?'-':g.cells[t].mx)).join(', ');
+  return g.bank+' | '+g.product+(g.rsv?'('+g.rsv+')':'')+' | '+terms
+    +(g.joinway?' | 가입:'+g.joinway:'')
+    +(g.spcl?' | 우대:'+g.spcl.slice(0,100):''); };
+ let ctx = '공시기준 '+APP.dcls+' (조회 '+APP.now+')\n[정기예금]\n'
+   + allGroups('deposit').map(line).join('\n')
+   + '\n[적금]\n' + allGroups('saving').map(line).join('\n');
+ const hist = APP.history||{};
+ const hd = Object.keys(hist).sort();
+ if(hd.length > 1){
+  ctx += '\n[일별 은행별 최고우대금리 이력]\n' + hd.map(d => {
+   const day = hist[d].deposit||{};
+   return d+' 예금: '+Object.keys(day).map(b=>b+' '+day[b].max+'%').join(', ');
+  }).join('\n');
+ }
+ return ctx;
+}
+const llmHistory = [];
+async function askClaude(q){
+ const key = getKey();
+ const sys = '너는 한국 은행 예·적금 금리 안내 에이전트다. 아래 오늘자 데이터에만 근거해 '
+  +'한국어로 간결히 답하라(금리는 % 그대로, 핵심은 <b></b>). 데이터에 없는 것은 모른다고 '
+  +'말하라. 상담·투자권유가 아닌 정보 안내이며, 금리는 세전·우대조건 충족 기준임을 '
+  +'필요시 짧게 덧붙여라.\n\n'+buildContext();
+ llmHistory.push({role:'user', content:q});
+ const body = {model:LLM_MODEL, max_tokens:700, system:sys,
+   messages:llmHistory.slice(-8)};
+ const r = await fetch('https://api.anthropic.com/v1/messages', {
+  method:'POST',
+  headers:{'x-api-key':key, 'anthropic-version':'2023-06-01',
+   'content-type':'application/json',
+   'anthropic-dangerous-direct-browser-access':'true'},
+  body:JSON.stringify(body)});
+ if(!r.ok){
+  const err = await r.text();
+  throw new Error('HTTP '+r.status+': '+err.slice(0,180));
+ }
+ const d = await r.json();
+ const txt = (d.content||[]).map(c=>c.text||'').join('');
+ llmHistory.push({role:'assistant', content:txt});
+ return txt;
+}
+async function sendMsg(){
  const inp = document.getElementById('ask');
  const q = (inp.value||'').trim();
  if(!q) return;
  addMsg('user', esc(q));
  inp.value = '';
- const a = agentAnswer(q);
- addMsg('bot', a.html);
- if(a.apply) a.apply();
+ const useLLM = !!getKey() && typeof fetch !== 'undefined';
+ if(useLLM){
+  addMsg('bot typing', 'Claude가 생각하는 중…');
+  try{
+   const txt = await askClaude(q);
+   chatMsgs.pop();
+   // Claude 응답: <b>만 허용, 나머지 이스케이프
+   const safe = esc(txt).replace(/&lt;b&gt;/g,'<b>').replace(/&lt;\/b&gt;/g,'</b>');
+   addMsg('bot', safe);
+  }catch(e){
+   chatMsgs.pop();
+   const a = agentAnswer(q);
+   addMsg('bot', a.html + '\n\n<i>⚠ Claude 호출 실패('+esc(String(e.message||e).slice(0,120))
+     +') — 내장 에이전트로 답했어요.</i>');
+   if(a.apply) a.apply();
+  }
+ } else {
+  const a = agentAnswer(q);
+  addMsg('bot', a.html);
+  if(a.apply) a.apply();
+ }
 }
 function initChat(){
  const sug = document.getElementById('sugg');
@@ -859,6 +979,39 @@ function initChat(){
  document.getElementById('send').onclick = sendMsg;
  document.getElementById('ask').addEventListener('keydown', e => {
   if(e.key === 'Enter') sendMsg(); });
+ document.getElementById('llmset').onclick = () => {
+  const cur = getKey();
+  const k = window.prompt(cur
+   ? 'Claude API 키가 설정되어 있어요. 새 키 입력(비우고 확인=해제):'
+   : 'Anthropic Claude API 키를 입력하세요 (sk-ant-...)\n키는 이 브라우저(localStorage)에만 저장됩니다.', cur);
+  if(k === null) return;
+  setKey(k.trim());
+  updateLlmStat();
+ };
+ updateLlmStat();
+ // 1뎁스 모듈 버튼 → 각 섹션 연결
+ document.querySelectorAll('#mods button').forEach(b => b.onclick = () => {
+  const m = b.dataset.m;
+  if(m==='dep' || m==='sav'){
+   state.product = m==='sav' ? 'saving' : 'deposit';
+   state.term='전체'; state.compare=[]; render();
+   document.getElementById('view').scrollIntoView({behavior:'smooth'});
+  } else if(m==='trend'){
+   document.getElementById('trendcard').scrollIntoView({behavior:'smooth'});
+  } else if(m==='cmp'){
+   if(state.compare.length){ state.modal='compare'; renderOverlay(); }
+   else{ document.getElementById('view').scrollIntoView({behavior:'smooth'});
+    addMsg('bot','상품 비교는 표에서 <b>＋담기</b>로 2~4개를 고른 뒤 하단 <b>나란히 비교</b>를 누르면 열려요.'); }
+  } else if(m==='wiz'){ state.modal='wizard'; renderOverlay(); }
+ });
+}
+function syncMods(){
+ document.querySelectorAll('#mods button').forEach(b => {
+  const m = b.dataset.m;
+  b.classList.toggle('on',
+   (m==='dep' && state.product==='deposit') ||
+   (m==='sav' && state.product==='saving'));
+ });
 }
 
 function pivot(rows){
@@ -1023,7 +1176,7 @@ function render(){
   `<div class="wrap"><table><thead><tr>${bankTh}<th>상품명</th>${ths}`+
   `<th>우대조건</th></tr></thead><tbody>${trs}</tbody></table></div>`;
  view.querySelectorAll('.add').forEach(b => b.onclick = () => toggleCompare(b.dataset.k));
- renderTrend(); renderTray(); renderOverlay();
+ renderTrend(); renderTray(); renderOverlay(); syncMods();
 }
 initChat();
 render();
