@@ -139,90 +139,106 @@ __FONTCSS__
   color-scheme:light;
   --neutralFg1:#242424; --neutralFg2:#424242; --neutralFg3:#616161;
   --neutralBg1:#ffffff; --neutralBg2:#fafafa; --neutralBg3:#f5f5f5;
-  --neutralStroke1:#d1d1d1; --neutralStroke2:#e0e0e0;
-  /* 디지털 뱅킹 랜딩 팔레트 */
-  --ink:#0c2f24; --ink2:#124534; --lime:#d9f25a; --limeDeep:#b8d92e;
-  --paper:#f2f3ec;
-  --brandFg:#0e6b4f; --brandFgHover:#0a563f;
+  --neutralStroke1:#d1d1d1; --neutralStroke2:#e5e7eb;
+  /* 레퍼런스 팔레트: 연블루 배경 + 화이트 셸 + 블루 액센트 */
+  --pageBg:#cddff8; --blue:#4285f4; --blueDeep:#3573dd;
+  --blueSoft:#e6effc; --grayPill:#eef0f4; --ink:#101215;
+  --brandFg:#3573dd; --brandFgHover:#2b62c4;
   --radiusMd:4px; --radiusLg:6px; --radiusXl:8px; --radiusPill:999px;
   --shadow2:0 1px 2px rgba(0,0,0,.14),0 0 2px rgba(0,0,0,.12);
   --fontBase:'Pretendard','Pretendard Variable',-apple-system,
    'Segoe UI Variable','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
  }
  *{box-sizing:border-box}
- body{font-family:var(--fontBase);margin:0;padding:14px 16px 28px;
-  background:var(--paper);color:var(--neutralFg1);
+ body{font-family:var(--fontBase);margin:0;padding:34px 26px;
+  background:var(--pageBg);color:var(--neutralFg1);
   font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
- /* ===== 랜딩 컨테이너 ===== */
- .widget{max-width:1080px;margin:0 auto}
- /* ===== 탑바: 로고 + 모듈 내비 ===== */
- .whead{display:flex;align-items:center;gap:14px;padding:10px 6px 16px;
+ /* ===== 화이트 셸 (레퍼런스의 큰 라운드 컨테이너) ===== */
+ .widget{max-width:1200px;margin:0 auto;background:#fff;border-radius:40px;
+  padding:26px 34px 22px;box-shadow:0 30px 70px rgba(60,90,140,.18)}
+ /* ===== 탑바: 로고 + 중앙 필 내비 ===== */
+ .whead{display:flex;align-items:center;gap:14px;padding:4px 2px 10px;
   flex-wrap:wrap}
- .wmark{display:inline-flex;align-items:center;justify-content:center;
-  width:40px;height:40px;border-radius:14px;background:var(--ink);
-  color:var(--lime)}
- .wmark svg{width:22px;height:22px}
- .wname{font-size:16px;font-weight:800;letter-spacing:-.2px}
- .mods{display:flex;gap:4px;margin:0 auto;background:#fff;
-  border:1px solid var(--neutralStroke2);border-radius:var(--radiusPill);
-  padding:4px;overflow-x:auto;max-width:100%}
- .mods button{font:inherit;font-size:14px;font-weight:600;cursor:pointer;
-  color:var(--neutralFg2);background:transparent;border:0;
-  border-radius:var(--radiusPill);padding:8px 16px;white-space:nowrap}
- .mods button:hover{background:var(--neutralBg3)}
- .mods button.on{background:var(--ink);color:#fff}
+ .wname{font-size:15px;font-weight:700;letter-spacing:-.2px}
+ .mods{display:flex;gap:8px;margin:0 auto;overflow-x:auto;max-width:100%}
+ .mods button{font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;
+  color:var(--neutralFg2);background:var(--grayPill);border:0;
+  border-radius:var(--radiusPill);padding:9px 18px;white-space:nowrap;
+  transition:background .12s}
+ .mods button:hover{background:#e3e6ec}
+ .mods button.on{background:var(--blue);color:#fff;font-weight:600}
  .whead .meta{text-align:right}
- /* ===== 히어로 패널 (딥 그린) ===== */
- .heroPanel{background:
-   radial-gradient(90% 140% at 85% -20%,var(--ink2),transparent 60%),
-   var(--ink);
-  border-radius:26px;padding:44px 42px 34px;margin-bottom:16px;color:#fff}
- .eyebrow{display:inline-block;font-size:12.5px;font-weight:600;margin:0 0 14px;
-  color:var(--lime);background:rgba(217,242,90,.12);
-  border:1px solid rgba(217,242,90,.35);border-radius:var(--radiusPill);
-  padding:5px 13px;letter-spacing:.2px}
- .heroPanel h1{font-size:clamp(28px,4.6vw,46px);font-weight:800;margin:0 0 12px;
-  line-height:1.16;letter-spacing:-.8px}
- .herosub{margin:0 0 22px;color:rgba(255,255,255,.72);font-size:15.5px;
-  max-width:560px}
+ /* ===== 홈 히어로 (중앙 정렬, 흰 배경 위 검은 헤드라인) ===== */
+ .heroC{text-align:center;padding:56px 16px 22px;max-width:760px;margin:0 auto}
+ .pillbadge{display:inline-flex;align-items:center;gap:7px;font-size:13px;
+  font-weight:600;color:var(--blueDeep);background:var(--blueSoft);
+  border-radius:var(--radiusPill);padding:7px 15px;margin-bottom:26px}
+ .pillbadge svg{width:15px;height:15px}
+ .heroC h1{font-size:clamp(40px,6.4vw,72px);font-weight:800;margin:0 0 18px;
+  line-height:1.06;letter-spacing:-2.5px;color:var(--ink)}
+ .herosub{margin:0 auto 26px;color:var(--neutralFg3);font-size:14.5px;
+  max-width:400px}
  /* Get Started 자리의 LLM 입력창 */
  .askbar{display:flex;align-items:center;gap:8px;background:#fff;
-  border-radius:var(--radiusPill);padding:8px 8px 8px 18px;max-width:620px;
-  box-shadow:0 14px 34px rgba(0,0,0,.28)}
+  border:1px solid var(--neutralStroke2);
+  border-radius:var(--radiusPill);padding:7px 7px 7px 18px;max-width:560px;
+  margin:0 auto;box-shadow:0 10px 30px rgba(66,133,244,.16)}
  .askbar>svg{width:18px;height:18px;color:var(--neutralFg3);flex:none}
  .askbar input{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;
   background:transparent;color:var(--neutralFg1)}
  .askbar input::placeholder{color:var(--neutralFg3)}
- .keybtn{display:inline-flex;align-items:center;justify-content:center;flex:none;
-  width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;
-  color:var(--neutralFg3);background:var(--neutralBg3)}
- .keybtn:hover{color:var(--ink);background:var(--neutralBg2)}
- .keybtn.on{color:var(--ink);background:var(--lime)}
- .keybtn svg{width:17px;height:17px}
- .sendbtn{display:inline-flex;align-items:center;justify-content:center;flex:none;
-  width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;color:var(--ink);
-  background:linear-gradient(180deg,var(--lime),var(--limeDeep))}
+ .sendbtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  flex:none;height:42px;border-radius:var(--radiusPill);border:0;cursor:pointer;
+  color:#fff;font:inherit;font-size:14px;font-weight:600;padding:0 20px;
+  background:linear-gradient(180deg,#5b97f7,var(--blue));
+  box-shadow:0 6px 16px rgba(66,133,244,.35)}
  .sendbtn:hover{filter:brightness(1.05)}
- .sendbtn svg{width:19px;height:19px}
- .llmstat{margin:8px 2px 0;font-size:12px;color:rgba(255,255,255,.55)}
- .llmstat b{color:var(--lime);font-weight:600}
- .sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+ .sendbtn svg{width:16px;height:16px}
+ .sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center}
  .sugg button{font:inherit;font-size:13px;cursor:pointer;
-  color:rgba(255,255,255,.85);background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:var(--radiusPill);padding:6px 13px}
- .sugg button:hover{background:rgba(255,255,255,.16)}
- /* 채팅 로그 (히어로 안) */
- .chatlog{display:flex;flex-direction:column;gap:10px;margin:16px 0 0;
-  max-height:360px;overflow:auto;padding:4px 2px}
+  color:var(--neutralFg2);background:var(--grayPill);border:0;
+  border-radius:var(--radiusPill);padding:6px 14px}
+ .sugg button:hover{background:#e3e6ec}
+ /* 채팅 로그 */
+ .chatlog{display:flex;flex-direction:column;gap:10px;margin:18px auto 0;
+  max-height:360px;overflow:auto;padding:4px 2px;max-width:640px;text-align:left}
  .msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;
   line-height:1.55;white-space:pre-line}
- .msg.user{align-self:flex-end;background:var(--lime);color:var(--ink);
-  border-bottom-right-radius:6px;font-weight:500}
- .msg.bot{align-self:flex-start;background:rgba(255,255,255,.94);
+ .msg.user{align-self:flex-end;background:var(--blue);color:#fff;
+  border-bottom-right-radius:6px}
+ .msg.bot{align-self:flex-start;background:var(--grayPill);
   color:var(--neutralFg1);border-bottom-left-radius:6px}
- .msg.bot b{color:var(--brandFg)}
- .msg.typing{opacity:.75;font-style:italic}
+ .msg.bot b{color:var(--blueDeep)}
+ /* ===== 모듈 카드 3장 (레퍼런스 하단 카드) ===== */
+ .modrow{display:grid;grid-template-columns:1fr 1.55fr 1fr;gap:20px;
+  margin:34px 4px 10px;align-items:stretch}
+ .mcard{font:inherit;text-align:left;cursor:pointer;border-radius:24px;
+  padding:20px 22px;min-height:230px;display:flex;flex-direction:column;
+  transition:transform .15s,box-shadow .15s;position:relative}
+ .mcard:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(60,90,140,.16)}
+ .mcard.light{background:#fff;border:1px solid var(--neutralStroke2);
+  box-shadow:0 8px 24px rgba(60,90,140,.08)}
+ .mcard.bluecard{background:linear-gradient(135deg,#8db9f8 0%,#5b97f7 55%,#3f7ff0 100%);
+  border:0;color:#fff}
+ .mc-k{font-size:13px;color:var(--neutralFg3);font-weight:500;margin-bottom:6px}
+ .mc-v{font-size:34px;font-weight:700;letter-spacing:-1px;color:var(--ink)}
+ .mc-s{font-size:13px;color:var(--neutralFg2);margin-top:4px}
+ .mc-up{display:inline-block;font-size:12px;font-weight:600;color:var(--blueDeep);
+  margin-top:4px}
+ .mc-foot{margin-top:auto;border-top:1px solid var(--neutralBg3);padding-top:10px;
+  font-size:12px;color:var(--neutralFg3);text-align:center}
+ .mcard .pillbadge{margin-bottom:14px;background:rgba(255,255,255,.22);
+  color:#fff;font-size:12.5px}
+ .mc-title{font-size:clamp(22px,2.6vw,32px);font-weight:800;letter-spacing:-.8px;
+  line-height:1.15;margin-bottom:auto}
+ .mcard.bluecard p{font-size:13.5px;color:rgba(255,255,255,.88);line-height:1.6;
+  margin:18px 0 0}
+ .mc-spark{margin-top:8px}
+ .mc-spark svg{display:block;width:100%;height:auto}
+ /* 하단 스트립 */
+ .shellfoot{display:flex;justify-content:space-between;align-items:center;
+  padding:16px 6px 2px;color:var(--neutralFg3);font-size:12.5px}
+ .page{margin-top:6px}
  /* ===== 카드 공통 / 추이 그래프 ===== */
  .card{border:1px solid var(--neutralStroke2);border-radius:18px;background:#fff;
   padding:16px 18px;margin:0 0 8px;box-shadow:var(--shadow2)}
@@ -256,7 +272,7 @@ __FONTCSS__
   color:#fff;font-weight:600}
 
  /* 스티키 툴바 */
- .stickybar{position:sticky;top:0;z-index:5;background:var(--paper);
+ .stickybar{position:sticky;top:0;z-index:5;background:#fff;
   padding:12px 0 14px;border-bottom:1px solid var(--neutralStroke2)}
  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:12px}
  .search{flex:1 1 220px;min-width:150px;font:inherit;font-size:14px;
@@ -282,25 +298,7 @@ __FONTCSS__
  .badge{display:inline-block;font-size:11px;font-weight:700;color:#fff;
   background:var(--brandFg);border-radius:var(--radiusPill);
   padding:1px 8px;margin-left:6px;vertical-align:middle;letter-spacing:.3px}
- /* 히어로: 그라데이션 숏컷 타일 3장 */
- .hero{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0 4px}
- .hcard{position:relative;border:0;border-radius:20px;padding:16px 18px;
-  min-height:132px;cursor:pointer;text-align:left;font:inherit;
-  box-shadow:0 8px 22px rgba(30,40,60,.10);transition:transform .15s,box-shadow .15s}
- .hcard:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(30,40,60,.16)}
- .hcard.dep{background:linear-gradient(135deg,#d9f4ec,#c2ead9 55%,#dff0fa)}
- .hcard.sav{background:linear-gradient(135deg,#e6e2fa,#d9d2f4 55%,#f3e3f4)}
- .hcard.trd{background:linear-gradient(135deg,#fde7d8,#fbd9c6 55%,#f9e3ef)}
- .hcard .k{font-size:13px;color:rgba(20,30,40,.65);font-weight:600;
-  display:flex;align-items:center;gap:6px}
- .hcard .k svg{width:16px;height:16px;color:rgba(20,30,40,.7);flex:none}
- .hcard .v{font-size:30px;font-weight:700;margin:6px 0 2px;line-height:1.1;
-  color:#1c2733}
- .hcard .v small{font-size:14px;font-weight:600;color:rgba(20,30,40,.55)}
- .hcard .d{font-size:12.5px;color:rgba(20,30,40,.72);line-height:1.45}
- .hcard .d b{font-weight:600}
- @media (max-width:760px){.hero{grid-template-columns:1fr 1fr}}
- @media (max-width:560px){.hero{grid-template-columns:1fr}}
+ @media (max-width:900px){.modrow{grid-template-columns:1fr}}
 
  /* 툴바 3단 정리 */
  .barrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
@@ -416,11 +414,14 @@ __FONTCSS__
 
  /* ===== 반응형: 좁은 화면(모바일)에서는 상품별 카드로 ===== */
  @media (max-width:720px){
-  body{padding:8px 10px 20px}
-  .heroPanel{padding:26px 20px 24px;border-radius:20px}
+  body{padding:12px 8px}
+  .widget{padding:16px 14px;border-radius:26px}
+  .heroC{padding:28px 4px 16px}
+  .heroC h1{letter-spacing:-1.2px}
   h2{font-size:18px}
   .whead .meta{display:none}
   .mods{margin:0;order:3;flex-basis:100%}
+  .sendbtn{padding:0 14px}
   .wrap{border:none;overflow:visible;box-shadow:none}
   table,thead,tbody,tr,td{display:block;width:auto}
   thead{display:none}
@@ -446,12 +447,9 @@ __FONTCSS__
 </style></head><body>
 <div class="widget">
 <header class="whead">
- <span class="wmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-  stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
-  <path d="M3.5 21h17"/></svg></span>
  <span class="wname">금리 에이전트</span>
- <nav class="mods" id="mods" aria-label="바로가기">
+ <nav class="mods" id="mods" aria-label="페이지 이동">
+  <button type="button" data-m="home" class="on">홈</button>
   <button type="button" data-m="dep">예금</button>
   <button type="button" data-m="sav">적금</button>
   <button type="button" data-m="trend">금리 추이</button>
@@ -461,39 +459,41 @@ __FONTCSS__
  <span class="meta" id="meta"></span>
 </header>
 
-<section class="heroPanel">
- <p class="eyebrow">금융감독원 공시 기반 · 매일 아침 7시 갱신</p>
- <h1>오늘 가장 높은<br>예·적금 금리를 찾아드려요</h1>
- <p class="herosub">국민·우리·농협·하나·카카오뱅크·기업·수협 —
-  7개 은행 상품을 에이전트에게 바로 물어보세요.</p>
- <div class="askbar" role="search">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
-   stroke-linecap="round" stroke-linejoin="round"><path d="m14 5 5 5L8 21H3v-5z"/>
-   <path d="m12.5 6.5 5 5"/></svg>
-  <input id="ask" type="text" placeholder="무엇이든 물어보세요… 예) 12개월 예금 최고 금리"
-   aria-label="금리 질문" autocomplete="off">
-  <button id="llmset" class="keybtn" type="button" title="Claude API 키 설정"
-   aria-label="Claude API 키 설정"><svg viewBox="0 0 24 24" fill="none"
-   stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
-   stroke-linejoin="round"><circle cx="8" cy="14" r="4.5"/>
-   <path d="m11.5 10.5 8-8M16 5l2.5 2.5M13.5 7.5 16 10"/></svg></button>
-  <button id="send" class="sendbtn" aria-label="질문 보내기"><svg viewBox="0 0 24 24"
-   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-   stroke-linejoin="round"><path d="M12 19V6"/><path d="m6 11 6-6 6 6"/></svg></button>
+<section id="homeview">
+ <div class="heroC">
+  <span class="pillbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
+   <path d="M3.5 21h17"/></svg>금융감독원 공시 기반</span>
+  <h1>예금. 적금. 한눈에.</h1>
+  <p class="herosub">7개 은행의 오늘 금리를 매일 아침 갱신해요.<br>
+   궁금한 건 그대로 물어보세요.</p>
+  <div class="askbar" role="search">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+    stroke-linecap="round" stroke-linejoin="round"><path d="m14 5 5 5L8 21H3v-5z"/>
+    <path d="m12.5 6.5 5 5"/></svg>
+   <input id="ask" type="text" placeholder="무엇이든 물어보세요… 예) 12개월 예금 최고 금리"
+    aria-label="금리 질문" autocomplete="off">
+   <button id="send" class="sendbtn" aria-label="질문 보내기">질문하기<svg
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/>
+    <path d="m13 6 6 6-6 6"/></svg></button>
+  </div>
+  <div class="sugg" id="sugg"></div>
+  <div id="chatlog" class="chatlog" hidden aria-live="polite"></div>
  </div>
- <div class="sugg" id="sugg"></div>
- <p class="llmstat" id="llmstat"></p>
- <div id="chatlog" class="chatlog" hidden aria-live="polite"></div>
+ <div class="modrow" id="modrow" aria-label="모듈 바로가기"></div>
+ <div class="shellfoot"><span id="footstat"></span>
+  <span class="hint">모듈을 누르면 페이지로 이동해요 →</span></div>
 </section>
 
-<div id="hero" class="hero" aria-live="polite"></div>
-
-<section class="card" id="trendcard">
+<section class="card page" id="trendcard" hidden>
  <div class="card-h"><b>날짜별 금리 추이</b>
   <span class="card-sub" id="trendsub"></span></div>
  <div id="trend"></div>
 </section>
 
+<div id="ratespage" class="page" hidden>
 <div class="stickybar">
  <div class="barrow primary">
   <div class="seg" id="seg" role="tablist" aria-label="상품 종류">
@@ -536,6 +536,7 @@ __FONTCSS__
  <span class="badge">BEST</span>=현재 목록 중 최고우대 1위 · 빈칸(·)은 해당 기간 미판매</p>
 <p class="legend">※ 표시 금리는 세전·연이율이며 우대금리는 조건 충족 시 적용됩니다.
  상품별 단리/복리·과세 조건이 다를 수 있으니 가입 전 각 은행 약관을 확인하세요.</p>
+</div><!-- /#ratespage -->
 </div><!-- /.widget -->
 
 <div id="tray" class="tray" hidden></div>
@@ -543,8 +544,8 @@ __FONTCSS__
 
 <script>
 const APP = __DATA__;
-const state = {product:'deposit', banks:new Set(), term:'전체', q:'', sort:'max',
-  compare:[], modal:null, online:false, amount:0,
+const state = {view:'home', product:'deposit', banks:new Set(), term:'전체',
+  q:'', sort:'max', compare:[], modal:null, online:false, amount:0,
   ratetype:'', joindeny:'', rsvtype:'', minrate:0};
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -562,28 +563,69 @@ function heroBest(list){
  }
  return best;
 }
-const ICON_TRD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5.5-5.5 4 4L21 7"/><path d="M15 7h6v6"/></svg>';
-function renderHero(){
- const mk = (cls, label, icon, b, extra) => `<button type="button" class="hcard ${cls}" data-go="${cls}">`+
-   `<div class="k">${icon}${label}</div>`+
-   (b ? `<div class="v">${b.mx}<small>%</small></div>`+
-   `<div class="d"><b>${esc(b.bank)}</b> · ${esc(b.product)} · ${b.term}개월`+
-   `${b.rsv?' · '+esc(b.rsv):''} · 기본 ${isNaN(b.base)?'-':b.base}%</div>` : extra)+
-   `</button>`;
- const days = Object.keys(APP.history||{}).length;
- document.getElementById('hero').innerHTML =
-   mk('dep','오늘의 최고 예금', ICON_DEP, heroBest(APP.deposit)) +
-   mk('sav','오늘의 최고 적금', ICON_SAV, heroBest(APP.saving)) +
-   mk('trd','날짜별 금리 추이', ICON_TRD, null,
-     `<div class="v">${days}<small>일치 기록</small></div>`+
-     `<div class="d">매일 아침 7시에 쌓이는<br>은행별 최고금리 흐름 보기</div>`);
- document.querySelectorAll('.hcard').forEach(c => c.onclick = () => {
-  const go = c.dataset.go;
-  if(go==='trd'){ document.getElementById('trendcard').scrollIntoView({behavior:'smooth'}); return; }
-  state.product = go==='sav' ? 'saving' : 'deposit';
-  state.term='전체'; state.compare=[]; render();
-  document.getElementById('view').scrollIntoView({behavior:'smooth'});
- });
+function miniSpark(){
+ // 홈 우측 카드용 미니 추이(예금 전체 최고, 레퍼런스의 라인차트+툴팁)
+ const hist = APP.history || {};
+ const dates = Object.keys(hist).sort();
+ const pts = dates.map(d => { const day = (hist[d]||{}).deposit || {};
+  let m = 0; for(const b in day) m = Math.max(m, day[b].max||0); return m || null; });
+ const vals = pts.filter(v => v != null);
+ if(vals.length === 0) return {svg:'', last:null, delta:null};
+ let mn = Math.min(...vals), mx = Math.max(...vals);
+ if(mx-mn < 0.3){ const c=(mx+mn)/2; mn=c-0.2; mx=c+0.2; }
+ const W=250,H=96,L=8,R=12,T=30,B=18;
+ const X=i=>L+(W-L-R)*(dates.length===1?0.5:i/(dates.length-1));
+ const Y=v=>T+(H-T-B)*(1-(v-mn)/(mx-mn));
+ let d='';
+ const P=pts.map((v,i)=>v==null?null:{x:X(i),y:Y(v)}).filter(Boolean);
+ if(P.length>1){ d='M'+P[0].x+' '+P[0].y;
+  for(let i=1;i<P.length;i++){ const a=P[i-1],b=P[i],cx=(a.x+b.x)/2;
+   d+=' C'+cx+' '+a.y+' '+cx+' '+b.y+' '+b.x+' '+b.y; } }
+ let s='<svg viewBox="0 0 '+W+' '+H+'" aria-hidden="true">';
+ dates.forEach((dd,i)=>{ s+='<line x1="'+X(i)+'" y1="'+T+'" x2="'+X(i)+'" y2="'
+  +(H-B)+'" stroke="#eef0f4"/>'; });
+ if(d) s+='<path d="'+d+'" fill="none" stroke="#4285f4" stroke-width="2" stroke-linecap="round"/>';
+ P.forEach(p=>{ s+='<circle cx="'+p.x+'" cy="'+p.y+'" r="3" fill="#fff" stroke="#4285f4" stroke-width="1.6"/>'; });
+ const lp=P[P.length-1], lv=vals[vals.length-1];
+ if(lp){ const txt=lv.toFixed(2)+'%', tw=txt.length*6.6+14;
+  s+='<rect x="'+(lp.x-tw/2)+'" y="'+(lp.y-26)+'" width="'+tw+'" height="18" rx="9" fill="#101215"/>'
+   +'<text x="'+lp.x+'" y="'+(lp.y-13)+'" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">'+txt+'</text>'; }
+ dates.forEach((dd,i)=>{ s+='<text x="'+X(i)+'" y="'+(H-4)+'" text-anchor="middle" font-size="9" fill="#9aa1ab">'
+  +(+dd.slice(5,7))+'/'+(+dd.slice(8,10))+'</text>'; });
+ s+='</svg>';
+ const delta = vals.length>1 ? lv-vals[0] : null;
+ return {svg:s, last:lv, delta};
+}
+function renderModules(){
+ const dep = heroBest(APP.deposit), sav = heroBest(APP.saving);
+ const sp = miniSpark();
+ const el = document.getElementById('modrow');
+ el.innerHTML =
+  `<button type="button" class="mcard light" data-m="dep">
+    <div class="mc-k">오늘의 최고 예금</div>
+    <div class="mc-v">${dep?dep.mx+'%':'-'}</div>
+    <div class="mc-s">${dep?esc(dep.bank)+' · '+esc(dep.product)+' · '+dep.term+'개월':''}</div>
+    <div class="mc-k" style="margin-top:14px">오늘의 최고 적금</div>
+    <div class="mc-v">${sav?sav.mx+'%':'-'}</div>
+    <div class="mc-s">${sav?esc(sav.bank)+' · '+esc(sav.product)+' · '+sav.term+'개월':''}</div>
+    <div class="mc-foot">기본금리 기준 예금 ${dep&&!isNaN(dep.base)?dep.base:'-'}% ·
+     적금 ${sav&&!isNaN(sav.base)?sav.base:'-'}%</div>
+   </button>
+   <button type="button" class="mcard bluecard" data-m="cmp">
+    <span class="pillbadge">${ICON_DEP}상품 비교</span>
+    <div class="mc-title">담고. 비교하고.<br>고르고.</div>
+    <p>7개 은행 ${(APP.deposit||[]).length+(APP.saving||[]).length}개 상품을
+     2~4개 담아 기간별 금리와 우대조건을 나란히 확인하세요.
+     내 조건에 맞는 상품만 추릴 수도 있어요.</p>
+   </button>
+   <button type="button" class="mcard light" data-m="trend">
+    <div class="mc-k">금리 추이 (예금 최고)</div>
+    <div class="mc-v">${sp.last!=null?sp.last.toFixed(2)+'%':'-'}</div>
+    ${sp.delta!=null?'<span class="mc-up">'+(sp.delta>=0?'▲':'▼')+' '
+      +Math.abs(sp.delta).toFixed(2)+'%p</span>':''}
+    <div class="mc-spark">${sp.svg}</div>
+   </button>`;
+ el.querySelectorAll('.mcard').forEach(c => c.onclick = () => showView(c.dataset.m));
 }
 
 // ===== 비교 트레이 · 마법사 · 예상이자 =====
@@ -880,96 +922,41 @@ function agentAnswer(q){
    state.banks = new Set(banks); state.term = tm ? String(tm) : '전체';
    state.q=''; render(); }};
 }
-// ===== Claude API 연결 (키가 있으면 실제 LLM, 없으면 내장 에이전트) =====
-const LLM_MODEL = 'claude-sonnet-4-6';
-function getKey(){
- try{ return localStorage.getItem('anthropic_api_key') || ''; }catch(e){ return ''; }
-}
-function setKey(k){
- try{ k ? localStorage.setItem('anthropic_api_key', k)
-        : localStorage.removeItem('anthropic_api_key'); }catch(e){}
-}
-function updateLlmStat(){
- const el = document.getElementById('llmstat');
- const btn = document.getElementById('llmset');
- const on = !!getKey();
- btn.classList.toggle('on', on);
- el.innerHTML = on
-  ? '<b>Claude 연결됨</b> ('+LLM_MODEL+') — 자유롭게 질문하세요. 🔑 버튼으로 해제'
-  : '내장 에이전트 모드 — 🔑 버튼에 Claude API 키를 넣으면 어떤 질문에도 답해요';
-}
-function buildContext(){
- const line = g => { const terms = Object.keys(g.cells).sort((a,b)=>a-b)
-   .map(t=>t+'개월 기본'+(g.cells[t].base==null?'-':g.cells[t].base)
-     +'/최고'+(g.cells[t].mx==null?'-':g.cells[t].mx)).join(', ');
-  return g.bank+' | '+g.product+(g.rsv?'('+g.rsv+')':'')+' | '+terms
-    +(g.joinway?' | 가입:'+g.joinway:'')
-    +(g.spcl?' | 우대:'+g.spcl.slice(0,100):''); };
- let ctx = '공시기준 '+APP.dcls+' (조회 '+APP.now+')\n[정기예금]\n'
-   + allGroups('deposit').map(line).join('\n')
-   + '\n[적금]\n' + allGroups('saving').map(line).join('\n');
- const hist = APP.history||{};
- const hd = Object.keys(hist).sort();
- if(hd.length > 1){
-  ctx += '\n[일별 은행별 최고우대금리 이력]\n' + hd.map(d => {
-   const day = hist[d].deposit||{};
-   return d+' 예금: '+Object.keys(day).map(b=>b+' '+day[b].max+'%').join(', ');
-  }).join('\n');
- }
- return ctx;
-}
-const llmHistory = [];
-async function askClaude(q){
- const key = getKey();
- const sys = '너는 한국 은행 예·적금 금리 안내 에이전트다. 아래 오늘자 데이터에만 근거해 '
-  +'한국어로 간결히 답하라(금리는 % 그대로, 핵심은 <b></b>). 데이터에 없는 것은 모른다고 '
-  +'말하라. 상담·투자권유가 아닌 정보 안내이며, 금리는 세전·우대조건 충족 기준임을 '
-  +'필요시 짧게 덧붙여라.\n\n'+buildContext();
- llmHistory.push({role:'user', content:q});
- const body = {model:LLM_MODEL, max_tokens:700, system:sys,
-   messages:llmHistory.slice(-8)};
- const r = await fetch('https://api.anthropic.com/v1/messages', {
-  method:'POST',
-  headers:{'x-api-key':key, 'anthropic-version':'2023-06-01',
-   'content-type':'application/json',
-   'anthropic-dangerous-direct-browser-access':'true'},
-  body:JSON.stringify(body)});
- if(!r.ok){
-  const err = await r.text();
-  throw new Error('HTTP '+r.status+': '+err.slice(0,180));
- }
- const d = await r.json();
- const txt = (d.content||[]).map(c=>c.text||'').join('');
- llmHistory.push({role:'assistant', content:txt});
- return txt;
-}
-async function sendMsg(){
+function sendMsg(){
  const inp = document.getElementById('ask');
  const q = (inp.value||'').trim();
  if(!q) return;
  addMsg('user', esc(q));
  inp.value = '';
- const useLLM = !!getKey() && typeof fetch !== 'undefined';
- if(useLLM){
-  addMsg('bot typing', 'Claude가 생각하는 중…');
-  try{
-   const txt = await askClaude(q);
-   chatMsgs.pop();
-   // Claude 응답: <b>만 허용, 나머지 이스케이프
-   const safe = esc(txt).replace(/&lt;b&gt;/g,'<b>').replace(/&lt;\/b&gt;/g,'</b>');
-   addMsg('bot', safe);
-  }catch(e){
-   chatMsgs.pop();
-   const a = agentAnswer(q);
-   addMsg('bot', a.html + '\n\n<i>⚠ Claude 호출 실패('+esc(String(e.message||e).slice(0,120))
-     +') — 내장 에이전트로 답했어요.</i>');
-   if(a.apply) a.apply();
-  }
- } else {
-  const a = agentAnswer(q);
-  addMsg('bot', a.html);
-  if(a.apply) a.apply();
+ const a = agentAnswer(q);
+ addMsg('bot', a.html);
+ if(a.apply) a.apply();
+}
+// ===== 페이지 전환: 모듈 클릭 → 해당 내용 페이지 =====
+function showView(m){
+ if(m==='dep' || m==='sav'){
+  state.product = m==='sav' ? 'saving' : 'deposit';
+  state.term='전체'; state.compare=[];
  }
+ state.view = m;
+ render();
+ if(m==='wiz'){ state.modal='wizard'; renderOverlay(); }
+ if(m==='cmp' && state.compare.length){ state.modal='compare'; renderOverlay(); }
+ try{ window.scrollTo({top:0, behavior:'smooth'}); }catch(e){}
+}
+function applyView(){
+ const v = state.view || 'home';
+ const home = document.getElementById('homeview');
+ const rates = document.getElementById('ratespage');
+ const trend = document.getElementById('trendcard');
+ home.hidden = v !== 'home';
+ trend.hidden = v !== 'trend';
+ rates.hidden = !(v==='dep' || v==='sav' || v==='cmp' || v==='wiz');
+ document.querySelectorAll('#mods button').forEach(b => {
+  const m = b.dataset.m;
+  b.classList.toggle('on', m === v ||
+   (v==='dep' && m==='dep') || (v==='sav' && m==='sav'));
+ });
 }
 function initChat(){
  const sug = document.getElementById('sugg');
@@ -979,39 +966,9 @@ function initChat(){
  document.getElementById('send').onclick = sendMsg;
  document.getElementById('ask').addEventListener('keydown', e => {
   if(e.key === 'Enter') sendMsg(); });
- document.getElementById('llmset').onclick = () => {
-  const cur = getKey();
-  const k = window.prompt(cur
-   ? 'Claude API 키가 설정되어 있어요. 새 키 입력(비우고 확인=해제):'
-   : 'Anthropic Claude API 키를 입력하세요 (sk-ant-...)\n키는 이 브라우저(localStorage)에만 저장됩니다.', cur);
-  if(k === null) return;
-  setKey(k.trim());
-  updateLlmStat();
- };
- updateLlmStat();
- // 1뎁스 모듈 버튼 → 각 섹션 연결
- document.querySelectorAll('#mods button').forEach(b => b.onclick = () => {
-  const m = b.dataset.m;
-  if(m==='dep' || m==='sav'){
-   state.product = m==='sav' ? 'saving' : 'deposit';
-   state.term='전체'; state.compare=[]; render();
-   document.getElementById('view').scrollIntoView({behavior:'smooth'});
-  } else if(m==='trend'){
-   document.getElementById('trendcard').scrollIntoView({behavior:'smooth'});
-  } else if(m==='cmp'){
-   if(state.compare.length){ state.modal='compare'; renderOverlay(); }
-   else{ document.getElementById('view').scrollIntoView({behavior:'smooth'});
-    addMsg('bot','상품 비교는 표에서 <b>＋담기</b>로 2~4개를 고른 뒤 하단 <b>나란히 비교</b>를 누르면 열려요.'); }
-  } else if(m==='wiz'){ state.modal='wizard'; renderOverlay(); }
- });
-}
-function syncMods(){
- document.querySelectorAll('#mods button').forEach(b => {
-  const m = b.dataset.m;
-  b.classList.toggle('on',
-   (m==='dep' && state.product==='deposit') ||
-   (m==='sav' && state.product==='saving'));
- });
+ // 탑바 모듈 내비 → 페이지 전환
+ document.querySelectorAll('#mods button').forEach(b =>
+  b.onclick = () => showView(b.dataset.m));
 }
 
 function pivot(rows){
@@ -1043,7 +1000,10 @@ function pivot(rows){
 function render(){
  document.getElementById('meta').textContent =
   '공시기준 '+APP.dcls+' · 조회시각 '+APP.now+' · 출처: 금융감독원 금융상품통합비교공시';
- renderHero();
+ document.getElementById('footstat').textContent =
+  '7개 은행 · '+((APP.deposit||[]).length+(APP.saving||[]).length)
+  +'개 상품 옵션 · 매일 아침 7시 갱신';
+ renderModules();
 
  // 세그먼트(탭)
  document.querySelectorAll('#seg button').forEach(b => {
@@ -1141,7 +1101,7 @@ function render(){
  if(!items.length){
   view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl}${onLbl}</h2>`+
    `<p class="empty">해당 조건의 상품이 없습니다. 필터를 줄여보세요.</p>`;
-  renderTrend(); renderTray(); renderOverlay(); return;
+  renderTrend(); renderTray(); renderOverlay(); applyView(); return;
  }
  const showBank = state.banks.size !== 1;
  const ths = dispTerms.map(t => `<th class="num">${t}개월</th>`).join('');
@@ -1176,7 +1136,7 @@ function render(){
   `<div class="wrap"><table><thead><tr>${bankTh}<th>상품명</th>${ths}`+
   `<th>우대조건</th></tr></thead><tbody>${trs}</tbody></table></div>`;
  view.querySelectorAll('.add').forEach(b => b.onclick = () => toggleCompare(b.dataset.k));
- renderTrend(); renderTray(); renderOverlay(); syncMods();
+ renderTrend(); renderTray(); renderOverlay(); applyView();
 }
 initChat();
 render();
