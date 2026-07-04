@@ -209,6 +209,12 @@ __FONTCSS__
  .msg.bot{align-self:flex-start;background:var(--grayPill);
   color:var(--neutralFg1);border-bottom-left-radius:6px}
  .msg.bot b{color:var(--blueDeep)}
+ .chatclear{display:inline-flex;align-items:center;gap:6px;margin:10px auto 0;
+  font:inherit;font-size:12.5px;cursor:pointer;color:var(--neutralFg3);
+  background:transparent;border:1px solid var(--neutralStroke2);
+  border-radius:var(--radiusPill);padding:6px 14px}
+ .chatclear:hover{background:var(--grayPill);color:var(--neutralFg1)}
+ .chatclear svg{width:14px;height:14px}
  /* ===== 모듈 카드 3장 (레퍼런스 하단 카드) ===== */
  .modrow{display:grid;grid-template-columns:1fr 1.55fr 1fr;gap:20px;
   margin:34px 4px 10px;align-items:stretch}
@@ -481,6 +487,10 @@ __FONTCSS__
   </div>
   <div class="sugg" id="sugg"></div>
   <div id="chatlog" class="chatlog" hidden aria-live="polite"></div>
+  <button id="chatclear" class="chatclear" type="button" hidden>
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+    stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2"/>
+    <path d="M6 6l1 14h10l1-14"/></svg>답변 초기화</button>
  </div>
  <div class="modrow" id="modrow" aria-label="모듈 바로가기"></div>
  <div class="shellfoot"><span id="footstat"></span>
@@ -863,6 +873,13 @@ function addMsg(cls, html){
  log.hidden = false;
  log.innerHTML = chatMsgs.map(m=>'<div class="msg '+m.cls+'">'+m.html+'</div>').join('');
  log.scrollTop = 1e9;
+ document.getElementById('chatclear').hidden = false;
+}
+function clearChat(){
+ chatMsgs.length = 0;
+ const log = document.getElementById('chatlog');
+ log.innerHTML = ''; log.hidden = true;
+ document.getElementById('chatclear').hidden = true;
 }
 function parseAmount(q){
  let m = q.match(/(\d+(?:\.\d+)?)\s*억/); if(m) return Math.round(+m[1]*1e8);
@@ -964,6 +981,7 @@ function initChat(){
  sug.querySelectorAll('button').forEach(b => b.onclick = () => {
   document.getElementById('ask').value = b.textContent; sendMsg(); });
  document.getElementById('send').onclick = sendMsg;
+ document.getElementById('chatclear').onclick = clearChat;
  document.getElementById('ask').addEventListener('keydown', e => {
   if(e.key === 'Enter') sendMsg(); });
  // 탑바 모듈 내비 → 페이지 전환
