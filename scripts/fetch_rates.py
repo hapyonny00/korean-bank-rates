@@ -210,7 +210,7 @@ __FONTCSS__
  .chatlogwrap{position:relative;margin:18px auto 0;max-width:640px;text-align:left}
  .chatlog{display:flex;flex-direction:column;gap:10px;
   max-height:360px;overflow:auto;padding:4px 2px 28px}
- .chatfade{position:absolute;left:0;right:6px;bottom:0;height:52px;
+ .chatfade{position:absolute;left:-24px;right:-24px;bottom:0;height:52px;
   background:linear-gradient(to bottom, rgba(255,255,255,0), #fff 88%);
   pointer-events:none;border-radius:0 0 14px 14px}
  .msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;
@@ -561,15 +561,15 @@ __FONTCSS__
     <path d="m12.5 6.5 5 5"/></svg>
    <input id="ask" type="text" placeholder="궁금한 걸 물어보세요 · 예) 12개월 예금 금리"
     aria-label="금리 질문" autocomplete="off">
+   <button id="send" class="sendbtn" aria-label="질문 보내기">질문하기<svg
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/>
+    <path d="m13 6 6 6-6 6"/></svg></button>
    <button id="chatclear" class="chatclear" type="button" hidden aria-label="대화 리셋"
     title="대화 리셋">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
      stroke-linecap="round" stroke-linejoin="round">
      <path d="M3.5 9.5a8.5 8.5 0 1 1 1.02 6.4"/><path d="M3.5 4v5.5H9"/></svg></button>
-   <button id="send" class="sendbtn" aria-label="질문 보내기">질문하기<svg
-    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-    stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/>
-    <path d="m13 6 6 6-6 6"/></svg></button>
   </div>
   <div class="sugg" id="sugg"></div>
   <div class="chatlogwrap" id="chatlogwrap" hidden>
