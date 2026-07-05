@@ -253,6 +253,35 @@ __FONTCSS__
  #trend{overflow-x:auto}
  #trend svg{display:block;width:100%;height:auto}
  .trend-note{color:var(--neutralFg3);font-size:13px;padding:14px 2px}
+ /* 날짜 조회 내비 (메인) */
+ .datenavwrap{text-align:center;margin-top:20px}
+ .datenav{display:inline-flex;align-items:center;gap:4px;background:#fff;
+  border:1px solid var(--neutralStroke2);border-radius:var(--radiusPill);padding:5px 7px;
+  box-shadow:0 6px 16px rgba(66,133,244,.10)}
+ .datenav .dn-arw{display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;font-size:17px;
+  line-height:1;color:var(--neutralFg2);background:var(--grayPill)}
+ .datenav .dn-arw:hover:not(:disabled){background:#e3e6ec}
+ .datenav .dn-arw:disabled{opacity:.35;cursor:default}
+ .datenav .dn-cal{font-size:13px;padding:0 2px 0 5px}
+ .datenav select{border:0;background:transparent;font:inherit;font-size:14px;
+  font-weight:600;color:var(--ink);cursor:pointer;padding:4px 4px}
+ /* 추이 컨트롤 (은행별/상품별 비교) */
+ .tctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:2px 0 16px}
+ .tsegwrap{display:inline-flex;background:var(--grayPill);border-radius:var(--radiusPill);
+  padding:3px;gap:2px}
+ .tseg{font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;border:0;
+  background:transparent;color:var(--neutralFg2);border-radius:var(--radiusPill);
+  padding:6px 13px}
+ .tseg.on{background:var(--blue);color:#fff}
+ .tchips{display:flex;flex-wrap:wrap;gap:6px}
+ .tchip{font:inherit;font-size:12.5px;cursor:pointer;border:1px solid var(--neutralStroke2);
+  background:#fff;color:var(--neutralFg2);border-radius:var(--radiusPill);padding:5px 12px}
+ .tchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+ .tlegend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:12.5px;
+  color:var(--neutralFg2)}
+ .tlegend span{display:inline-flex;align-items:center;gap:6px}
+ .tlegend i{width:11px;height:11px;border-radius:50%;display:inline-block}
  h2{font-size:20px;font-weight:700;margin:8px 0 10px;line-height:1.3}
  h2 small{font-weight:400;color:var(--neutralFg3);font-size:13px}
  .meta{color:var(--neutralFg3);font-size:13px;margin:0}
@@ -350,8 +379,8 @@ __FONTCSS__
  /* hidden 속성이 display:flex 를 이기도록(안 그러면 빈 오버레이가 안 닫힘) */
  .overlay[hidden]{display:none}
  .tray[hidden]{display:none}
- .sheet{background:var(--neutralBg1);border-radius:var(--radiusXl);width:100%;
-  max-width:880px;box-shadow:0 8px 28px rgba(0,0,0,.22);padding:18px 20px}
+ .sheet{background:var(--neutralBg1);border-radius:32px;width:100%;
+  max-width:880px;box-shadow:0 20px 50px rgba(20,40,80,.28);padding:22px 24px}
  .sheet-h{display:flex;justify-content:space-between;align-items:center;
   margin-bottom:14px;font-size:17px}
  .sheet-h small{font-weight:400;color:var(--neutralFg3);font-size:12px}
@@ -360,7 +389,7 @@ __FONTCSS__
  .x:hover{background:var(--neutralBg2)}
  /* 비교 카드 */
  .ccards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
- .ccard{border:1px solid var(--neutralStroke2);border-radius:var(--radiusLg);padding:12px}
+ .ccard{border:1px solid var(--neutralStroke2);border-radius:18px;padding:14px}
  .cc-h{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700}
  .cc-h .x{margin-left:auto}
  .cc-p{color:var(--neutralFg2);font-size:13px;margin:4px 0 8px;font-weight:400}
@@ -492,6 +521,7 @@ __FONTCSS__
     stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2"/>
     <path d="M6 6l1 14h10l1-14"/></svg>답변 초기화</button>
  </div>
+ <div class="datenavwrap"><div class="datenav" id="datenav"></div></div>
  <div class="modrow" id="modrow" aria-label="모듈 바로가기"></div>
  <div class="shellfoot"><span id="footstat"></span>
   <span class="hint">모듈을 누르면 페이지로 이동해요 →</span></div>
@@ -500,6 +530,7 @@ __FONTCSS__
 <section class="card page" id="trendcard" hidden>
  <div class="card-h"><b>날짜별 금리 추이</b>
   <span class="card-sub" id="trendsub"></span></div>
+ <div class="tctrl" id="tctrl"></div>
  <div id="trend"></div>
 </section>
 
@@ -556,7 +587,8 @@ __FONTCSS__
 const APP = __DATA__;
 const state = {view:'home', product:'deposit', banks:new Set(), term:'전체',
   q:'', sort:'max', compare:[], modal:null, online:false, amount:0,
-  ratetype:'', joindeny:'', rsvtype:'', minrate:0};
+  ratetype:'', joindeny:'', rsvtype:'', minrate:0,
+  viewDate:null, trendProduct:'deposit', trendMetric:'max', trendBanks:new Set()};
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const isNum = v => /^\d+$/.test(String(v));
@@ -606,20 +638,48 @@ function miniSpark(){
  const delta = vals.length>1 ? lv-vals[0] : null;
  return {svg:s, last:lv, delta};
 }
+function histDates(){ return Object.keys(APP.history||{}).sort(); }
+function latestDate(){ const d = histDates(); return d[d.length-1] || null; }
+function histVal(date, prod, bank, metric){
+ const day = (APP.history[date]||{})[prod] || {};
+ if(bank === '전체'){ let m = 0; for(const b in day) m = Math.max(m, (day[b]||{})[metric]||0);
+  return m || null; }
+ return day[bank] ? (day[bank][metric] || null) : null;
+}
+function histTop(date, prod, metric){
+ const day = (APP.history[date]||{})[prod] || {}; let bb=null, bv=-1;
+ for(const b in day){ const v = (day[b]||{})[metric]||0; if(v > bv){ bv = v; bb = b; } }
+ return bb ? {bank:bb, rate:bv} : null;
+}
 function renderModules(){
- const dep = heroBest(APP.deposit), sav = heroBest(APP.saving);
+ const vd = state.viewDate || latestDate();
+ const isToday = !vd || vd === latestDate();
+ const dl = isToday ? '오늘' : (vd ? (+vd.slice(5,7))+'/'+(+vd.slice(8,10)) : '오늘');
+ let depV, depS, savV, savS, footTxt;
+ if(isToday){
+  const dep = heroBest(APP.deposit), sav = heroBest(APP.saving);
+  depV = dep?dep.mx+'%':'-'; depS = dep?esc(dep.bank)+' · '+esc(dep.product)+' · '+dep.term+'개월':'';
+  savV = sav?sav.mx+'%':'-'; savS = sav?esc(sav.bank)+' · '+esc(sav.product)+' · '+sav.term+'개월':'';
+  footTxt = '기본금리 기준 예금 '+(dep&&!isNaN(dep.base)?dep.base:'-')+'% · 적금 '
+    +(sav&&!isNaN(sav.base)?sav.base:'-')+'%';
+ } else {
+  const dt = histTop(vd,'deposit','max'), st = histTop(vd,'saving','max');
+  const db = histTop(vd,'deposit','base'), sb = histTop(vd,'saving','base');
+  depV = dt?dt.rate+'%':'-'; depS = dt?esc(dt.bank)+' 최고 (은행 기준)':'기록 없음';
+  savV = st?st.rate+'%':'-'; savS = st?esc(st.bank)+' 최고 (은행 기준)':'기록 없음';
+  footTxt = '기본금리 최고 예금 '+(db?db.rate:'-')+'% · 적금 '+(sb?sb.rate:'-')+'%';
+ }
  const sp = miniSpark();
  const el = document.getElementById('modrow');
  el.innerHTML =
   `<button type="button" class="mcard light" data-m="dep">
-    <div class="mc-k">오늘의 최고 예금</div>
-    <div class="mc-v">${dep?dep.mx+'%':'-'}</div>
-    <div class="mc-s">${dep?esc(dep.bank)+' · '+esc(dep.product)+' · '+dep.term+'개월':''}</div>
-    <div class="mc-k" style="margin-top:14px">오늘의 최고 적금</div>
-    <div class="mc-v">${sav?sav.mx+'%':'-'}</div>
-    <div class="mc-s">${sav?esc(sav.bank)+' · '+esc(sav.product)+' · '+sav.term+'개월':''}</div>
-    <div class="mc-foot">기본금리 기준 예금 ${dep&&!isNaN(dep.base)?dep.base:'-'}% ·
-     적금 ${sav&&!isNaN(sav.base)?sav.base:'-'}%</div>
+    <div class="mc-k">${dl}의 최고 예금</div>
+    <div class="mc-v">${depV}</div>
+    <div class="mc-s">${depS}</div>
+    <div class="mc-k" style="margin-top:14px">${dl}의 최고 적금</div>
+    <div class="mc-v">${savV}</div>
+    <div class="mc-s">${savS}</div>
+    <div class="mc-foot">${footTxt}</div>
    </button>
    <button type="button" class="mcard bluecard" data-m="cmp">
     <span class="pillbadge">${ICON_DEP}상품 비교</span>
@@ -772,94 +832,124 @@ function wizardHTML(){
 
 // ===== 날짜별 금리 추이 그래프 =====
 const LINE_COLORS = ['#0f6cbd','#7a5af8','#e8618c','#12a594','#e07b39','#5a6acf','#c05299'];
+function renderDatenav(){
+ const el = document.getElementById('datenav');
+ const ds = histDates();
+ if(!ds.length){ el.innerHTML = ''; return; }
+ const vd = state.viewDate || latestDate();
+ const idx = ds.indexOf(vd);
+ el.innerHTML =
+  '<button class="dn-arw" data-d="prev"'+(idx<=0?' disabled':'')+' aria-label="이전 날짜">‹</button>'
+  +'<span class="dn-cal" aria-hidden="true">📅</span>'
+  +'<select id="datesel" aria-label="조회 날짜">'
+  + ds.map(d => '<option value="'+d+'"'+(d===vd?' selected':'')+'>'
+    + d + (d===latestDate()?' (오늘)':'') + '</option>').join('')
+  + '</select>'
+  +'<button class="dn-arw" data-d="next"'+(idx>=ds.length-1?' disabled':'')+' aria-label="다음 날짜">›</button>';
+ el.querySelector('#datesel').onchange = e => {
+  state.viewDate = e.target.value; renderModules(); renderDatenav(); };
+ el.querySelectorAll('.dn-arw').forEach(b => b.onclick = () => {
+  if(b.disabled) return;
+  const i = ds.indexOf(state.viewDate || latestDate());
+  const ni = b.dataset.d === 'prev' ? i-1 : i+1;
+  if(ni>=0 && ni<ds.length){ state.viewDate = ds[ni]; renderModules(); renderDatenav(); }
+ });
+}
+function renderTrendControls(){
+ const el = document.getElementById('tctrl');
+ const seg = (arr, attr, cur) => '<div class="tsegwrap">' + arr.map(([v,l]) =>
+   '<button class="tseg'+(String(cur)===String(v)?' on':'')+'" '+attr+'="'+v+'">'+l+'</button>'
+  ).join('') + '</div>';
+ const allOn = state.trendBanks.size === 0;
+ const chips = '<div class="tchips"><button class="tchip'+(allOn?' on':'')
+   +'" data-tb="__ALL__">전체 최고</button>'
+   + APP.banks.map(b => '<button class="tchip'+(state.trendBanks.has(b)?' on':'')
+     +'" data-tb="'+esc(b)+'">'+esc(b)+'</button>').join('') + '</div>';
+ el.innerHTML =
+   seg([['deposit','예금'],['saving','적금'],['both','예금+적금']],'data-tp',state.trendProduct)
+   + seg([['max','최고우대'],['base','기본금리']],'data-tm',state.trendMetric)
+   + chips;
+ el.querySelectorAll('[data-tp]').forEach(b => b.onclick = () => {
+  state.trendProduct = b.dataset.tp; renderTrend(); });
+ el.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => {
+  state.trendMetric = b.dataset.tm; renderTrend(); });
+ el.querySelectorAll('[data-tb]').forEach(b => b.onclick = () => {
+  const v = b.dataset.tb;
+  if(v === '__ALL__') state.trendBanks.clear();
+  else state.trendBanks.has(v) ? state.trendBanks.delete(v) : state.trendBanks.add(v);
+  renderTrend(); });
+}
 function renderTrend(){
+ renderTrendControls();
  const el = document.getElementById('trend'), sub = document.getElementById('trendsub');
- const hist = APP.history || {};
- const dates = Object.keys(hist).sort();
- const prod = state.product, pname = prod==='deposit' ? '예금' : '적금';
- const sel = state.banks.size ? APP.banks.filter(b => state.banks.has(b)) : null;
- const names = sel || ['전체 최고'];
- const series = names.map(name => ({name, pts: dates.map(d => {
-   const day = (hist[d]||{})[prod] || {};
-   if(sel) return day[name] ? day[name].max : null;
-   let m = 0; for(const b in day) m = Math.max(m, day[b].max||0);
-   return m || null;
- })}));
- sub.textContent = pname+' 최고우대 기준 · '+(sel?sel.join('·'):'7개 은행 중 최고')
-   +' · '+dates.length+'일 기록';
+ const dates = histDates();
+ const prods = state.trendProduct==='both' ? ['deposit','saving'] : [state.trendProduct];
+ const banks = state.trendBanks.size ? APP.banks.filter(b => state.trendBanks.has(b)) : ['전체'];
+ const metric = state.trendMetric, mlbl = metric==='max' ? '최고우대' : '기본금리';
+ const series = [];
+ for(const bank of banks) for(const prod of prods){
+  const pl = prod==='deposit' ? '예금' : '적금';
+  series.push({ name:(bank==='전체'?'전체 최고':bank)+(prods.length>1?' '+pl:''),
+   pts: dates.map(d => histVal(d, prod, bank, metric)) });
+ }
+ const pn = prods.length>1 ? '예금·적금 비교' : (prods[0]==='deposit'?'예금':'적금');
+ sub.textContent = pn+' · '+mlbl+' · '
+   +(banks[0]==='전체'?'7개 은행 중 최고':banks.join('·'))+' · '+dates.length+'일 기록';
  const vals = series.flatMap(s => s.pts).filter(v => v != null);
  if(!dates.length || !vals.length){
-  el.innerHTML = '<p class="trend-note">아직 기록이 없어요. 매일 아침 7시 자동 갱신 때마다 하루치가 쌓여요.</p>';
+  el.innerHTML = '<p class="trend-note">아직 기록이 없어요. 매일 아침 7시 갱신 때마다 하루치가 쌓여요.</p>';
   return;
  }
  let mn = Math.min(...vals), mx = Math.max(...vals);
  if(mx - mn < 0.4){ const c = (mx+mn)/2; mn = c-0.25; mx = c+0.25; }
- const W=720, H=230, L=42, R=20, T=34, B=30;
+ const W=720, H=250, L=42, R=20, Tp=20, B=30, single = series.length===1;
  const X = i => L + (W-L-R) * (dates.length===1 ? 0.5 : i/(dates.length-1));
- const Y = v => T + (H-T-B) * (1-(v-mn)/(mx-mn));
+ const Y = v => Tp + (H-Tp-B) * (1-(v-mn)/(mx-mn));
  const fmtD = d => (+d.slice(5,7))+'/'+(+d.slice(8,10));
  function path(pts){
   const p = pts.map((v,i)=> v==null?null:{x:X(i),y:Y(v)}).filter(Boolean);
-  if(p.length < 2) return '';
+  if(p.length < 2) return {d:'', p};
   let d = 'M'+p[0].x.toFixed(1)+' '+p[0].y.toFixed(1);
-  for(let i=1;i<p.length;i++){
-   const a=p[i-1], b=p[i], cx=((a.x+b.x)/2).toFixed(1);
-   d += ' C'+cx+' '+a.y.toFixed(1)+' '+cx+' '+b.y.toFixed(1)+' '+b.x.toFixed(1)+' '+b.y.toFixed(1);
-  }
-  return d;
+  for(let i=1;i<p.length;i++){ const a=p[i-1], b=p[i], cx=((a.x+b.x)/2).toFixed(1);
+   d += ' C'+cx+' '+a.y.toFixed(1)+' '+cx+' '+b.y.toFixed(1)+' '+b.x.toFixed(1)+' '+b.y.toFixed(1); }
+  return {d, p};
  }
- let g = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="날짜별 '+pname+' 최고금리 추이">';
+ let g = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="날짜별 '+pn+' '+mlbl+' 추이">';
  g += '<defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">'
    +'<stop offset="0" stop-color="'+LINE_COLORS[0]+'" stop-opacity=".22"/>'
    +'<stop offset="1" stop-color="'+LINE_COLORS[0]+'" stop-opacity="0"/></linearGradient></defs>';
- // 가로 눈금 3줄
- for(let i=0;i<3;i++){
-  const v = mn + (mx-mn)*i/2, y = Y(v);
-  g += '<line x1="'+L+'" y1="'+y.toFixed(1)+'" x2="'+(W-R)+'" y2="'+y.toFixed(1)
-    +'" stroke="#eceef1"/>'
-    +'<text x="'+(L-6)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="10.5"'
-    +' fill="#8a8f98">'+v.toFixed(1)+'</text>';
- }
- // 기본(첫) 시리즈: 그라데이션 영역
- const first = series[0];
- const fp = path(first.pts);
- if(fp){
-  const pIdx = first.pts.map((v,i)=>v==null?null:i).filter(v=>v!=null);
-  const x0 = X(pIdx[0]), x1 = X(pIdx[pIdx.length-1]), yb = H-B;
-  g += '<path d="'+fp+' L'+x1.toFixed(1)+' '+yb+' L'+x0.toFixed(1)+' '+yb+' Z" fill="url(#tg)"/>';
- }
- series.forEach((s,si)=>{
-  const col = LINE_COLORS[si % LINE_COLORS.length];
-  const d = path(s.pts);
-  if(d) g += '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="'
-    +(si===0?2.5:1.8)+'" stroke-linecap="round"/>';
-  s.pts.forEach((v,i)=>{ if(v!=null) g += '<circle cx="'+X(i).toFixed(1)+'" cy="'
-    +Y(v).toFixed(1)+'" r="'+(si===0?3.5:2.6)+'" fill="#fff" stroke="'+col
-    +'" stroke-width="2"/>'; });
- });
- // 마지막 포인트: 점선 마커 + 말풍선 라벨 (레퍼런스 스타일)
- const li = first.pts.map((v,i)=>v==null?null:i).filter(v=>v!=null).pop();
- if(li != null){
-  const lv = first.pts[li], lx = X(li), ly = Y(lv);
-  const txt = lv.toFixed(2)+'%', tw = txt.length*7.2+16;
-  g += '<line x1="'+lx.toFixed(1)+'" y1="'+(H-B)+'" x2="'+lx.toFixed(1)+'" y2="'
-    +ly.toFixed(1)+'" stroke="'+LINE_COLORS[0]+'" stroke-dasharray="3 4" opacity=".55"/>'
-    +'<rect x="'+(lx-tw/2).toFixed(1)+'" y="'+(ly-32).toFixed(1)+'" width="'+tw.toFixed(1)
-    +'" height="21" rx="10.5" fill="'+LINE_COLORS[0]+'"/>'
-    +'<text x="'+lx.toFixed(1)+'" y="'+(ly-17.5).toFixed(1)+'" text-anchor="middle"'
-    +' font-size="11.5" font-weight="700" fill="#fff">'+txt+'</text>';
- }
- // 날짜 라벨
+ for(let i=0;i<3;i++){ const v = mn + (mx-mn)*i/2, y = Y(v);
+  g += '<line x1="'+L+'" y1="'+y.toFixed(1)+'" x2="'+(W-R)+'" y2="'+y.toFixed(1)+'" stroke="#eceef1"/>'
+   +'<text x="'+(L-6)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="10.5" fill="#8a8f98">'
+   + v.toFixed(1)+'</text>'; }
+ if(single){ const {d,p} = path(series[0].pts);
+  if(d){ const yb = H-B;
+   g += '<path d="'+d+' L'+p[p.length-1].x.toFixed(1)+' '+yb+' L'+p[0].x.toFixed(1)+' '+yb
+     +' Z" fill="url(#tg)"/>'; } }
+ series.forEach((s,si) => { const col = LINE_COLORS[si % LINE_COLORS.length];
+  const {d,p} = path(s.pts);
+  if(d) g += '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="2.4" stroke-linecap="round"/>';
+  p.forEach(pt => { g += '<circle cx="'+pt.x.toFixed(1)+'" cy="'+pt.y.toFixed(1)
+    +'" r="3.2" fill="#fff" stroke="'+col+'" stroke-width="2"/>'; }); });
+ // 각 시리즈 마지막 값 라벨
+ series.forEach((s,si) => { const col = LINE_COLORS[si % LINE_COLORS.length];
+  const idx = s.pts.map((v,i)=>v==null?null:i).filter(v=>v!=null);
+  if(!idx.length) return;
+  const li = idx[idx.length-1], lv = s.pts[li], lx = X(li), ly = Y(lv);
+  const txt = lv.toFixed(2), tw = txt.length*7+14;
+  g += '<rect x="'+(lx-tw/2).toFixed(1)+'" y="'+(ly-30).toFixed(1)+'" width="'+tw.toFixed(1)
+    +'" height="19" rx="9.5" fill="'+col+'"/>'
+    +'<text x="'+lx.toFixed(1)+'" y="'+(ly-16.5).toFixed(1)+'" text-anchor="middle" font-size="11"'
+    +' font-weight="700" fill="#fff">'+txt+'</text>'; });
  const step = Math.max(1, Math.ceil(dates.length/8));
- dates.forEach((d,i)=>{ if(i%step===0 || i===dates.length-1)
-  g += '<text x="'+X(i).toFixed(1)+'" y="'+(H-9)+'" text-anchor="middle" font-size="10.5"'
-    +' fill="#8a8f98">'+fmtD(d)+'</text>'; });
+ dates.forEach((d,i) => { if(i%step===0 || i===dates.length-1)
+  g += '<text x="'+X(i).toFixed(1)+'" y="'+(H-9)+'" text-anchor="middle" font-size="10.5" fill="#8a8f98">'
+    + fmtD(d)+'</text>'; });
  g += '</svg>';
+ if(!single) g += '<div class="tlegend">' + series.map((s,si) =>
+   '<span><i style="background:'+LINE_COLORS[si%LINE_COLORS.length]+'"></i>'+esc(s.name)+'</span>'
+  ).join('') + '</div>';
  if(dates.length === 1) g += '<p class="trend-note">오늘 첫 기록이에요 — 내일 아침 7시부터 선이 그려져요.</p>';
- // 범례(은행 선택 시)
- if(sel && sel.length > 1) g += '<p class="trend-note">'
-   + sel.map((b,i)=>'<span style="color:'+LINE_COLORS[i%LINE_COLORS.length]
-     +';font-weight:600">●</span> '+esc(b)).join('&nbsp;&nbsp;') + '</p>';
  el.innerHTML = g;
 }
 
@@ -1021,7 +1111,7 @@ function render(){
  document.getElementById('footstat').textContent =
   '7개 은행 · '+((APP.deposit||[]).length+(APP.saving||[]).length)
   +'개 상품 옵션 · 매일 아침 7시 갱신';
- renderModules();
+ renderModules(); renderDatenav();
 
  // 세그먼트(탭)
  document.querySelectorAll('#seg button').forEach(b => {
