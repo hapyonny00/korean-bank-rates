@@ -579,7 +579,7 @@ __FONTCSS__
    stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
    <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
    <path d="M3.5 21h17"/></svg>금융감독원 공시로 확인해요</span>
-  <h1>날짜별 예·적금,<br>편하게 찾아드릴게요</h1>
+  <h1>날짜별 예·적금 금리,<br>편하게 찾아드릴게요</h1>
   <p class="herosub">7개 은행 예·적금 금리를 매일 아침 새로 가져와요.<br>
    궁금한 건 편하게 물어보세요.</p>
   <div class="askbar" role="search">
