@@ -181,7 +181,7 @@ __FONTCSS__
  .brandmenu button:hover{background:var(--grayPill)}
  .brandmenu button.on{background:var(--blue);color:#fff;font-weight:600}
  /* ===== 홈 히어로 (중앙 정렬, 흰 배경 위 검은 헤드라인) ===== */
- .heroC{text-align:center;padding:56px 16px 22px;max-width:760px;margin:0 auto}
+ .heroC{text-align:center;padding:26px 16px 22px;max-width:760px;margin:0 auto}
  .pillbadge{display:inline-flex;align-items:center;gap:7px;font-size:13px;
   font-weight:600;color:var(--blueDeep);background:var(--blueSoft);
   border-radius:var(--radiusPill);padding:7px 15px;margin-bottom:26px}

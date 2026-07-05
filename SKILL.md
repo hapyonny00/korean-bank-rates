@@ -106,6 +106,25 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.hapyonny.bankrates.p
 ```
 > 컴퓨터가 켜져 있어야 실행됩니다. 7시에 꺼져 있었으면 다음 부팅 후 보충 실행됩니다.
 
+## 웹 배포 (GitHub Pages)
+
+라이브 링크: **https://hapyonny00.github.io/korean-bank-rates/**
+(GitHub 저장소 [hapyonny00/korean-bank-rates](https://github.com/hapyonny00/korean-bank-rates),
+공개 저장소·main 브랜치 루트에서 Pages 서비스 중)
+
+디자인/기능을 수정한 뒤 라이브 링크에 반영하려면:
+```bash
+export FSS_API_KEY=...  # 또는 ~/.zshrc 에 등록된 값 사용
+python3 scripts/fetch_rates.py --html 금리표_latest.html
+cp 금리표_latest.html index.html
+git add index.html scripts/fetch_rates.py
+git commit -m "설명"
+git push origin main
+```
+push 후 약 30초~1분 뒤 GitHub Pages가 자동으로 다시 빌드되어 같은 링크에 최신 버전이 보입니다.
+`index.html`은 매일 자동 생성되는 `금리표_latest.html`과 별개로, **배포용으로 수동 동기화**하는
+파일입니다(자동 생성 파일은 `.gitignore`로 제외되어 있음).
+
 ## Streamlit 대시보드 (dashboard/)
 
 리포트(`금리표_latest.html`)와 **동일한 디자인**(Fluent 2 + Pretendard)의 인터랙티브 대시보드.
