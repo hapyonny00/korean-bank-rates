@@ -156,24 +156,30 @@ __FONTCSS__
  /* ===== 화이트 셸 (레퍼런스의 큰 라운드 컨테이너) ===== */
  .widget{max-width:1200px;margin:0 auto;background:#fff;border-radius:40px;
   padding:26px 34px 22px;box-shadow:0 30px 70px rgba(60,90,140,.18)}
- /* ===== 탑바: 로고 + 중앙 필 내비 ===== */
+ /* ===== 탑바: 로고 클릭 → 드롭다운 메뉴 ===== */
  .whead{display:flex;align-items:center;gap:14px;padding:4px 2px 10px;
   flex-wrap:wrap}
+ .brandwrap{position:relative}
  .brand{display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:0;
-  background:transparent;padding:4px 6px 4px 4px;border-radius:12px}
+  background:transparent;padding:4px 8px 4px 4px;border-radius:12px}
  .brand:hover{background:var(--grayPill)}
  .brand-ic{display:inline-flex;align-items:center;justify-content:center;
   width:30px;height:30px;border-radius:9px;background:var(--blue);color:#fff}
  .brand-ic svg{width:18px;height:18px}
  .brand-tx{font-family:'Poppins',var(--fontBase);font-weight:600;font-size:16px;
   letter-spacing:-.2px;color:var(--ink)}
- .mods{display:flex;gap:8px;margin:0 auto;overflow-x:auto;max-width:100%}
- .mods button{font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;
-  color:var(--neutralFg2);background:var(--grayPill);border:0;
-  border-radius:var(--radiusPill);padding:9px 18px;white-space:nowrap;
-  transition:background .12s}
- .mods button:hover{background:#e3e6ec}
- .mods button.on{background:var(--blue);color:#fff;font-weight:600}
+ .brand-chev{width:15px;height:15px;color:var(--neutralFg3);transition:transform .15s}
+ .brand[aria-expanded="true"] .brand-chev{transform:rotate(180deg)}
+ .brandmenu{position:absolute;top:100%;left:0;margin-top:8px;z-index:25;
+  background:#fff;border-radius:16px;padding:6px;min-width:168px;
+  box-shadow:0 16px 36px rgba(20,40,80,.18);border:1px solid var(--neutralStroke2);
+  display:flex;flex-direction:column;gap:2px}
+ .brandmenu[hidden]{display:none}
+ .brandmenu button{font:inherit;font-size:14px;font-weight:500;cursor:pointer;
+  text-align:left;color:var(--neutralFg2);background:transparent;border:0;
+  border-radius:10px;padding:9px 12px;transition:background .12s}
+ .brandmenu button:hover{background:var(--grayPill)}
+ .brandmenu button.on{background:var(--blue);color:#fff;font-weight:600}
  /* ===== 홈 히어로 (중앙 정렬, 흰 배경 위 검은 헤드라인) ===== */
  .heroC{text-align:center;padding:56px 16px 22px;max-width:760px;margin:0 auto}
  .pillbadge{display:inline-flex;align-items:center;gap:7px;font-size:13px;
@@ -200,11 +206,19 @@ __FONTCSS__
   box-shadow:0 6px 16px rgba(66,133,244,.35)}
  .sendbtn:hover{filter:brightness(1.05)}
  .sendbtn svg{width:16px;height:16px}
- .sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center}
- .sugg button{font:inherit;font-size:13px;cursor:pointer;
+ /* 추천 질문: 가로 스크롤 + 좌우 화이트 그라데이션 페이드 */
+ .suggwrap{position:relative;margin-top:14px}
+ .sugg{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;
+  scroll-snap-type:x proximity;padding:2px 22px;scrollbar-width:none}
+ .sugg::-webkit-scrollbar{display:none}
+ .sugg button{flex:none;scroll-snap-align:start;white-space:nowrap;
+  font:inherit;font-size:13px;cursor:pointer;
   color:var(--neutralFg2);background:var(--grayPill);border:0;
   border-radius:var(--radiusPill);padding:6px 14px}
  .sugg button:hover{background:#e3e6ec}
+ .suggfade{position:absolute;top:0;bottom:0;width:36px;pointer-events:none}
+ .suggfade.left{left:0;background:linear-gradient(to right,#fff,rgba(255,255,255,0))}
+ .suggfade.right{right:0;background:linear-gradient(to left,#fff,rgba(255,255,255,0))}
  /* 채팅 로그 (하단 화이트 그라데이션으로 자연스럽게 사라짐) */
  .chatlogwrap{position:relative;margin:18px auto 0;max-width:640px;text-align:left}
  .chatlog{display:flex;flex-direction:column;gap:10px;
@@ -508,7 +522,6 @@ __FONTCSS__
   .heroC{padding:28px 4px 16px}
   .heroC h1{letter-spacing:-1.2px}
   h2{font-size:18px}
-  .mods{margin:0;order:3;flex-basis:100%}
   .sendbtn{padding:0 14px}
   .wrap{border:none;overflow:visible;box-shadow:none}
   table,thead,tbody,tr,td{display:block;width:auto}
@@ -535,21 +548,27 @@ __FONTCSS__
 </style></head><body>
 <div class="widget">
 <header class="whead">
- <button class="brand" id="brandhome" type="button" aria-label="첫 화면으로">
-  <span class="brand-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-   stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-   <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
-   <path d="M3.5 21h17"/></svg></span>
-  <span class="brand-tx">interest rate Agent</span>
- </button>
- <nav class="mods" id="mods" aria-label="페이지 이동">
-  <button type="button" data-m="home" class="on">홈</button>
-  <button type="button" data-m="dep">예금</button>
-  <button type="button" data-m="sav">적금</button>
-  <button type="button" data-m="trend">금리 추이</button>
-  <button type="button" data-m="cmp">상품 비교</button>
-  <button type="button" data-m="wiz">내 조건</button>
- </nav>
+ <div class="brandwrap">
+  <button class="brand" id="brandhome" type="button" aria-haspopup="true"
+   aria-expanded="false" aria-controls="brandmenu" aria-label="메뉴 열기">
+   <span class="brand-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
+    <path d="M3.5 21h17"/></svg></span>
+   <span class="brand-tx">interest rate Agent</span>
+   <svg class="brand-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m6 9 6 6 6-6"/></svg>
+  </button>
+  <nav class="brandmenu" id="brandmenu" hidden aria-label="페이지 이동">
+   <button type="button" data-m="home" class="on">홈</button>
+   <button type="button" data-m="dep">예금</button>
+   <button type="button" data-m="sav">적금</button>
+   <button type="button" data-m="trend">금리 추이</button>
+   <button type="button" data-m="cmp">상품 비교</button>
+   <button type="button" data-m="wiz">내 조건</button>
+  </nav>
+ </div>
 </header>
 
 <section id="homeview">
@@ -577,7 +596,11 @@ __FONTCSS__
      stroke-linecap="round" stroke-linejoin="round">
      <path d="M3.5 9.5a8.5 8.5 0 1 1 1.02 6.4"/><path d="M3.5 4v5.5H9"/></svg></button>
   </div>
-  <div class="sugg" id="sugg"></div>
+  <div class="suggwrap">
+   <div class="sugg" id="sugg"></div>
+   <div class="suggfade left" aria-hidden="true"></div>
+   <div class="suggfade right" aria-hidden="true"></div>
+  </div>
   <div class="chatlogwrap" id="chatlogwrap" hidden>
    <div id="chatlog" class="chatlog" aria-live="polite"></div>
    <div class="chatfade" aria-hidden="true"></div>
@@ -1214,11 +1237,17 @@ function applyView(){
  home.hidden = v !== 'home';
  trend.hidden = v !== 'trend';
  rates.hidden = !(v==='dep' || v==='sav' || v==='cmp' || v==='wiz');
- document.querySelectorAll('#mods button').forEach(b => {
+ document.querySelectorAll('#brandmenu button').forEach(b => {
   const m = b.dataset.m;
   b.classList.toggle('on', m === v ||
    (v==='dep' && m==='dep') || (v==='sav' && m==='sav'));
  });
+}
+function toggleBrandMenu(force){
+ const menu = document.getElementById('brandmenu');
+ const open = force != null ? force : menu.hidden;
+ menu.hidden = !open;
+ document.getElementById('brandhome').setAttribute('aria-expanded', String(open));
 }
 function initChat(){
  const sug = document.getElementById('sugg');
@@ -1227,20 +1256,24 @@ function initChat(){
   document.getElementById('ask').value = b.textContent; sendMsg(); });
  document.getElementById('send').onclick = sendMsg;
  document.getElementById('chatclear').onclick = clearChat;
- document.getElementById('brandhome').onclick = () => showView('home');
+ document.getElementById('brandhome').onclick = e => {
+  e.stopPropagation(); toggleBrandMenu(); };
  document.getElementById('ask').addEventListener('keydown', e => {
   if(e.key === 'Enter') sendMsg(); });
- // 탑바 모듈 내비 → 페이지 전환
- document.querySelectorAll('#mods button').forEach(b =>
-  b.onclick = () => showView(b.dataset.m));
- // 날짜 팝오버: 바깥 클릭 · Esc · 스크롤/리사이즈 시 닫기(열려 있으면 위치 재계산)
+ // 로고 클릭 → 드롭다운 메뉴 → 페이지 전환
+ document.querySelectorAll('#brandmenu button').forEach(b =>
+  b.onclick = () => { toggleBrandMenu(false); showView(b.dataset.m); });
+ // 드롭다운/날짜 팝오버: 바깥 클릭 · Esc · 스크롤/리사이즈 시 닫기
  document.addEventListener('click', e => {
+  const menu = document.getElementById('brandmenu');
+  if(!menu.hidden && !menu.contains(e.target) && e.target.id !== 'brandhome'
+     && !e.target.closest('#brandhome')) toggleBrandMenu(false);
   const pop = document.getElementById('datepop');
   if(!pop.hidden && !pop.contains(e.target) && e.target.id !== 'datebtn'
      && !e.target.closest('[data-open]')) closeDatepop();
  });
  document.addEventListener('keydown', e => {
-  if(e.key === 'Escape') closeDatepop(); });
+  if(e.key === 'Escape'){ closeDatepop(); toggleBrandMenu(false); } });
  window.addEventListener('scroll', () => {
   const pop = document.getElementById('datepop');
   if(!pop.hidden) positionDatepop(); }, true);
