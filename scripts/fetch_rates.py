@@ -174,7 +174,6 @@ __FONTCSS__
   transition:background .12s}
  .mods button:hover{background:#e3e6ec}
  .mods button.on{background:var(--blue);color:#fff;font-weight:600}
- .whead .meta{text-align:right}
  /* ===== 홈 히어로 (중앙 정렬, 흰 배경 위 검은 헤드라인) ===== */
  .heroC{text-align:center;padding:56px 16px 22px;max-width:760px;margin:0 auto}
  .pillbadge{display:inline-flex;align-items:center;gap:7px;font-size:13px;
@@ -331,6 +330,7 @@ __FONTCSS__
  h2{font-size:20px;font-weight:700;margin:8px 0 10px;line-height:1.3}
  h2 small{font-weight:400;color:var(--neutralFg3);font-size:13px}
  .meta{color:#b0b5bd;font-size:13px;margin:0}
+ .pagemeta{color:#b0b5bd;font-size:12.5px;text-align:center;margin:28px 0 4px}
 
  /* ===== 컨트롤: 예금/적금 세그먼트 + 은행 칩 ===== */
  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;
@@ -425,6 +425,12 @@ __FONTCSS__
  /* hidden 속성이 display:flex 를 이기도록(안 그러면 빈 오버레이가 안 닫힘) */
  .overlay[hidden]{display:none}
  .tray[hidden]{display:none}
+ /* 날짜 팝오버: 버튼 바로 아래에 뜨는 작은 캘린더 카드 */
+ .datepop{position:absolute;z-index:40;background:var(--neutralBg1);
+  border-radius:24px;width:320px;max-width:calc(100vw - 24px);
+  box-shadow:0 16px 40px rgba(20,40,80,.24);border:1px solid var(--neutralStroke2);
+  padding:16px 18px}
+ .datepop[hidden]{display:none}
  .sheet{background:var(--neutralBg1);border-radius:32px;width:100%;
   max-width:880px;box-shadow:0 20px 50px rgba(20,40,80,.28);padding:22px 24px}
  .sheet-h{display:flex;justify-content:space-between;align-items:center;
@@ -502,7 +508,6 @@ __FONTCSS__
   .heroC{padding:28px 4px 16px}
   .heroC h1{letter-spacing:-1.2px}
   h2{font-size:18px}
-  .whead .meta{display:none}
   .mods{margin:0;order:3;flex-basis:100%}
   .sendbtn{padding:0 14px}
   .wrap{border:none;overflow:visible;box-shadow:none}
@@ -545,7 +550,6 @@ __FONTCSS__
   <button type="button" data-m="cmp">상품 비교</button>
   <button type="button" data-m="wiz">내 조건</button>
  </nav>
- <span class="meta" id="meta"></span>
 </header>
 
 <section id="homeview">
@@ -638,10 +642,12 @@ __FONTCSS__
 <p class="legend">※ 여기 금리는 세전 연이율이에요. 우대금리는 조건을 채우면 받을 수 있어요.
  상품마다 단리·복리와 과세 조건이 다를 수 있으니, 가입 전에 각 은행 약관을 확인해요.</p>
 </div><!-- /#ratespage -->
+<p class="pagemeta" id="meta"></p>
 </div><!-- /.widget -->
 
 <div id="tray" class="tray" hidden></div>
 <div id="overlay" class="overlay" hidden><div class="sheet" id="sheet"></div></div>
+<div id="datepop" class="datepop" hidden role="dialog" aria-label="날짜 선택"></div>
 
 <script>
 const APP = __DATA__;
@@ -799,17 +805,8 @@ function renderOverlay(){
  const ov = document.getElementById('overlay'), sheet = document.getElementById('sheet');
  if(!state.modal){ ov.hidden = true; sheet.innerHTML=''; return; }
  ov.hidden = false;
- sheet.innerHTML = state.modal==='compare' ? compareHTML()
-   : state.modal==='datepicker' ? calendarHTML() : wizardHTML();
- sheet.classList.toggle('narrow', state.modal==='datepicker');
+ sheet.innerHTML = state.modal==='compare' ? compareHTML() : wizardHTML();
  ov.onclick = e => { if(e.target===ov) closeOverlay(); };
- sheet.querySelectorAll('[data-cal]').forEach(b => b.onclick = () => {
-  const [y,m] = state.pickerMonth.split('-').map(Number);
-  const nd = new Date(y, m-1 + (b.dataset.cal==='next'?1:-1), 1);
-  state.pickerMonth = nd.getFullYear()+'-'+String(nd.getMonth()+1).padStart(2,'0');
-  renderOverlay();
- });
- sheet.querySelectorAll('[data-day]').forEach(b => b.onclick = () => pickDate(b.dataset.day));
  sheet.querySelectorAll('[data-close]').forEach(b => b.onclick = closeOverlay);
  sheet.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => {
   const i = state.compare.indexOf(b.dataset.rm); if(i>=0) state.compare.splice(i,1);
@@ -918,24 +915,54 @@ function renderDatenav(){
   + '<span class="dc-date">'+(dt.getMonth()+1)+'월 '+dt.getDate()+'일</span>'
   + '<span class="dc-wd">'+WD[dt.getDay()]+'요일'+(isToday?' · 오늘':'')+'</span>'
   + '<span class="dc-chev" aria-hidden="true">▾</span></button>';
- document.getElementById('datebtn').onclick = () => openCalendar('view');
+ document.getElementById('datebtn').onclick = e => openCalendar('view', e.currentTarget);
 }
-// ===== 달력 데이트피커 =====
-function openCalendar(target){
+// ===== 달력 데이트피커 (버튼 바로 아래에 뜨는 팝오버) =====
+let pickerAnchor = null;
+function openCalendar(target, anchorEl){
  state.pickerTarget = target;
  let base = target==='from' ? state.trendFrom
    : target==='to' ? state.trendTo : state.viewDate;
  base = base || latestDate() || new Date().toISOString().slice(0,10);
  state.pickerMonth = base.slice(0,7);
- state.modal = 'datepicker';
- renderOverlay();
+ pickerAnchor = anchorEl || pickerAnchor;
+ renderDatepop();
+}
+function positionDatepop(){
+ const pop = document.getElementById('datepop');
+ if(!pickerAnchor || !pop) return;
+ const r = pickerAnchor.getBoundingClientRect();
+ const pw = pop.offsetWidth || 320;
+ let left = r.left + window.scrollX;
+ const maxLeft = window.scrollX + document.documentElement.clientWidth - pw - 12;
+ if(left > maxLeft) left = Math.max(window.scrollX + 12, maxLeft);
+ pop.style.top = (r.bottom + window.scrollY + 8) + 'px';
+ pop.style.left = left + 'px';
+}
+function renderDatepop(){
+ const pop = document.getElementById('datepop');
+ pop.innerHTML = calendarHTML();
+ pop.hidden = false;
+ positionDatepop();
+ pop.querySelectorAll('[data-cal]').forEach(b => b.onclick = () => {
+  const [y,m] = state.pickerMonth.split('-').map(Number);
+  const nd = new Date(y, m-1 + (b.dataset.cal==='next'?1:-1), 1);
+  state.pickerMonth = nd.getFullYear()+'-'+String(nd.getMonth()+1).padStart(2,'0');
+  renderDatepop();
+ });
+ pop.querySelectorAll('[data-day]').forEach(b => b.onclick = () => pickDate(b.dataset.day));
+ pop.querySelectorAll('[data-close]').forEach(b => b.onclick = closeDatepop);
+}
+function closeDatepop(){
+ const pop = document.getElementById('datepop');
+ if(pop){ pop.hidden = true; pop.innerHTML = ''; }
 }
 function pickDate(d){
  const t = state.pickerTarget;
  if(t==='from'){ state.trendFrom = d; if(state.trendTo && d > state.trendTo) state.trendTo = d; }
  else if(t==='to'){ state.trendTo = d; if(state.trendFrom && d < state.trendFrom) state.trendFrom = d; }
  else { state.viewDate = d; }
- state.modal = null;
+ closeDatepop();
  render();
 }
 function calendarHTML(){
@@ -962,10 +989,10 @@ function calendarHTML(){
  const cap = state.pickerTarget==='view' ? '금리를 확인할 날짜를 골라요 · 점(●) 있는 날에 데이터가 있어요'
    : (state.pickerTarget==='from' ? '추이 시작일을 골라요' : '추이 종료일을 골라요')
    + ' · 점(●) 있는 날에 데이터가 있어요';
- return '<div class="sheet-h"><b>날짜 선택</b><button class="x" data-close>✕</button></div>'
-  + '<div class="cal"><div class="cal-h"><b>'+title+'</b><div class="cal-nav">'
+ return '<div class="cal"><div class="cal-h"><b>'+title+'</b><div class="cal-nav">'
   + '<button data-cal="prev" aria-label="이전 달">‹</button>'
-  + '<button data-cal="next" aria-label="다음 달">›</button></div></div>'
+  + '<button data-cal="next" aria-label="다음 달">›</button>'
+  + '<button class="x" data-close aria-label="닫기">✕</button></div></div>'
   + '<div class="cal-dow">'+dow+'</div>'
   + '<div class="cal-grid">'+cells+'</div>'
   + '<p class="cal-cap">'+cap+'</p></div>';
@@ -999,10 +1026,10 @@ function renderTrendControls(){
   if(v === '__ALL__') state.trendBanks.clear();
   else state.trendBanks.has(v) ? state.trendBanks.delete(v) : state.trendBanks.add(v);
   renderTrend(); });
- el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => {
+ el.querySelectorAll('[data-open]').forEach(b => b.onclick = e => {
   const t = b.dataset.open;
   if(t === 'reset'){ state.trendFrom = null; state.trendTo = null; renderTrend(); }
-  else openCalendar(t);
+  else openCalendar(t, e.currentTarget);
  });
 }
 function renderTrend(){
@@ -1206,6 +1233,20 @@ function initChat(){
  // 탑바 모듈 내비 → 페이지 전환
  document.querySelectorAll('#mods button').forEach(b =>
   b.onclick = () => showView(b.dataset.m));
+ // 날짜 팝오버: 바깥 클릭 · Esc · 스크롤/리사이즈 시 닫기(열려 있으면 위치 재계산)
+ document.addEventListener('click', e => {
+  const pop = document.getElementById('datepop');
+  if(!pop.hidden && !pop.contains(e.target) && e.target.id !== 'datebtn'
+     && !e.target.closest('[data-open]')) closeDatepop();
+ });
+ document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeDatepop(); });
+ window.addEventListener('scroll', () => {
+  const pop = document.getElementById('datepop');
+  if(!pop.hidden) positionDatepop(); }, true);
+ window.addEventListener('resize', () => {
+  const pop = document.getElementById('datepop');
+  if(!pop.hidden) positionDatepop(); });
 }
 
 function pivot(rows){
