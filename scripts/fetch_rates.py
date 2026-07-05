@@ -159,7 +159,14 @@ __FONTCSS__
  /* ===== 탑바: 로고 + 중앙 필 내비 ===== */
  .whead{display:flex;align-items:center;gap:14px;padding:4px 2px 10px;
   flex-wrap:wrap}
- .wname{font-size:15px;font-weight:700;letter-spacing:-.2px}
+ .brand{display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:0;
+  background:transparent;padding:4px 6px 4px 4px;border-radius:12px}
+ .brand:hover{background:var(--grayPill)}
+ .brand-ic{display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:9px;background:var(--blue);color:#fff}
+ .brand-ic svg{width:18px;height:18px}
+ .brand-tx{font-family:'Poppins',var(--fontBase);font-weight:600;font-size:16px;
+  letter-spacing:-.2px;color:var(--ink)}
  .mods{display:flex;gap:8px;margin:0 auto;overflow-x:auto;max-width:100%}
  .mods button{font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;
   color:var(--neutralFg2);background:var(--grayPill);border:0;
@@ -174,8 +181,8 @@ __FONTCSS__
   font-weight:600;color:var(--blueDeep);background:var(--blueSoft);
   border-radius:var(--radiusPill);padding:7px 15px;margin-bottom:26px}
  .pillbadge svg{width:15px;height:15px}
- .heroC h1{font-size:clamp(40px,6.4vw,72px);font-weight:800;margin:0 0 18px;
-  line-height:1.06;letter-spacing:-2.5px;color:var(--ink)}
+ .heroC h1{font-size:clamp(38px,6vw,66px);font-weight:600;margin:0 0 18px;
+  line-height:1.12;letter-spacing:-1.6px;color:var(--ink)}
  .herosub{margin:0 auto 26px;color:var(--neutralFg3);font-size:14.5px;
   max-width:400px}
  /* Get Started 자리의 LLM 입력창 */
@@ -255,9 +262,8 @@ __FONTCSS__
  .trend-note{color:var(--neutralFg3);font-size:13px;padding:14px 2px}
  .ic-cal{width:16px;height:16px;flex:none}
  /* 모듈 섹션 헤더 + 컴팩트 날짜 칩 */
- .modhead{display:flex;align-items:center;justify-content:space-between;gap:12px;
-  flex-wrap:wrap;margin:38px 4px 14px}
- .modhead-t{font-size:18px;font-weight:800;letter-spacing:-.4px;color:var(--ink)}
+ .modhead{display:flex;align-items:center;justify-content:flex-end;gap:12px;
+  flex-wrap:wrap;margin:34px 4px 14px}
  .datechip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font:inherit;
   background:#fff;border:1px solid var(--neutralStroke2);border-radius:var(--radiusPill);
   padding:8px 8px 8px 14px;box-shadow:0 4px 14px rgba(60,90,140,.08);
@@ -518,7 +524,13 @@ __FONTCSS__
 </style></head><body>
 <div class="widget">
 <header class="whead">
- <span class="wname">금리 에이전트</span>
+ <button class="brand" id="brandhome" type="button" aria-label="첫 화면으로">
+  <span class="brand-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
+   <path d="M3.5 21h17"/></svg></span>
+  <span class="brand-tx">interest rate Agent</span>
+ </button>
  <nav class="mods" id="mods" aria-label="페이지 이동">
   <button type="button" data-m="home" class="on">홈</button>
   <button type="button" data-m="dep">예금</button>
@@ -535,15 +547,15 @@ __FONTCSS__
   <span class="pillbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
    stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
    <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
-   <path d="M3.5 21h17"/></svg>금융감독원 공시 기반</span>
-  <h1>예금. 적금. 한눈에.</h1>
-  <p class="herosub">7개 은행의 오늘 금리를 매일 아침 갱신해요.<br>
-   궁금한 건 그대로 물어보세요.</p>
+   <path d="M3.5 21h17"/></svg>금융감독원 공시로 확인해요</span>
+  <h1>금리 높은 예·적금,<br>제가 찾아드릴게요</h1>
+  <p class="herosub">7개 은행 예·적금 금리를 매일 아침 새로 가져와요.<br>
+   궁금한 건 편하게 물어보세요.</p>
   <div class="askbar" role="search">
    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
     stroke-linecap="round" stroke-linejoin="round"><path d="m14 5 5 5L8 21H3v-5z"/>
     <path d="m12.5 6.5 5 5"/></svg>
-   <input id="ask" type="text" placeholder="무엇이든 물어보세요… 예) 12개월 예금 최고 금리"
+   <input id="ask" type="text" placeholder="궁금한 걸 물어보세요 · 예) 12개월 예금 금리"
     aria-label="금리 질문" autocomplete="off">
    <button id="send" class="sendbtn" aria-label="질문 보내기">질문하기<svg
     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -558,12 +570,11 @@ __FONTCSS__
     <path d="M6 6l1 14h10l1-14"/></svg>답변 초기화</button>
  </div>
  <div class="modhead">
-  <span class="modhead-t">금리 요약</span>
   <div id="datenav"></div>
  </div>
  <div class="modrow" id="modrow" aria-label="모듈 바로가기"></div>
  <div class="shellfoot"><span id="footstat"></span>
-  <span class="hint">모듈을 누르면 페이지로 이동해요 →</span></div>
+  <span class="hint">카드를 누르면 자세히 볼 수 있어요 →</span></div>
 </section>
 
 <section class="card page" id="trendcard" hidden>
@@ -614,8 +625,8 @@ __FONTCSS__
  은행 칩은 여러 개 동시 선택, 기간·정렬 드롭다운과 검색으로 좁히고,
  <b>＋담기</b>로 2~4개를 골라 <b>나란히 비교</b>하세요 ·
  <span class="badge">BEST</span>=현재 목록 중 최고우대 1위 · 빈칸(·)은 해당 기간 미판매</p>
-<p class="legend">※ 표시 금리는 세전·연이율이며 우대금리는 조건 충족 시 적용됩니다.
- 상품별 단리/복리·과세 조건이 다를 수 있으니 가입 전 각 은행 약관을 확인하세요.</p>
+<p class="legend">※ 여기 금리는 세전 연이율이에요. 우대금리는 조건을 채우면 받을 수 있어요.
+ 상품마다 단리·복리와 과세 조건이 다를 수 있으니, 가입 전에 각 은행 약관을 확인해요.</p>
 </div><!-- /#ratespage -->
 </div><!-- /.widget -->
 
@@ -725,10 +736,10 @@ function renderModules(){
    </button>
    <button type="button" class="mcard bluecard" data-m="cmp">
     <span class="pillbadge">${ICON_DEP}상품 비교</span>
-    <div class="mc-title">담고. 비교하고.<br>고르고.</div>
-    <p>7개 은행 ${(APP.deposit||[]).length+(APP.saving||[]).length}개 상품을
-     2~4개 담아 기간별 금리와 우대조건을 나란히 확인하세요.
-     내 조건에 맞는 상품만 추릴 수도 있어요.</p>
+    <div class="mc-title">여러 상품을<br>나란히 비교해요</div>
+    <p>7개 은행 ${(APP.deposit||[]).length+(APP.saving||[]).length}개 상품 중
+     2~4개를 담으면 기간별 금리와 우대 조건을 한 번에 볼 수 있어요.
+     내 조건에 맞는 상품만 골라볼 수도 있어요.</p>
    </button>
    <button type="button" class="mcard light" data-m="trend">
     <div class="mc-k">금리 추이 (예금 최고)</div>
@@ -874,7 +885,7 @@ function wizardHTML(){
    <input name="amount" type="number" min="0" step="10000" inputmode="numeric"
     placeholder="예: 1000000" value="${state.amount||''}"></label>
   <div class="wiz-btns"><button type="button" class="btn-ghost" data-reset>초기화</button>
-   <button type="button" class="btn-ghost" data-close>취소</button>
+   <button type="button" class="btn-ghost" data-close>닫기</button>
    <button type="submit" class="btn-primary">추천 받기</button></div>
   <p class="wiz-note">※ 금액을 넣으면 예상이자(세전·단리 근사치)를 함께 보여줍니다.
    기간을 고르면 해당 기간 기준으로 계산합니다.</p>
@@ -938,9 +949,9 @@ function calendarHTML(){
  }
  const dow = ['월','화','수','목','금','토','일']
    .map((w,i)=>'<span'+(i>=5?' class="we"':'')+'>'+w+'</span>').join('');
- const cap = state.pickerTarget==='view' ? '금리를 조회할 날짜를 선택하세요'
-   : (state.pickerTarget==='from' ? '추이 시작일 선택' : '추이 종료일 선택')
-   + ' · 점(●) 있는 날만 데이터가 있어요';
+ const cap = state.pickerTarget==='view' ? '금리를 확인할 날짜를 골라요 · 점(●) 있는 날에 데이터가 있어요'
+   : (state.pickerTarget==='from' ? '추이 시작일을 골라요' : '추이 종료일을 골라요')
+   + ' · 점(●) 있는 날에 데이터가 있어요';
  return '<div class="sheet-h"><b>날짜 선택</b><button class="x" data-close>✕</button></div>'
   + '<div class="cal"><div class="cal-h"><b>'+title+'</b><div class="cal-nav">'
   + '<button data-cal="prev" aria-label="이전 달">‹</button>'
@@ -1179,6 +1190,7 @@ function initChat(){
   document.getElementById('ask').value = b.textContent; sendMsg(); });
  document.getElementById('send').onclick = sendMsg;
  document.getElementById('chatclear').onclick = clearChat;
+ document.getElementById('brandhome').onclick = () => showView('home');
  document.getElementById('ask').addEventListener('keydown', e => {
   if(e.key === 'Enter') sendMsg(); });
  // 탑바 모듈 내비 → 페이지 전환
@@ -1216,8 +1228,8 @@ function render(){
  document.getElementById('meta').textContent =
   '공시기준 '+APP.dcls+' · 조회시각 '+APP.now+' · 출처: 금융감독원 금융상품통합비교공시';
  document.getElementById('footstat').textContent =
-  '7개 은행 · '+((APP.deposit||[]).length+(APP.saving||[]).length)
-  +'개 상품 옵션 · 매일 아침 7시 갱신';
+  '7개 은행 · 상품 '+((APP.deposit||[]).length+(APP.saving||[]).length)
+  +'개 · 매일 아침 7시에 새로 가져와요';
  renderModules(); renderDatenav();
 
  // 세그먼트(탭)
@@ -1315,7 +1327,7 @@ function render(){
 
  if(!items.length){
   view.innerHTML = `<h2>${esc(title)} · ${pname}${focusLbl}${onLbl}</h2>`+
-   `<p class="empty">해당 조건의 상품이 없습니다. 필터를 줄여보세요.</p>`;
+   `<p class="empty">조건에 맞는 상품이 없어요. 필터를 조금 줄여보세요.</p>`;
   renderTrend(); renderTray(); renderOverlay(); applyView(); return;
  }
  const showBank = state.banks.size !== 1;
@@ -1452,6 +1464,14 @@ def _font_face_css():
             "@font-face{font-family:'Pretendard';font-style:normal;"
             f"font-weight:{w};font-display:swap;"
             f"src:url(data:font/woff2;base64,{b64}) format('woff2')}}")
+    # 브랜드용 Poppins SemiBold (있으면 임베드)
+    pp = os.path.join(fdir, "Poppins-SemiBold.woff2")
+    if os.path.exists(pp):
+        with open(pp, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("ascii")
+        faces.append(
+            "@font-face{font-family:'Poppins';font-style:normal;font-weight:600;"
+            f"font-display:swap;src:url(data:font/woff2;base64,{b64}) format('woff2')}}")
     return "<style>" + "".join(faces) + "</style>"
 
 
