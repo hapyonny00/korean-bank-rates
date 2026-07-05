@@ -266,7 +266,7 @@ __FONTCSS__
  .trend-note{color:var(--neutralFg3);font-size:13px;padding:14px 2px}
  .ic-cal{width:16px;height:16px;flex:none}
  /* 모듈 섹션 헤더 + 컴팩트 날짜 칩 */
- .modhead{display:flex;align-items:center;justify-content:flex-end;gap:12px;
+ .modhead{display:flex;align-items:center;justify-content:flex-start;gap:12px;
   flex-wrap:wrap;margin:34px 4px 14px}
  .datechip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font:inherit;
   background:#fff;border:1px solid var(--neutralStroke2);border-radius:var(--radiusPill);
@@ -330,7 +330,7 @@ __FONTCSS__
  .tlegend i{width:11px;height:11px;border-radius:50%;display:inline-block}
  h2{font-size:20px;font-weight:700;margin:8px 0 10px;line-height:1.3}
  h2 small{font-weight:400;color:var(--neutralFg3);font-size:13px}
- .meta{color:var(--neutralFg3);font-size:13px;margin:0}
+ .meta{color:#b0b5bd;font-size:13px;margin:0}
 
  /* ===== 컨트롤: 예금/적금 세그먼트 + 은행 칩 ===== */
  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;
@@ -466,28 +466,30 @@ __FONTCSS__
  /* 하단 트레이 공간 */
  body{padding-bottom:88px}
 
- /* ===== 표 ===== */
+ /* ===== 표 (다른 카드와 통일된 24px 라운드, 깔끔한 라인 스타일) ===== */
  .wrap{overflow-x:auto;border:1px solid var(--neutralStroke2);background:#fff;
-  border-radius:16px;box-shadow:var(--shadow2)}
+  border-radius:24px;box-shadow:var(--shadow2)}
  table{border-collapse:separate;border-spacing:0;width:100%;font-size:15px}
- th,td{padding:11px 14px;text-align:left;
-  border-bottom:1px solid var(--neutralStroke2);vertical-align:top}
- thead th{background:var(--neutralBg3);position:sticky;top:0;z-index:2;
-  color:var(--neutralFg2);font-weight:600;font-size:14px;
-  border-bottom:1px solid var(--neutralStroke1)}
+ th,td{padding:14px 18px;text-align:left;
+  border-bottom:1px solid var(--neutralBg3);vertical-align:top}
+ thead th{background:transparent;position:sticky;top:0;z-index:2;
+  color:var(--neutralFg3);font-weight:600;font-size:12.5px;letter-spacing:.2px;
+  padding-top:16px;padding-bottom:12px;
+  border-bottom:1px solid var(--neutralStroke2)}
  .num{text-align:center;white-space:nowrap}
  /* 기본금리 크게(강조), 최고우대 작게 */
  td.num .b{display:block;font-size:18px;color:var(--neutralFg1)}
  td.num .m{display:block;font-size:13px;color:var(--neutralFg3);margin-top:2px}
  td.num.cempty{color:var(--neutralStroke1)}
  .bank{font-weight:600;white-space:nowrap;color:var(--neutralFg1)}
- .prod{color:var(--neutralFg2);min-width:180px}
+ .prod{color:var(--ink);font-weight:700;min-width:180px}
  .spcl{color:var(--neutralFg3);font-size:13px;line-height:1.5;
   min-width:260px;max-width:420px;white-space:normal}
  .tag{font-size:12px;color:var(--neutralFg2);background:var(--neutralBg3);
   border:1px solid var(--neutralStroke2);border-radius:var(--radiusMd);
-  padding:1px 6px;margin-left:6px;vertical-align:middle}
- tr.rowsep td{border-top:1px solid var(--neutralStroke1)}
+  padding:1px 6px;margin-left:6px;vertical-align:middle;font-weight:400}
+ tr.rowsep td{border-top:1px solid var(--neutralStroke2)}
+ tbody tr:last-child td{border-bottom:0}
  tbody tr:hover td{background:var(--neutralBg2)}
  .empty{color:var(--neutralFg3);padding:20px 2px}
  .legend{font-size:13px;color:var(--neutralFg3);margin-top:14px}
