@@ -208,8 +208,10 @@ __FONTCSS__
  .sendbtn svg{width:16px;height:16px}
  /* 추천 질문: 가로 스크롤 + 좌우 화이트 그라데이션 페이드 */
  .suggwrap{position:relative;margin-top:14px}
- .sugg{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;
+ .sugg{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;cursor:grab;
+  touch-action:pan-x;-webkit-overflow-scrolling:touch;user-select:none;
   scroll-snap-type:x proximity;padding:2px 22px;scrollbar-width:none}
+ .sugg.dragging{cursor:grabbing;scroll-snap-type:none}
  .sugg::-webkit-scrollbar{display:none}
  .sugg button{flex:none;scroll-snap-align:start;white-space:nowrap;
   font:inherit;font-size:13px;cursor:pointer;
@@ -1249,11 +1251,34 @@ function toggleBrandMenu(force){
  menu.hidden = !open;
  document.getElementById('brandhome').setAttribute('aria-expanded', String(open));
 }
+// 추천 질문 칩: 세로 휠 → 가로 스크롤 변환 + 마우스 드래그 스크롤(데스크톱 지원)
+function initSuggScroll(){
+ const el = document.getElementById('sugg');
+ el.addEventListener('wheel', e => {
+  if(el.scrollWidth <= el.clientWidth) return;
+  if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){ el.scrollLeft += e.deltaY; e.preventDefault(); }
+ }, {passive:false});
+ let down=false, moved=false, startX=0, startLeft=0;
+ el.addEventListener('mousedown', e => {
+  down=true; moved=false; startX=e.pageX; startLeft=el.scrollLeft;
+  el.classList.add('dragging');
+ });
+ window.addEventListener('mousemove', e => {
+  if(!down) return;
+  const dx = e.pageX - startX;
+  if(Math.abs(dx) > 4) moved = true;
+  el.scrollLeft = startLeft - dx;
+ });
+ window.addEventListener('mouseup', () => { down=false; el.classList.remove('dragging'); });
+ // 드래그였으면 클릭(칩 선택)으로 이어지지 않게 캡처 단계에서 차단
+ el.addEventListener('click', e => { if(moved){ e.stopPropagation(); e.preventDefault(); } }, true);
+}
 function initChat(){
  const sug = document.getElementById('sugg');
  sug.innerHTML = SUGGS.map(s=>'<button type="button">'+esc(s)+'</button>').join('');
  sug.querySelectorAll('button').forEach(b => b.onclick = () => {
   document.getElementById('ask').value = b.textContent; sendMsg(); });
+ initSuggScroll();
  document.getElementById('send').onclick = sendMsg;
  document.getElementById('chatclear').onclick = clearChat;
  document.getElementById('brandhome').onclick = e => {
