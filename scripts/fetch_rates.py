@@ -253,19 +253,23 @@ __FONTCSS__
  #trend{overflow-x:auto}
  #trend svg{display:block;width:100%;height:auto}
  .trend-note{color:var(--neutralFg3);font-size:13px;padding:14px 2px}
- /* 날짜 조회 모듈 카드 (iOS 캘린더 위젯 스타일) */
- .datenavwrap{text-align:center;margin-top:22px}
- .datecard{display:inline-flex;flex-direction:column;align-items:flex-start;
-  background:#fff;border:1px solid var(--neutralStroke2);border-radius:22px;
-  padding:14px 20px 12px;cursor:pointer;min-width:132px;
-  box-shadow:0 8px 22px rgba(60,90,140,.10);transition:transform .15s,box-shadow .15s}
- .datecard:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(60,90,140,.16)}
- .datecard .dc-top{font-size:14px;font-weight:600}
- .datecard .dc-top b{color:var(--ink)}
- .datecard .dc-top span{color:var(--neutralFg3)}
- .datecard .dc-day{font-size:46px;font-weight:800;line-height:1.02;letter-spacing:-2px;
-  color:var(--ink)}
- .datecard .dc-lbl{font-size:11px;color:var(--blueDeep);font-weight:600;margin-top:3px}
+ .ic-cal{width:16px;height:16px;flex:none}
+ /* 모듈 섹션 헤더 + 컴팩트 날짜 칩 */
+ .modhead{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;margin:38px 4px 14px}
+ .modhead-t{font-size:18px;font-weight:800;letter-spacing:-.4px;color:var(--ink)}
+ .datechip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font:inherit;
+  background:#fff;border:1px solid var(--neutralStroke2);border-radius:var(--radiusPill);
+  padding:8px 8px 8px 14px;box-shadow:0 4px 14px rgba(60,90,140,.08);
+  transition:background .12s,box-shadow .12s}
+ .datechip:hover{background:var(--grayPill);box-shadow:0 6px 18px rgba(60,90,140,.12)}
+ .datechip .ic-cal{color:var(--blueDeep)}
+ .datechip .dc-date{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:-.2px}
+ .datechip .dc-wd{font-size:12.5px;color:var(--neutralFg3);font-weight:600}
+ .datechip.today .dc-date{color:var(--blueDeep)}
+ .datechip .dc-chev{color:var(--neutralFg3);font-size:11px;
+  background:var(--grayPill);border-radius:50%;width:22px;height:22px;
+  display:inline-flex;align-items:center;justify-content:center}
  /* 달력 데이트피커 */
  .sheet.narrow{max-width:360px}
  .cal{margin:0 auto}
@@ -293,6 +297,7 @@ __FONTCSS__
  .cal-cap{text-align:center;font-size:12px;color:var(--neutralFg3);margin:14px 0 2px}
  /* 추이 기간 선택 필드 */
  .tdates{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--neutralFg3)}
+ .tdates .ic-cal{color:var(--neutralFg3);margin-right:-2px}
  .tdate{font:inherit;font-size:12.5px;cursor:pointer;border:1px solid var(--neutralStroke2);
   background:#fff;color:var(--ink);border-radius:var(--radiusPill);padding:6px 13px;font-weight:600}
  .tdate:hover{background:var(--grayPill)}
@@ -552,7 +557,10 @@ __FONTCSS__
     stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2"/>
     <path d="M6 6l1 14h10l1-14"/></svg>답변 초기화</button>
  </div>
- <div class="datenavwrap"><div class="datenav" id="datenav"></div></div>
+ <div class="modhead">
+  <span class="modhead-t">금리 요약</span>
+  <div id="datenav"></div>
+ </div>
  <div class="modrow" id="modrow" aria-label="모듈 바로가기"></div>
  <div class="shellfoot"><span id="footstat"></span>
   <span class="hint">모듈을 누르면 페이지로 이동해요 →</span></div>
@@ -627,6 +635,8 @@ const isNum = v => /^\d+$/.test(String(v));
 const bestMax = g => Math.max(0, ...Object.values(g.cells).map(c => c.mx||0));
 const ICON_DEP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.5" width="19" height="11" rx="2"/><circle cx="12" cy="12" r="2.4"/></svg>';
 const ICON_SAV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="6.5" ry="2.6"/><path d="M5.5 6.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/><path d="M5.5 11.5v5c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-5"/></svg>';
+// Uicons(Flaticon) 스타일 캘린더 라인 아이콘
+const ICON_CAL = '<svg class="ic-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="4.5"/><path d="M3 9.5h18M8 3v3.4M16 3v3.4"/></svg>';
 
 function heroBest(list){
  let best = null;
@@ -881,13 +891,12 @@ function renderDatenav(){
  const vd = state.viewDate || latestDate();
  const dt = new Date(vd + 'T00:00:00');
  const isToday = vd === latestDate();
- // iOS 캘린더 위젯 스타일 모듈 카드
  el.innerHTML =
-  '<button class="datecard" id="datebtn" aria-label="날짜 선택">'
-  + '<div class="dc-top"><b>'+WD[dt.getDay()]+'요일</b> <span>'+(dt.getMonth()+1)+'월</span></div>'
-  + '<div class="dc-day">'+dt.getDate()+'</div>'
-  + '<div class="dc-lbl">'+(isToday?'오늘 · 조회 날짜':'조회 날짜')+' ▾</div>'
-  + '</button>';
+  '<button class="datechip'+(isToday?' today':'')+'" id="datebtn" aria-label="조회 날짜 선택">'
+  + ICON_CAL
+  + '<span class="dc-date">'+(dt.getMonth()+1)+'월 '+dt.getDate()+'일</span>'
+  + '<span class="dc-wd">'+WD[dt.getDay()]+'요일'+(isToday?' · 오늘':'')+'</span>'
+  + '<span class="dc-chev" aria-hidden="true">▾</span></button>';
  document.getElementById('datebtn').onclick = () => openCalendar('view');
 }
 // ===== 달력 데이트피커 =====
@@ -950,7 +959,7 @@ function renderTrendControls(){
    +'" data-tb="__ALL__">전체 최고</button>'
    + APP.banks.map(b => '<button class="tchip'+(state.trendBanks.has(b)?' on':'')
      +'" data-tb="'+esc(b)+'">'+esc(b)+'</button>').join('') + '</div>';
- const drange = '<div class="tdates">📅 '
+ const drange = '<div class="tdates">'+ICON_CAL
    + '<button class="tdate" data-open="from">'+(state.trendFrom||'시작일')+'</button>'
    + '<span>~</span>'
    + '<button class="tdate" data-open="to">'+(state.trendTo||'종료일')+'</button>'
