@@ -253,19 +253,50 @@ __FONTCSS__
  #trend{overflow-x:auto}
  #trend svg{display:block;width:100%;height:auto}
  .trend-note{color:var(--neutralFg3);font-size:13px;padding:14px 2px}
- /* 날짜 조회 내비 (메인) */
- .datenavwrap{text-align:center;margin-top:20px}
- .datenav{display:inline-flex;align-items:center;gap:4px;background:#fff;
-  border:1px solid var(--neutralStroke2);border-radius:var(--radiusPill);padding:5px 7px;
-  box-shadow:0 6px 16px rgba(66,133,244,.10)}
- .datenav .dn-arw{display:inline-flex;align-items:center;justify-content:center;
-  width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;font-size:17px;
-  line-height:1;color:var(--neutralFg2);background:var(--grayPill)}
- .datenav .dn-arw:hover:not(:disabled){background:#e3e6ec}
- .datenav .dn-arw:disabled{opacity:.35;cursor:default}
- .datenav .dn-cal{font-size:13px;padding:0 2px 0 5px}
- .datenav select{border:0;background:transparent;font:inherit;font-size:14px;
-  font-weight:600;color:var(--ink);cursor:pointer;padding:4px 4px}
+ /* 날짜 조회 모듈 카드 (iOS 캘린더 위젯 스타일) */
+ .datenavwrap{text-align:center;margin-top:22px}
+ .datecard{display:inline-flex;flex-direction:column;align-items:flex-start;
+  background:#fff;border:1px solid var(--neutralStroke2);border-radius:22px;
+  padding:14px 20px 12px;cursor:pointer;min-width:132px;
+  box-shadow:0 8px 22px rgba(60,90,140,.10);transition:transform .15s,box-shadow .15s}
+ .datecard:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(60,90,140,.16)}
+ .datecard .dc-top{font-size:14px;font-weight:600}
+ .datecard .dc-top b{color:var(--ink)}
+ .datecard .dc-top span{color:var(--neutralFg3)}
+ .datecard .dc-day{font-size:46px;font-weight:800;line-height:1.02;letter-spacing:-2px;
+  color:var(--ink)}
+ .datecard .dc-lbl{font-size:11px;color:var(--blueDeep);font-weight:600;margin-top:3px}
+ /* 달력 데이트피커 */
+ .sheet.narrow{max-width:360px}
+ .cal{margin:0 auto}
+ .cal-h{display:flex;align-items:center;justify-content:space-between;margin:4px 0 14px}
+ .cal-h b{font-size:17px;font-weight:800;letter-spacing:-.3px}
+ .cal-nav{display:inline-flex;gap:6px}
+ .cal-nav button{width:32px;height:32px;border-radius:50%;border:0;cursor:pointer;
+  font-size:16px;line-height:1;color:var(--neutralFg2);background:var(--grayPill)}
+ .cal-nav button:hover{background:#e3e6ec}
+ .cal-dow,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+ .cal-dow{margin-bottom:6px}
+ .cal-dow span{text-align:center;font-size:12px;font-weight:600;color:var(--neutralFg3)}
+ .cal-dow span.we{color:#c05299}
+ .cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  border:0;background:transparent;border-radius:50%;font:inherit;font-size:14px;
+  color:var(--ink);cursor:pointer;position:relative;padding:0}
+ .cal-day.empty{visibility:hidden;cursor:default}
+ .cal-day.off{color:#c7ccd3;cursor:default}
+ .cal-day.has{font-weight:600}
+ .cal-day.has::after{content:'';position:absolute;bottom:5px;width:4px;height:4px;
+  border-radius:50%;background:var(--blue)}
+ .cal-day.has:hover:not(.sel){background:var(--blueSoft)}
+ .cal-day.sel{background:var(--blue);color:#fff;font-weight:700}
+ .cal-day.sel::after{background:#fff}
+ .cal-cap{text-align:center;font-size:12px;color:var(--neutralFg3);margin:14px 0 2px}
+ /* 추이 기간 선택 필드 */
+ .tdates{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--neutralFg3)}
+ .tdate{font:inherit;font-size:12.5px;cursor:pointer;border:1px solid var(--neutralStroke2);
+  background:#fff;color:var(--ink);border-radius:var(--radiusPill);padding:6px 13px;font-weight:600}
+ .tdate:hover{background:var(--grayPill)}
+ .tdate.reset{color:var(--neutralFg3);font-weight:500}
  /* 추이 컨트롤 (은행별/상품별 비교) */
  .tctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:2px 0 16px}
  .tsegwrap{display:inline-flex;background:var(--grayPill);border-radius:var(--radiusPill);
@@ -588,7 +619,8 @@ const APP = __DATA__;
 const state = {view:'home', product:'deposit', banks:new Set(), term:'전체',
   q:'', sort:'max', compare:[], modal:null, online:false, amount:0,
   ratetype:'', joindeny:'', rsvtype:'', minrate:0,
-  viewDate:null, trendProduct:'deposit', trendMetric:'max', trendBanks:new Set()};
+  viewDate:null, trendProduct:'deposit', trendMetric:'max', trendBanks:new Set(),
+  pickerMonth:null, pickerTarget:'view', trendFrom:null, trendTo:null};
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const isNum = v => /^\d+$/.test(String(v));
@@ -736,8 +768,17 @@ function renderOverlay(){
  const ov = document.getElementById('overlay'), sheet = document.getElementById('sheet');
  if(!state.modal){ ov.hidden = true; sheet.innerHTML=''; return; }
  ov.hidden = false;
- sheet.innerHTML = state.modal==='compare' ? compareHTML() : wizardHTML();
+ sheet.innerHTML = state.modal==='compare' ? compareHTML()
+   : state.modal==='datepicker' ? calendarHTML() : wizardHTML();
+ sheet.classList.toggle('narrow', state.modal==='datepicker');
  ov.onclick = e => { if(e.target===ov) closeOverlay(); };
+ sheet.querySelectorAll('[data-cal]').forEach(b => b.onclick = () => {
+  const [y,m] = state.pickerMonth.split('-').map(Number);
+  const nd = new Date(y, m-1 + (b.dataset.cal==='next'?1:-1), 1);
+  state.pickerMonth = nd.getFullYear()+'-'+String(nd.getMonth()+1).padStart(2,'0');
+  renderOverlay();
+ });
+ sheet.querySelectorAll('[data-day]').forEach(b => b.onclick = () => pickDate(b.dataset.day));
  sheet.querySelectorAll('[data-close]').forEach(b => b.onclick = closeOverlay);
  sheet.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => {
   const i = state.compare.indexOf(b.dataset.rm); if(i>=0) state.compare.splice(i,1);
@@ -832,28 +873,72 @@ function wizardHTML(){
 
 // ===== 날짜별 금리 추이 그래프 =====
 const LINE_COLORS = ['#0f6cbd','#7a5af8','#e8618c','#12a594','#e07b39','#5a6acf','#c05299'];
+const WD = ['일','월','화','수','목','금','토'];
 function renderDatenav(){
  const el = document.getElementById('datenav');
  const ds = histDates();
  if(!ds.length){ el.innerHTML = ''; return; }
  const vd = state.viewDate || latestDate();
- const idx = ds.indexOf(vd);
+ const dt = new Date(vd + 'T00:00:00');
+ const isToday = vd === latestDate();
+ // iOS 캘린더 위젯 스타일 모듈 카드
  el.innerHTML =
-  '<button class="dn-arw" data-d="prev"'+(idx<=0?' disabled':'')+' aria-label="이전 날짜">‹</button>'
-  +'<span class="dn-cal" aria-hidden="true">📅</span>'
-  +'<select id="datesel" aria-label="조회 날짜">'
-  + ds.map(d => '<option value="'+d+'"'+(d===vd?' selected':'')+'>'
-    + d + (d===latestDate()?' (오늘)':'') + '</option>').join('')
-  + '</select>'
-  +'<button class="dn-arw" data-d="next"'+(idx>=ds.length-1?' disabled':'')+' aria-label="다음 날짜">›</button>';
- el.querySelector('#datesel').onchange = e => {
-  state.viewDate = e.target.value; renderModules(); renderDatenav(); };
- el.querySelectorAll('.dn-arw').forEach(b => b.onclick = () => {
-  if(b.disabled) return;
-  const i = ds.indexOf(state.viewDate || latestDate());
-  const ni = b.dataset.d === 'prev' ? i-1 : i+1;
-  if(ni>=0 && ni<ds.length){ state.viewDate = ds[ni]; renderModules(); renderDatenav(); }
- });
+  '<button class="datecard" id="datebtn" aria-label="날짜 선택">'
+  + '<div class="dc-top"><b>'+WD[dt.getDay()]+'요일</b> <span>'+(dt.getMonth()+1)+'월</span></div>'
+  + '<div class="dc-day">'+dt.getDate()+'</div>'
+  + '<div class="dc-lbl">'+(isToday?'오늘 · 조회 날짜':'조회 날짜')+' ▾</div>'
+  + '</button>';
+ document.getElementById('datebtn').onclick = () => openCalendar('view');
+}
+// ===== 달력 데이트피커 =====
+function openCalendar(target){
+ state.pickerTarget = target;
+ let base = target==='from' ? state.trendFrom
+   : target==='to' ? state.trendTo : state.viewDate;
+ base = base || latestDate() || new Date().toISOString().slice(0,10);
+ state.pickerMonth = base.slice(0,7);
+ state.modal = 'datepicker';
+ renderOverlay();
+}
+function pickDate(d){
+ const t = state.pickerTarget;
+ if(t==='from'){ state.trendFrom = d; if(state.trendTo && d > state.trendTo) state.trendTo = d; }
+ else if(t==='to'){ state.trendTo = d; if(state.trendFrom && d < state.trendFrom) state.trendFrom = d; }
+ else { state.viewDate = d; }
+ state.modal = null;
+ render();
+}
+function calendarHTML(){
+ const avail = new Set(histDates());
+ const cur = state.viewDate || latestDate();
+ const [y,m] = state.pickerMonth.split('-').map(Number);
+ const first = new Date(y, m-1, 1);
+ const startDow = (first.getDay()+6)%7;         // 월요일 시작
+ const daysInMonth = new Date(y, m, 0).getDate();
+ const pad = n => String(n).padStart(2,'0');
+ const title = y+'년 '+m+'월';
+ let cells = '';
+ for(let i=0;i<startDow;i++) cells += '<span class="cal-day empty"></span>';
+ for(let d=1; d<=daysInMonth; d++){
+  const iso = y+'-'+pad(m)+'-'+pad(d);
+  const has = avail.has(iso);
+  const sel = (state.pickerTarget==='from'?state.trendFrom
+    :state.pickerTarget==='to'?state.trendTo:cur) === iso;
+  const cls = 'cal-day' + (has?' has':' off') + (sel?' sel':'');
+  cells += '<button class="'+cls+'"'+(has?' data-day="'+iso+'"':' disabled')+'>'+d+'</button>';
+ }
+ const dow = ['월','화','수','목','금','토','일']
+   .map((w,i)=>'<span'+(i>=5?' class="we"':'')+'>'+w+'</span>').join('');
+ const cap = state.pickerTarget==='view' ? '금리를 조회할 날짜를 선택하세요'
+   : (state.pickerTarget==='from' ? '추이 시작일 선택' : '추이 종료일 선택')
+   + ' · 점(●) 있는 날만 데이터가 있어요';
+ return '<div class="sheet-h"><b>날짜 선택</b><button class="x" data-close>✕</button></div>'
+  + '<div class="cal"><div class="cal-h"><b>'+title+'</b><div class="cal-nav">'
+  + '<button data-cal="prev" aria-label="이전 달">‹</button>'
+  + '<button data-cal="next" aria-label="다음 달">›</button></div></div>'
+  + '<div class="cal-dow">'+dow+'</div>'
+  + '<div class="cal-grid">'+cells+'</div>'
+  + '<p class="cal-cap">'+cap+'</p></div>';
 }
 function renderTrendControls(){
  const el = document.getElementById('tctrl');
@@ -865,10 +950,16 @@ function renderTrendControls(){
    +'" data-tb="__ALL__">전체 최고</button>'
    + APP.banks.map(b => '<button class="tchip'+(state.trendBanks.has(b)?' on':'')
      +'" data-tb="'+esc(b)+'">'+esc(b)+'</button>').join('') + '</div>';
+ const drange = '<div class="tdates">📅 '
+   + '<button class="tdate" data-open="from">'+(state.trendFrom||'시작일')+'</button>'
+   + '<span>~</span>'
+   + '<button class="tdate" data-open="to">'+(state.trendTo||'종료일')+'</button>'
+   + ((state.trendFrom||state.trendTo)?'<button class="tdate reset" data-open="reset">전체기간</button>':'')
+   + '</div>';
  el.innerHTML =
    seg([['deposit','예금'],['saving','적금'],['both','예금+적금']],'data-tp',state.trendProduct)
    + seg([['max','최고우대'],['base','기본금리']],'data-tm',state.trendMetric)
-   + chips;
+   + drange + chips;
  el.querySelectorAll('[data-tp]').forEach(b => b.onclick = () => {
   state.trendProduct = b.dataset.tp; renderTrend(); });
  el.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => {
@@ -878,11 +969,18 @@ function renderTrendControls(){
   if(v === '__ALL__') state.trendBanks.clear();
   else state.trendBanks.has(v) ? state.trendBanks.delete(v) : state.trendBanks.add(v);
   renderTrend(); });
+ el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => {
+  const t = b.dataset.open;
+  if(t === 'reset'){ state.trendFrom = null; state.trendTo = null; renderTrend(); }
+  else openCalendar(t);
+ });
 }
 function renderTrend(){
  renderTrendControls();
  const el = document.getElementById('trend'), sub = document.getElementById('trendsub');
- const dates = histDates();
+ let dates = histDates();
+ if(state.trendFrom) dates = dates.filter(d => d >= state.trendFrom);
+ if(state.trendTo) dates = dates.filter(d => d <= state.trendTo);
  const prods = state.trendProduct==='both' ? ['deposit','saving'] : [state.trendProduct];
  const banks = state.trendBanks.size ? APP.banks.filter(b => state.trendBanks.has(b)) : ['전체'];
  const metric = state.trendMetric, mlbl = metric==='max' ? '최고우대' : '기본금리';
