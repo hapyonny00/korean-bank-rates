@@ -34,6 +34,7 @@ DEFAULT_BANKS = {
     "카카오뱅크": "카카오",
     "기업은행": "기업은행",   # API상 '중소기업은행'에 부분일치
     "수협은행": "수협",
+    "신한은행": "신한",
 }
 
 PRODUCTS = {
@@ -158,12 +159,33 @@ __FONTCSS__
   --fontBase:'Pretendard','Pretendard Variable',-apple-system,
    'Segoe UI Variable','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
  }
+ /* ===== 다크 모드 ===== */
+ body.dark{
+  color-scheme:dark;
+  --neutralFg1:#f0f1f3; --neutralFg2:#c4c8cf; --neutralFg3:#8b929e;
+  --neutralBg1:#1c2027; --neutralBg2:#252a33; --neutralBg3:#2c313b;
+  --neutralStroke1:#3a4049; --neutralStroke2:#333944;
+  --pageBg:#0e1116; --blueSoft:#1c2a40; --grayPill:#2c313b; --ink:#f0f1f3;
+ }
+ body{transition:background-color .2s}
+ body.dark .widget{box-shadow:0 30px 70px rgba(0,0,0,.5)}
+ body.dark .askbar,body.dark .datepop,body.dark .sheet{box-shadow:0 16px 40px rgba(0,0,0,.5)}
+ /* 다크모드 토글 버튼 */
+ .themebtn{display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;border:1px solid var(--neutralStroke2);
+  background:var(--neutralBg1);color:var(--neutralFg2);cursor:pointer;
+  margin-left:auto;flex:none}
+ .themebtn:hover{background:var(--grayPill)}
+ .themebtn svg{width:17px;height:17px}
+ .themebtn .ic-moon{display:none}
+ body.dark .themebtn .ic-sun{display:none}
+ body.dark .themebtn .ic-moon{display:block}
  *{box-sizing:border-box}
  body{font-family:var(--fontBase);margin:0;padding:34px 26px;
   background:var(--pageBg);color:var(--neutralFg1);
   font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
  /* ===== 화이트 셸 (레퍼런스의 큰 라운드 컨테이너) ===== */
- .widget{max-width:1200px;margin:0 auto;background:#fff;border-radius:40px;
+ .widget{max-width:1200px;margin:0 auto;background:var(--neutralBg1);border-radius:40px;
   padding:26px 34px 22px;box-shadow:0 30px 70px rgba(60,90,140,.18)}
  /* ===== 탑바: 로고 클릭 → 드롭다운 메뉴 ===== */
  .whead{display:flex;align-items:center;gap:14px;padding:4px 2px 10px;
@@ -180,7 +202,7 @@ __FONTCSS__
  .brand-chev{width:15px;height:15px;color:var(--neutralFg3);transition:transform .15s}
  .brand[aria-expanded="true"] .brand-chev{transform:rotate(180deg)}
  .brandmenu{position:absolute;top:100%;left:0;margin-top:8px;z-index:25;
-  background:#fff;border-radius:16px;padding:6px;min-width:168px;
+  background:var(--neutralBg1);border-radius:16px;padding:6px;min-width:168px;
   box-shadow:0 16px 36px rgba(20,40,80,.18);border:1px solid var(--neutralStroke2);
   display:flex;flex-direction:column;gap:2px}
  .brandmenu[hidden]{display:none}
@@ -200,7 +222,7 @@ __FONTCSS__
  .herosub{margin:0 auto 26px;color:var(--neutralFg3);font-size:14.5px;
   max-width:400px}
  /* Get Started 자리의 LLM 입력창 */
- .askbar{display:flex;align-items:center;gap:8px;background:#fff;
+ .askbar{display:flex;align-items:center;gap:8px;background:var(--neutralBg1);
   border:1px solid var(--neutralStroke2);
   border-radius:var(--radiusPill);padding:7px 7px 7px 18px;max-width:560px;
   margin:0 auto;box-shadow:0 10px 30px rgba(66,133,244,.16)}
@@ -208,13 +230,13 @@ __FONTCSS__
  .askbar input{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;
   background:transparent;color:var(--neutralFg1)}
  .askbar input::placeholder{color:var(--neutralFg3)}
- .sendbtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  flex:none;height:42px;border-radius:var(--radiusPill);border:0;cursor:pointer;
-  color:#fff;font:inherit;font-size:14px;font-weight:600;padding:0 20px;
+ .sendbtn{display:inline-flex;align-items:center;justify-content:center;
+  flex:none;width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;
+  color:#fff;padding:0;
   background:linear-gradient(180deg,#5b97f7,var(--blue));
   box-shadow:0 6px 16px rgba(66,133,244,.35)}
  .sendbtn:hover{filter:brightness(1.05)}
- .sendbtn svg{width:16px;height:16px}
+ .sendbtn svg{width:18px;height:18px}
  /* 추천 질문: 가로 스크롤 + 좌우 화이트 그라데이션 페이드 */
  .suggwrap{position:relative;margin-top:14px}
  .sugg{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;cursor:grab;
@@ -228,14 +250,14 @@ __FONTCSS__
   border-radius:var(--radiusPill);padding:6px 14px}
  .sugg button:hover{background:#e3e6ec}
  .suggfade{position:absolute;top:0;bottom:0;width:36px;pointer-events:none}
- .suggfade.left{left:0;background:linear-gradient(to right,#fff,rgba(255,255,255,0))}
- .suggfade.right{right:0;background:linear-gradient(to left,#fff,rgba(255,255,255,0))}
+ .suggfade.left{left:0;background:linear-gradient(to right,var(--neutralBg1),rgba(255,255,255,0))}
+ .suggfade.right{right:0;background:linear-gradient(to left,var(--neutralBg1),rgba(255,255,255,0))}
  /* 채팅 로그 (하단 화이트 그라데이션으로 자연스럽게 사라짐) */
  .chatlogwrap{position:relative;margin:18px auto 0;max-width:640px;text-align:left}
  .chatlog{display:flex;flex-direction:column;gap:10px;
   max-height:360px;overflow:auto;padding:4px 2px 28px}
  .chatfade{position:absolute;left:-24px;right:-24px;bottom:0;height:52px;
-  background:linear-gradient(to bottom, rgba(255,255,255,0), #fff 88%);
+  background:linear-gradient(to bottom, rgba(255,255,255,0), var(--neutralBg1) 88%);
   pointer-events:none;border-radius:0 0 14px 14px}
  .msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;
   line-height:1.55;white-space:pre-line}
@@ -244,7 +266,7 @@ __FONTCSS__
  .msg.bot{align-self:flex-start;background:var(--grayPill);
   color:var(--neutralFg1);border-bottom-left-radius:6px}
  .msg.bot b{color:var(--blueDeep)}
- /* 리셋 버튼: 질문하기 옆 작은 아이콘 버튼 */
+ /* 리셋 버튼: 전송 버튼 왼쪽 작은 아이콘 버튼 */
  .chatclear{display:inline-flex;align-items:center;justify-content:center;flex:none;
   width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;
   color:var(--neutralFg3);background:transparent}
@@ -257,7 +279,7 @@ __FONTCSS__
   padding:20px 22px;min-height:230px;display:flex;flex-direction:column;
   transition:transform .15s,box-shadow .15s;position:relative}
  .mcard:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(60,90,140,.16)}
- .mcard.light{background:#fff;border:1px solid var(--neutralStroke2);
+ .mcard.light{background:var(--neutralBg1);border:1px solid var(--neutralStroke2);
   box-shadow:0 8px 24px rgba(60,90,140,.08)}
  .mcard.bluecard{background:linear-gradient(135deg,#8db9f8 0%,#5b97f7 55%,#3f7ff0 100%);
   border:0;color:#fff}
@@ -281,7 +303,7 @@ __FONTCSS__
   padding:16px 6px 2px;color:var(--neutralFg3);font-size:12.5px}
  .page{margin-top:6px}
  /* ===== 카드 공통 / 추이 그래프 ===== */
- .card{border:1px solid var(--neutralStroke2);border-radius:18px;background:#fff;
+ .card{border:1px solid var(--neutralStroke2);border-radius:18px;background:var(--neutralBg1);
   padding:16px 18px;margin:0 0 8px;box-shadow:var(--shadow2)}
  .card-h{display:flex;align-items:baseline;gap:10px;font-size:16px;margin-bottom:6px}
  .card-sub{font-size:12px;color:var(--neutralFg3)}
@@ -293,7 +315,7 @@ __FONTCSS__
  .modhead{display:flex;align-items:center;justify-content:flex-start;gap:12px;
   flex-wrap:wrap;margin:34px 4px 14px}
  .datechip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font:inherit;
-  background:#fff;border:1px solid var(--neutralStroke2);border-radius:var(--radiusPill);
+  background:var(--neutralBg1);border:1px solid var(--neutralStroke2);border-radius:var(--radiusPill);
   padding:8px 8px 8px 14px;box-shadow:0 4px 14px rgba(60,90,140,.08);
   transition:background .12s,box-shadow .12s}
  .datechip:hover{background:var(--grayPill);box-shadow:0 6px 18px rgba(60,90,140,.12)}
@@ -333,7 +355,7 @@ __FONTCSS__
  .tdates{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--neutralFg3)}
  .tdates .ic-cal{color:var(--neutralFg3);margin-right:-2px}
  .tdate{font:inherit;font-size:12.5px;cursor:pointer;border:1px solid var(--neutralStroke2);
-  background:#fff;color:var(--ink);border-radius:var(--radiusPill);padding:6px 13px;font-weight:600}
+  background:var(--neutralBg1);color:var(--ink);border-radius:var(--radiusPill);padding:6px 13px;font-weight:600}
  .tdate:hover{background:var(--grayPill)}
  .tdate.reset{color:var(--neutralFg3);font-weight:500}
  /* 추이 컨트롤 (은행별/상품별 비교) */
@@ -346,7 +368,7 @@ __FONTCSS__
  .tseg.on{background:var(--blue);color:#fff}
  .tchips{display:flex;flex-wrap:wrap;gap:6px}
  .tchip{font:inherit;font-size:12.5px;cursor:pointer;border:1px solid var(--neutralStroke2);
-  background:#fff;color:var(--neutralFg2);border-radius:var(--radiusPill);padding:5px 12px}
+  background:var(--neutralBg1);color:var(--neutralFg2);border-radius:var(--radiusPill);padding:5px 12px}
  .tchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
  .tlegend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:12.5px;
   color:var(--neutralFg2)}
@@ -378,7 +400,7 @@ __FONTCSS__
   color:#fff;font-weight:600}
 
  /* 스티키 툴바 */
- .stickybar{position:sticky;top:0;z-index:5;background:#fff;
+ .stickybar{position:sticky;top:0;z-index:5;background:var(--neutralBg1);
   padding:12px 0 14px;border-bottom:1px solid var(--neutralStroke2)}
  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:12px}
  .search{flex:1 1 220px;min-width:150px;font:inherit;font-size:14px;
@@ -498,7 +520,7 @@ __FONTCSS__
  body{padding-bottom:88px}
 
  /* ===== 표 (다른 카드와 통일된 24px 라운드, 깔끔한 라인 스타일) ===== */
- .wrap{overflow-x:auto;border:1px solid var(--neutralStroke2);background:#fff;
+ .wrap{overflow-x:auto;border:1px solid var(--neutralStroke2);background:var(--neutralBg1);
   border-radius:24px;box-shadow:var(--shadow2)}
  table{border-collapse:separate;border-spacing:0;width:100%;font-size:15px}
  th,td{padding:14px 18px;text-align:left;
@@ -533,7 +555,6 @@ __FONTCSS__
   .heroC{padding:28px 4px 16px}
   .heroC h1{letter-spacing:-1.2px}
   h2{font-size:18px}
-  .sendbtn{padding:0 14px}
   .wrap{border:none;overflow:visible;box-shadow:none}
   table,thead,tbody,tr,td{display:block;width:auto}
   thead{display:none}
@@ -580,6 +601,16 @@ __FONTCSS__
    <button type="button" data-m="wiz">내 조건</button>
   </nav>
  </div>
+ <button id="themebtn" class="themebtn" type="button" aria-label="다크 모드 전환"
+  title="다크 모드 전환">
+  <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+   <circle cx="12" cy="12" r="4.3"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7
+    M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
+  <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>
+ </button>
 </header>
 
 <section id="homeview">
@@ -589,7 +620,7 @@ __FONTCSS__
    <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
    <path d="M3.5 21h17"/></svg>금융감독원 공시로 확인해요</span>
   <h1>날짜별 예·적금 금리,<br>편하게 찾아드릴게요</h1>
-  <p class="herosub">7개 은행 예·적금 금리를 매일 아침 새로 가져와요.<br>
+  <p class="herosub">8개 은행 예·적금 금리를 매일 아침 새로 가져와요.<br>
    궁금한 건 편하게 물어보세요.</p>
   <div class="askbar" role="search">
    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
@@ -597,15 +628,15 @@ __FONTCSS__
     <path d="m12.5 6.5 5 5"/></svg>
    <input id="ask" type="text" placeholder="궁금한 걸 물어보세요 · 예) 12개월 예금 금리"
     aria-label="금리 질문" autocomplete="off">
-   <button id="send" class="sendbtn" aria-label="질문 보내기">질문하기<svg
-    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-    stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/>
-    <path d="m13 6 6 6-6 6"/></svg></button>
    <button id="chatclear" class="chatclear" type="button" hidden aria-label="대화 리셋"
     title="대화 리셋">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
      stroke-linecap="round" stroke-linejoin="round">
      <path d="M3.5 9.5a8.5 8.5 0 1 1 1.02 6.4"/><path d="M3.5 4v5.5H9"/></svg></button>
+   <button id="send" class="sendbtn" aria-label="질문 보내기" title="질문 보내기"><svg
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/>
+    <path d="m13 6 6 6-6 6"/></svg></button>
   </div>
   <div class="suggwrap">
    <div class="sugg" id="sugg"></div>
@@ -787,7 +818,7 @@ function renderModules(){
    <button type="button" class="mcard bluecard" data-m="cmp">
     <span class="pillbadge">${ICON_DEP}상품 비교</span>
     <div class="mc-title">여러 상품을<br>나란히 비교해요</div>
-    <p>7개 은행 ${(APP.deposit||[]).length+(APP.saving||[]).length}개 상품 중
+    <p>8개 은행 ${(APP.deposit||[]).length+(APP.saving||[]).length}개 상품 중
      2~4개를 담으면 기간별 금리와 우대 조건을 한 번에 볼 수 있어요.
      내 조건에 맞는 상품만 골라볼 수도 있어요.</p>
    </button>
@@ -1083,7 +1114,7 @@ function renderTrend(){
  }
  const pn = prods.length>1 ? '예금·적금 비교' : (prods[0]==='deposit'?'예금':'적금');
  sub.textContent = pn+' · '+mlbl+' · '
-   +(banks[0]==='전체'?'7개 은행 중 최고':banks.join('·'))+' · '+dates.length+'일 기록';
+   +(banks[0]==='전체'?'8개 은행 중 최고':banks.join('·'))+' · '+dates.length+'일 기록';
  const vals = series.flatMap(s => s.pts).filter(v => v != null);
  if(!dates.length || !vals.length){
   el.innerHTML = '<p class="trend-note">아직 기록이 없어요. 매일 아침 7시 갱신 때마다 하루치가 쌓여요.</p>';
@@ -1346,7 +1377,7 @@ function render(){
  document.getElementById('meta').textContent =
   '공시기준 '+APP.dcls+' · 조회시각 '+APP.now+' · 출처: 금융감독원 금융상품통합비교공시';
  document.getElementById('footstat').textContent =
-  '7개 은행 · 상품 '+((APP.deposit||[]).length+(APP.saving||[]).length)
+  '8개 은행 · 상품 '+((APP.deposit||[]).length+(APP.saving||[]).length)
   +'개 · 매일 아침 7시에 새로 가져와요';
  renderModules(); renderDatenav();
 
@@ -1483,6 +1514,18 @@ function render(){
  view.querySelectorAll('.add').forEach(b => b.onclick = () => toggleCompare(b.dataset.k));
  renderTrend(); renderTray(); renderOverlay(); applyView();
 }
+function initTheme(){
+ let saved = null;
+ try{ saved = localStorage.getItem('theme'); }catch(e){}
+ const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+ const dark = saved ? saved === 'dark' : prefersDark;
+ document.body.classList.toggle('dark', dark);
+ document.getElementById('themebtn').onclick = () => {
+  const on = document.body.classList.toggle('dark');
+  try{ localStorage.setItem('theme', on ? 'dark' : 'light'); }catch(e){}
+ };
+}
+initTheme();
 initChat();
 render();
 </script>
@@ -1601,7 +1644,7 @@ def write_html(out, path):
     dcls = next((r["dcls_month"] for rows in out.values() for r in rows), "-")
 
     banks_order = ["국민은행", "우리은행", "농협은행", "하나은행",
-                   "카카오뱅크", "기업은행", "수협은행"]
+                   "카카오뱅크", "기업은행", "수협은행", "신한은행"]
     payload = {
         "deposit": out.get("정기예금", []),
         "saving": out.get("적금", []),
@@ -1625,7 +1668,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--product", choices=["deposit", "saving", "both"],
                     default="both", help="조회 상품 (기본: both)")
-    ap.add_argument("--banks", help="쉼표구분 은행명 (기본: 7개 은행 전체)")
+    ap.add_argument("--banks", help="쉼표구분 은행명 (기본: 8개 은행 전체)")
     ap.add_argument("--term", help="저축기간(개월) 필터, 예: 12")
     ap.add_argument("--json", action="store_true", help="JSON 출력")
     ap.add_argument("--html", nargs="?", const="auto", metavar="PATH",
