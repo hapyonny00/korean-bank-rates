@@ -180,6 +180,19 @@ __FONTCSS__
  .themebtn .ic-moon{display:none}
  body.dark .themebtn .ic-sun{display:none}
  body.dark .themebtn .ic-moon{display:block}
+ /* ===== Figma 임포트용 세로 스펙시트 (?figma=1) ===== */
+ body.figmaspec{background:#f2f2f4;padding:0}
+ #figmaSpecRoot{display:flex;flex-direction:column}
+ .specSection{padding:56px 40px;background:var(--pageBg);
+  border-bottom:1px solid rgba(0,0,0,.06)}
+ .specSection.dark{background:#0e1116}
+ .specSection.plain{background:#eef0f4}
+ .specLabel{font-family:var(--fontBase);font-size:13px;font-weight:700;
+  color:#111;letter-spacing:.3px;margin:0 0 18px;text-transform:uppercase}
+ .specSection.dark .specLabel{color:#f0f1f3}
+ .specStage{max-width:1200px;margin:0 auto}
+ .specStage .widget{margin:0 auto}
+ .specStage #sheet,.specStage #datepop{position:static;margin:0 auto}
  *{box-sizing:border-box}
  body{font-family:var(--fontBase);margin:0;padding:34px 26px;
   background:var(--pageBg);color:var(--neutralFg1);
@@ -1528,6 +1541,86 @@ function initTheme(){
 initTheme();
 initChat();
 render();
+
+// ===== Figma 임포트용: 모든 화면을 세로로 스택한 정적 스펙시트 =====
+// 사용법: 이 페이지를 ?figma=1 쿼리로 열고, Figma의 HTML-import 플러그인으로
+// 해당 탭(또는 URL)을 가져오면 8개 화면이 각각 프레임으로 들어옵니다.
+function buildFigmaSpec(){
+ const qs = (typeof location !== 'undefined' && location.search) || '';
+ if(!/[?&]figma=1\b/.test(qs)) return;
+ document.title = '금리 에이전트 — Figma 임포트 스펙시트';
+ document.body.classList.remove('dark');
+ const frames = [];
+ function snap(label, mutate, selector, opts){
+  mutate();
+  render();
+  const el = document.querySelector(selector);
+  frames.push({label, html: el ? el.outerHTML : '',
+   dark: !!(opts && opts.dark), plain: !!(opts && opts.plain)});
+ }
+ // 01 홈(라이트)
+ snap('01 · 홈 (라이트)', () => {
+  state.view='home'; state.compare=[]; state.modal=null; document.body.classList.remove('dark');
+ }, '.widget');
+ // 02 홈(다크)
+ snap('02 · 홈 (다크)', () => { document.body.classList.add('dark'); }, '.widget', {dark:true});
+ document.body.classList.remove('dark');
+ // 03 예금 페이지
+ snap('03 · 예금 페이지', () => {
+  state.view='dep'; state.product='deposit'; state.term='전체';
+  state.banks=new Set(); state.q=''; state.sort='max';
+ }, '.widget');
+ // 04 적금 페이지
+ snap('04 · 적금 페이지', () => {
+  state.view='sav'; state.product='saving'; state.term='전체'; state.banks=new Set();
+ }, '.widget');
+ // 05 금리 추이 페이지
+ snap('05 · 금리 추이', () => {
+  state.view='trend'; state.trendProduct='deposit'; state.trendMetric='max';
+  state.trendBanks=new Set(); state.trendFrom=null; state.trendTo=null;
+ }, '.widget');
+ // 06 상품 비교 모달
+ snap('06 · 상품 비교 (모달)', () => {
+  const arr = allGroups('deposit');
+  state.product='deposit';
+  state.compare = arr.slice(0,3).map(g => g.key);
+  state.modal = 'compare';
+ }, '#sheet', {plain:true});
+ // 07 내 조건 마법사 모달
+ snap('07 · 내 조건 찾기 (모달)', () => {
+  state.compare=[]; state.modal='wizard';
+ }, '#sheet', {plain:true});
+ state.modal = null;
+ // 08 날짜 선택 팝오버
+ (() => {
+  state.pickerTarget='view';
+  const base = latestDate() || new Date().toISOString().slice(0,10);
+  state.pickerMonth = base.slice(0,7);
+  const html = '<div class="datepop" style="position:static;display:inline-block">'
+    + calendarHTML() + '</div>';
+  frames.push({label:'08 · 날짜 선택 팝오버', html, dark:false, plain:true});
+ })();
+
+ const root = document.createElement('div');
+ root.id = 'figmaSpecRoot';
+ frames.forEach(f => {
+  const sec = document.createElement('section');
+  sec.className = 'specSection' + (f.dark?' dark':'') + (f.plain?' plain':'');
+  const label = document.createElement('div');
+  label.className = 'specLabel';
+  label.textContent = f.label;
+  const stage = document.createElement('div');
+  stage.className = 'specStage';
+  stage.innerHTML = f.html;
+  sec.appendChild(label);
+  sec.appendChild(stage);
+  root.appendChild(sec);
+ });
+ document.body.classList.add('figmaspec');
+ document.body.innerHTML = '';
+ document.body.appendChild(root);
+}
+buildFigmaSpec();
 </script>
 </body></html>'''
 
