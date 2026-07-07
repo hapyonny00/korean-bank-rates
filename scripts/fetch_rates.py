@@ -18,6 +18,7 @@ import argparse
 import json
 import os
 import sys
+import time
 import urllib.request
 import urllib.error
 
@@ -41,6 +42,20 @@ PRODUCTS = {
 }
 
 
+def _fetch_page(url, retries=3, backoff=3):
+    """일시적 네트워크 오류(연결 리셋 등)에 재시도. 마지막 시도까지 실패하면 종료."""
+    for attempt in range(1, retries + 1):
+        try:
+            with urllib.request.urlopen(url, timeout=20) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            sys.exit(f"[오류] HTTP {e.code}: {e.reason}")
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+            if attempt == retries:
+                sys.exit(f"[오류] 네트워크 {retries}회 재시도 실패: {e}")
+            time.sleep(backoff * attempt)
+
+
 def fetch_all(service, auth):
     """모든 페이지를 합쳐 baseList / optionList 반환."""
     base_list, option_list = [], []
@@ -48,13 +63,7 @@ def fetch_all(service, auth):
     while True:
         url = (f"{BASE}/{service}.json?auth={auth}"
                f"&topFinGrpNo={TOP_FIN_GRP_NO}&pageNo={page}")
-        try:
-            with urllib.request.urlopen(url, timeout=20) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as e:
-            sys.exit(f"[오류] HTTP {e.code}: {e.reason}")
-        except urllib.error.URLError as e:
-            sys.exit(f"[오류] 네트워크: {e.reason}")
+        data = _fetch_page(url)
 
         result = data.get("result", {})
         err = result.get("err_cd")
@@ -1622,6 +1631,8 @@ def main():
     ap.add_argument("--html", nargs="?", const="auto", metavar="PATH",
                     help="HTML 리포트 생성 후 브라우저로 열기 (경로 생략 가능)")
     ap.add_argument("--auth", help="FSS 인증키 (없으면 FSS_API_KEY 환경변수)")
+    ap.add_argument("--no-open", action="store_true",
+                    help="HTML 생성 후 브라우저 자동 오픈 생략 (자동화/cron 실행용)")
     args = ap.parse_args()
 
     auth = args.auth or os.environ.get("FSS_API_KEY")
@@ -1665,10 +1676,11 @@ def main():
                 f"금리표_{datetime.date.today():%Y%m%d}.html")
         write_html(out, path)
         print(f"[HTML 생성] {path}")
-        try:
-            subprocess.run(["open", path], check=False)
-        except Exception:
-            pass
+        if not args.no_open:
+            try:
+                subprocess.run(["open", path], check=False)
+            except Exception:
+                pass
 
 
 if __name__ == "__main__":
