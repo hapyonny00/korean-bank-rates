@@ -605,7 +605,7 @@ __FONTCSS__
     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
     <path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>
     <path d="M3.5 21h17"/></svg></span>
-   <span class="brand-tx">interest rate Agent</span>
+   <span class="brand-tx">Interest Agent</span>
    <svg class="brand-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="m6 9 6 6 6-6"/></svg>
