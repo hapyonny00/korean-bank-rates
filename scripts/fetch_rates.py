@@ -43,15 +43,20 @@ PRODUCTS = {
 }
 
 
-def _fetch_page(url, retries=3, backoff=3):
-    """일시적 네트워크 오류(연결 리셋 등)에 재시도. 마지막 시도까지 실패하면 종료."""
+def _fetch_page(url, retries=4, backoff=3):
+    """일시적 네트워크 오류(타임아웃·연결 리셋 등)에 재시도. 마지막 시도까지 실패하면 종료.
+
+    urllib이 항상 OSError를 URLError로 감싸주지는 않는다(예: 응답 대기 중
+    소켓 타임아웃은 raw socket.timeout/TimeoutError로 그대로 새어나올 수 있음).
+    그래서 URLError뿐 아니라 OSError 전체를 잡아야 재시도가 실제로 동작한다.
+    """
     for attempt in range(1, retries + 1):
         try:
-            with urllib.request.urlopen(url, timeout=20) as resp:
+            with urllib.request.urlopen(url, timeout=25) as resp:
                 return json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             sys.exit(f"[오류] HTTP {e.code}: {e.reason}")
-        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+        except (urllib.error.URLError, OSError) as e:
             if attempt == retries:
                 sys.exit(f"[오류] 네트워크 {retries}회 재시도 실패: {e}")
             time.sleep(backoff * attempt)
